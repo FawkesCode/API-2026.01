@@ -104,57 +104,57 @@ Consulte o [Manual de Instalação](./docs/manual-instalacao.md) para prosseguir
       <th>LinkedIn</th>
     </tr>
     <tr>
-      <td>Thiago [Sobrenome]</td>
+      <td>Thiago Nascimento</td>
       <td>Product Owner</td>
       <td><a href="https://github.com/Pottassiuw"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/></a></td>
-      <td><a href="#"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/></a></td>
+      <td><a href="https://www.linkedin.com/in/thiago-nascimento-729077292"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/></a></td>
     </tr>
     <tr>
-      <td>Marcos [Sobrenome]</td>
+      <td>Marcos Alexandre</td>
       <td>Scrum Master</td>
-      <td><a href="#"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/></a></td>
-      <td><a href="#"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/></a></td>
+      <td><a href="https://github.com/MarcosAlexandre-txt"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/></a></td>
+      <td><a href="https://www.linkedin.com/in/marcos-alexandre-cs/"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/></a></td>
     </tr>
     <tr>
-      <td>Thaís [Sobrenome]</td>
+      <td>Tais Fernandes</td>
       <td>Desenvolvedora</td>
-      <td><a href="#"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/></a></td>
-      <td><a href="#"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/></a></td>
+      <td><a href="https://github.com/tat4Souza"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/></a></td>
+      <td><a href="https://www.linkedin.com/in/tais-f-souza"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/></a></td>
     </tr>
     <tr>
-      <td>Matheus [Sobrenome]</td>
+      <td>Mateus Fernandes</td>
       <td>Desenvolvedor</td>
       <td><a href="#"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/></a></td>
       <td><a href="#"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/></a></td>
     </tr>
     <tr>
-      <td>João [Sobrenome]</td>
+      <td>João Conrado</td>
       <td>Desenvolvedor</td>
-      <td><a href="#"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/></a></td>
+      <td><a href="https://github.com/DiasJoao002"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/></a></td>
+      <td><a href="https://www.linkedin.com/in/jo%C3%A3o-vitor-dias-24b0a324a"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/></a></td>
+    </tr>
+    <tr>
+      <td>João Barreto</td>
+      <td>Desenvolvedor</td>
+      <td><a href="https://github.com/JoaoBarreto3"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/></a></td>
       <td><a href="#"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/></a></td>
     </tr>
     <tr>
-      <td>João [Sobrenome]</td>
+      <td>Vitor Bomfim</td>
       <td>Desenvolvedor</td>
-      <td><a href="#"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/></a></td>
+      <td><a href="https://github.com/VitorBomfim-12"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/></a></td>
+      <td><a href="https://www.linkedin.com/in/vitor-bomfim-122339289"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/></a></td>
+    </tr>
+    <tr>
+      <td>Gabriel Campos</td>
+      <td>Desenvolvedor</td>
+      <td><a href="https://github.com/gabrielyse"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/></a></td>
       <td><a href="#"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/></a></td>
     </tr>
     <tr>
-      <td>Vitor [Sobrenome]</td>
+      <td>Adler Rocha</td>
       <td>Desenvolvedor</td>
-      <td><a href="#"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/></a></td>
-      <td><a href="#"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/></a></td>
-    </tr>
-    <tr>
-      <td>Gabriel [Sobrenome]</td>
-      <td>Desenvolvedor</td>
-      <td><a href="#"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/></a></td>
-      <td><a href="#"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/></a></td>
-    </tr>
-    <tr>
-      <td>Adler [Sobrenome]</td>
-      <td>Desenvolvedor</td>
-      <td><a href="#"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/></a></td>
+      <td><a href="https://github.com/AdlerR101"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/></a></td>
       <td><a href="#"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/></a></td>
     </tr>
   </table>
