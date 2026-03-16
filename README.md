@@ -72,8 +72,10 @@ O objetivo é padronizar o processo, eliminar compras não autorizadas e gerar d
   <a href="https://www.java.com/"><img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"/></a>
   <a href="https://openjfx.io/"><img src="https://img.shields.io/badge/JavaFX-007396?style=for-the-badge&logo=java&logoColor=white"/></a>
   <a href="https://www.mysql.com/"><img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white"/></a>
-  <a href="https://github.com/"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/></a>
-  <a href="https://www.figma.com/"><img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white"/></a>
+  <a href="https://github.com/"><img src="https://img.shields.io/badge/Git-cc5a02?style=for-the-badge&logo=git&logoColor=white"/></a>
+  <a href="https://www.figma.com/"><img src="https://img.shields.io/badge/Figma-460066?style=for-the-badge&logo=figma&logoColor=white"/></a>
+  <a href="https://www.https:/spring.io/"><img src="https://img.shields.io/badge/Spring-38b559?style=for-the-badge&logo=spring&logoColor=white"/></a>
+
 </p>
 
 ---
@@ -87,38 +89,7 @@ O objetivo é padronizar o processo, eliminar compras não autorizadas e gerar d
 - [MySQL 8+](https://dev.mysql.com/downloads/)
 - [Git](https://git-scm.com/)
 
-### 1. Clonar o repositório
-
-```bash
-git clone https://github.com/fawkes-api/sistema-compras.git
-cd sistema-compras
-```
-
-### 2. Configurar o banco de dados
-
-```bash
-mysql -u root -p < migrations/YYYYMMDD_init.sql
-```
-
-Configure as credenciais em `src/main/resources/database.properties`:
-
-```properties
-db.url=jdbc:mysql://localhost:3306/newe_compras
-db.user=seu_usuario
-db.password=sua_senha
-```
-
-### 3. Executar a aplicação
-
-```bash
-# Via Maven
-mvn javafx:run
-
-# Via IDE — adicione ao VM Options:
---module-path /caminho/para/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml
-```
-
-> Consulte o [Manual de Instalação](./docs/manual-instalacao.md) para detalhes adicionais.
+Consulte o [Manual de Instalação](./docs/manual-instalacao.md) para prosseguir com a instalação.
 
 ---
 
