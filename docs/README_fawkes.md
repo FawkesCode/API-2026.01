@@ -117,9 +117,9 @@ Uma US só está **Done** quando todos os itens abaixo forem verificados:
 
 | Sprint | Período | Meta | Documentação |
 |--------|:-------:|------|:------------:|
-| 🔖 **Sprint 1** | 16/03 – 05/04 | Login, Funcionários, Fornecedores, Estoque (cadastro) | [Docs](./docs/sprints/sprint-1/README.md) |
-| 🔖 **Sprint 2** | 13/04 – 03/05 | Pedidos de compra, Aprovação, Movimentação de estoque | [Docs](./docs/sprints/sprint-2/README.md) |
-| 🔖 **Sprint 3** | 11/05 – 31/05 | Cotações, Dashboard, Histórico, Recebimento | [Docs](./docs/sprints/sprint-3/README.md) |
+| 🔖 **Sprint 1** | 16/03 – 05/04 | Login, Funcionários, Fornecedores, Estoque (cadastro) | [Docs](./docs/sprints/sprint-1/backlog.md) |
+| 🔖 **Sprint 2** | 13/04 – 03/05 | Pedidos de compra, Aprovação, Movimentação de estoque | [Docs](./docs/sprints/sprint-2/backlog.md) |
+| 🔖 **Sprint 3** | 11/05 – 31/05 | Cotações, Dashboard, Histórico, Recebimento | [Docs](./docs/sprints/sprint-3/backlog.md) |
 
 ---
 
@@ -144,38 +144,7 @@ Uma US só está **Done** quando todos os itens abaixo forem verificados:
 - [MySQL 8+](https://dev.mysql.com/downloads/)
 - [Git](https://git-scm.com/)
 
-### 1. Clonar o repositório
-
-```bash
-git clone https://github.com/fawkes-api/sistema-compras.git
-cd sistema-compras
-```
-
-### 2. Configurar o banco de dados
-
-```bash
-mysql -u root -p < migrations/YYYYMMDD_init.sql
-```
-
-Configure as credenciais em `src/main/resources/database.properties`:
-
-```properties
-db.url=jdbc:mysql://localhost:3306/newe_compras
-db.user=seu_usuario
-db.password=sua_senha
-```
-
-### 3. Executar a aplicação
-
-```bash
-# Via Maven
-mvn javafx:run
-
-# Via IDE — adicione ao VM Options:
---module-path /caminho/para/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml
-```
-
-> Consulte o [Manual de Instalação](./docs/manual-instalacao.md) para detalhes adicionais.
+Consulte o [Manual de Instalação](./docs/manual-instalacao.md) para detalhes adicionais.
 
 ---
 
