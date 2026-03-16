@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/img/logo-fawkes.png" alt="Logo Fawkes" width="180"/>
+  <img src="docs/img/logoFawkes.jpeg" alt="Logo Fawkes" width="180"/>
   <h2 align="center">Fawkes</h2>
 </p>
 
