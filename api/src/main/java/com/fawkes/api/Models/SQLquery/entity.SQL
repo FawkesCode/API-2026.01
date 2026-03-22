@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     is_active BOOLEAN DEFAULT TRUE,
     tipo_usuario ENUM('admin', 'user') DEFAULT 'user',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    departamento_usuario VARCHAR(255) NOT NULL,
+    departamento_usuario ENUM('TI', 'RH', 'Financeiro', 'Vendas') NOT NULL,
     grupo_id INT NOT NULL,
     FOREIGN KEY (grupo_id) REFERENCES grupos(id)
     --definir se, haverá usuario admin
@@ -67,3 +67,25 @@ CREATE TABLE IF NOT EXISTS departamentos (
     nome_departamento VARCHAR(255) NOT NULL UNIQUE,
     descricao TEXT
 );
+
+CREATE TABLE IF NOT EXISTS pedidos(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_requerente INT NOT NULL,
+    id_departamento INT NOT NULL,
+    id_nota_fiscal INT NOT NULL,
+    status_pedido ENUM('pendente', 'processando', 'concluido', 'cancelado') DEFAULT 'pendente',
+    aprovacao_gerente BOOLEAN DEFAULT FALSE,
+    aprovacao_gestor BOOLEAN DEFAULT FALSE,
+    quantidade INT NOT NULL,
+
+);
+
+CREATE TABLE IF NOT EXISTS notas_fiscais(
+
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    chave_acesso VARCHAR(255) NOT NULL UNIQUE,
+    serie VARCHAR(255) NOT NULL,
+    cnpj VARCHAR(255) NOT NULL,
+    data_emissao DATE NOT NULL,
+    valor_total DECIMAL(10, 2) NOT NULL,
+)
