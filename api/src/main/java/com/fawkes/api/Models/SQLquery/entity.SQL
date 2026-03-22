@@ -21,13 +21,13 @@ CREATE TABLE IF NOT EXISTS usuarios (
     --departamento é enum ??
 );
 
-CREATE TABLE IF NOT EXISTS GRUPOS (
+CREATE TABLE IF NOT EXISTS grupos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome_grupo VARCHAR(255) NOT NULL UNIQUE,
     descricao TEXT
 );
 
-CREATE TABLE IF NOT EXISTS PERMISSOES (
+CREATE TABLE IF NOT EXISTS permissoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome_permissao VARCHAR(255) NOT NULL UNIQUE,
     descricao TEXT
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS PERMISSOES (
     --se for enum, definir quais serão as permissões
 );
 
-CREATE TABLE IF NOT EXISTS GRUPO_PERMISSOES (
+CREATE TABLE IF NOT EXISTS grupo_permissoes (
     grupo_id INT NOT NULL,
     permissao_id INT NOT NULL,
     PRIMARY KEY (grupo_id, permissao_id),
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS GRUPO_PERMISSOES (
 
 --SESSÃO DE PEDIDOS E COMPRAS--
 
-CREATE TABLE IF NOT EXISTS PEDIDOS (
+CREATE TABLE IF NOT EXISTS pedidos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
     criado_as TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -56,10 +56,10 @@ CREATE TABLE IF NOT EXISTS PEDIDOS (
     data_pedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status ENUM('pendente', 'processando', 'concluido', 'cancelado') DEFAULT 'pendente',
     --definir os enums
-    total DECIMAL(10, 2) NOT NULL,
+    valor DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
     FOREIGN KEY (id_departamento) REFERENCES departamentos(id),
-    FOREIGN KEY (id_nota_fiscal) REFERENCES notas_fiscais(id)
+    FOREIGN KEY (id_nota_fiscal) REFERENCES notas_fiscais(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS departamentos (
