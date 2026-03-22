@@ -68,17 +68,6 @@ CREATE TABLE IF NOT EXISTS departamentos (
     descricao TEXT
 );
 
-CREATE TABLE IF NOT EXISTS pedidos(
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    id_requerente INT NOT NULL,
-    id_departamento INT NOT NULL,
-    id_nota_fiscal INT NOT NULL,
-    status_pedido ENUM('pendente', 'processando', 'concluido', 'cancelado') DEFAULT 'pendente',
-    aprovacao_gerente BOOLEAN DEFAULT FALSE,
-    aprovacao_gestor BOOLEAN DEFAULT FALSE,
-    quantidade INT NOT NULL,
-
-);
 
 CREATE TABLE IF NOT EXISTS notas_fiscais(
 
