@@ -1,4 +1,5 @@
 CREATE DATABASE IF NOT EXISTS FAWKES;
+
 USE FAWKES;
 
 --SESSÃO DE USUÁRIOS E GRUPOS--
@@ -54,8 +55,7 @@ CREATE TABLE IF NOT EXISTS pedidos (
     id_departamento INT NOT NULL,
     id_nota_fiscal INT NOT NULL,
     data_pedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    status ENUM('pendente', 'processando', 'concluido', 'cancelado') DEFAULT 'pendente',
-    --definir os enums
+    STATUS ENUM('pendente', 'processando', 'concluido', 'cancelado') DEFAULT 'pendente',
     valor DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
     FOREIGN KEY (id_departamento) REFERENCES departamentos(id),
@@ -68,13 +68,38 @@ CREATE TABLE IF NOT EXISTS departamentos (
     descricao TEXT
 );
 
-
 CREATE TABLE IF NOT EXISTS notas_fiscais(
-
     id INT AUTO_INCREMENT PRIMARY KEY,
     chave_acesso VARCHAR(255) NOT NULL UNIQUE,
     serie VARCHAR(255) NOT NULL,
-    cnpj VARCHAR(255) NOT NULL,
-    data_emissao DATE NOT NULL,
-    valor_total DECIMAL(10, 2) NOT NULL,
-)
+    data_emissao DATE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS saidas(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    data_saida DATE NOT NULL,
+    id_pedido_FK INT NOT NULL,
+    FOREIGN KEY (id_pedido_FK) REFERENCES pedidos(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS estoque(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id_FK INT DEFAULT NULL,
+    qtd_produtos INT NOT NULL,
+    FOREIGN KEY (product_id_FK) REFERENCES 
+);
+
+CREATE TABLE IF NOT EXISTS fornecedor(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome_fornecedor VARCHAR(255),
+    cnpj_fornecedor VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS produtos(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_name VARCHAR(255),
+    product_type VARCHAR(255),
+    fornecedor_id_FK INT NOT NULL,
+    FOREIGN KEY (fornecedor_id_FK) REFERENCES ON fornecedor(id)
+);
+
