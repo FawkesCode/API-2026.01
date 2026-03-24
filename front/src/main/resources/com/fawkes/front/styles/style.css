@@ -1,0 +1,11 @@
+.root {
+    -fx-background-color: green;
+}
+
+.sidebar__button {
+    -fx-text-overrun: clip;
+}
+
+.button {
+    -fx-cursor: hand;
+}

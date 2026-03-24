@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane maxWidth="1400.0" minWidth="800.0" prefHeight="630.0" prefWidth="1030.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="38.0" layoutY="34.0" text="Dashboard" textFill="WHITE" />
+      <Label layoutX="944.0" layoutY="100.0" text="fim da tela" textFill="WHITE" />
+   </children>
+</AnchorPane>
