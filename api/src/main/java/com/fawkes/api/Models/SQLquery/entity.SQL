@@ -1,8 +1,6 @@
 CREATE DATABASE IF NOT EXISTS FAWKES;
 USE FAWKES;
 
--- 1. TABELAS INDEPENDENTES (Nível 0 - Não dependem de FKs)
--- Devem vir primeiro para que as outras possam referenciá-las.
 
 CREATE TABLE IF NOT EXISTS grupos (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -24,8 +22,8 @@ CREATE TABLE IF NOT EXISTS departamentos (
 
 CREATE TABLE IF NOT EXISTS notas_fiscais (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    numero_nota CHAR(44) UNIQUE,
-    serie VARCHAR(255),
+    numero_nota CHAR(45) UNIQUE,
+    serie VARCHAR(20),
     data_emissao DATE
 );
 
@@ -36,7 +34,6 @@ CREATE TABLE IF NOT EXISTS fornecedor (
     meio_pagamento ENUM("PIX","CREDITO","DEBITO","BOLETO") DEFAULT "PIX"
 );
 
--- 2. TABELAS DE NÍVEL 1 (Dependem das tabelas acima)
 
 CREATE TABLE IF NOT EXISTS grupo_permissoes (
     grupo_id INT NOT NULL,
@@ -69,8 +66,6 @@ CREATE TABLE IF NOT EXISTS produtos (
     FOREIGN KEY (fornecedor_id_FK) REFERENCES fornecedor(id) ON DELETE CASCADE
 );
 
--- 3. TABELAS DE NÍVEL 2 (Dependem de Usuários e Produtos)
-
 CREATE TABLE IF NOT EXISTS pedidos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
@@ -95,8 +90,6 @@ CREATE TABLE IF NOT EXISTS estoque (
     FOREIGN KEY (produto_id_FK) REFERENCES produtos(id) ON DELETE CASCADE,
     CONSTRAINT CHECK (qtd_produtos >= 0)
 );
-
--- 4. TABELAS DE NÍVEL 3 (Dependem de Pedidos)
 
 CREATE TABLE IF NOT EXISTS saidas (
     id INT AUTO_INCREMENT PRIMARY KEY,
