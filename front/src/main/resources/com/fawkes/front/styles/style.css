@@ -1,11 +1,17 @@
-.root {
-    -fx-background-color: green;
-}
-
 .sidebar__button {
     -fx-text-overrun: clip;
 }
 
 .button {
     -fx-cursor: hand;
+}
+
+#header {
+    -fx-background-color: white;
+    -fx-padding: 20px;
+    -fx-background-radius: 10px;
+}
+
+.pageContent {
+    -fx-padding: 0 0 0 20px;
 }

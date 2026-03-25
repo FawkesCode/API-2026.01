@@ -10,9 +10,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 import java.util.HashMap;
@@ -22,9 +25,11 @@ public class LayoutController {
     @FXML private AnchorPane sidebarContainer;
     @FXML private ImageView logoContainer;
     @FXML private Pane userPane;
-    @FXML private AnchorPane contentWrapper;
+    @FXML private StackPane contentWrapper;
     @FXML private Label pageName;
     @FXML private Label pageDescription;
+    @FXML private ScrollPane contentScrollPane;
+    @FXML private VBox mainContent;
 
     private boolean isSidebarOpen = true;
 
@@ -38,6 +43,8 @@ public class LayoutController {
 
         pageName.setText(name);
         pageDescription.setText(description);
+
+        mainContent.minHeightProperty().bind(contentScrollPane.heightProperty());
     }
 
     public void setPageInfo(String name, String description) {
@@ -98,18 +105,22 @@ public class LayoutController {
     }
 
     public void handleHistoryButton() {
+        NavigationManager.navigateToPage(contentWrapper, "view/history-page.fxml");
         setPageInfo("Atividade Recente", "Descrição das Atividades Recentes");
     }
 
     public void handleEmployeesButton() {
+        NavigationManager.navigateToPage(contentWrapper, "view/employees-page.fxml");
         setPageInfo("Funcionários", "Descrição da tela de funcionários");
     }
 
     public void handleSuppliersButton() {
+        NavigationManager.navigateToPage(contentWrapper, "view/suppliers-page.fxml");
         setPageInfo("Fornecedores", "Descrição da tela de forncedores");
     }
 
     public void handleStockButton() {
+        NavigationManager.navigateToPage(contentWrapper, "view/stock-page.fxml");
         setPageInfo("Estoque", "Descrição da tela de Estoque");
     }
 
