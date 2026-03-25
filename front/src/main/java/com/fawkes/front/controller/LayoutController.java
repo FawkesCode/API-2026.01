@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -20,6 +21,10 @@ import javafx.util.Duration;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
+import static javafx.geometry.Pos.CENTER;
+import static javafx.geometry.Pos.CENTER_RIGHT;
 
 public class LayoutController {
     @FXML private AnchorPane sidebarContainer;
@@ -30,8 +35,12 @@ public class LayoutController {
     @FXML private Label pageDescription;
     @FXML private ScrollPane contentScrollPane;
     @FXML private VBox mainContent;
+    @FXML private ImageView btnIcon;
+    @FXML private StackPane menuBtnContainer;
 
     private boolean isSidebarOpen = true;
+    private final Image iconMenu = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/fawkes/front/img/menu-icon.png")));
+    private final Image iconClose = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/fawkes/front/img/close-icon.png")));
 
     private final Map<Button, String> navBtnLabels = new HashMap<>();
 
@@ -43,6 +52,8 @@ public class LayoutController {
 
         pageName.setText(name);
         pageDescription.setText(description);
+
+        btnIcon.setImage(iconClose);
 
         mainContent.minHeightProperty().bind(contentScrollPane.heightProperty());
     }
@@ -71,6 +82,8 @@ public class LayoutController {
         if (isSidebarOpen) {
             logoContainer.setVisible(false);
             userPane.setVisible(false);
+            btnIcon.setImage(iconMenu);
+            menuBtnContainer.setAlignment(CENTER);
 
             timeline.setOnFinished(event -> {
                 for (Node node : navBtn) {
@@ -79,7 +92,8 @@ public class LayoutController {
                             navBtnLabels.put(btn, btn.getText());
                         }
                         btn.setText(null);
-                        btn.setAlignment(javafx.geometry.Pos.CENTER);
+                        btn.setAlignment(CENTER);
+                        btn.getStyleClass().add("sidebar__button--closed");
                     }
                 }
             });
@@ -87,6 +101,8 @@ public class LayoutController {
         } else {
             logoContainer.setVisible(true);
             userPane.setVisible(true);
+            btnIcon.setImage(iconClose);
+            menuBtnContainer.setAlignment(CENTER_RIGHT);
 
             for (Node node : navBtn) {
                 if (node instanceof Button btn) {

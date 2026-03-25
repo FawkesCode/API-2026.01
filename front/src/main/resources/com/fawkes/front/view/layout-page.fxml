@@ -20,7 +20,7 @@
             <VBox alignment="TOP_CENTER" style="-fx-background-color: transparent;">
                <children>
 
-                  <VBox fx:id="mainContent" maxWidth="1200.0" spacing="0.0" style="-fx-background-color: white;" VBox.vgrow="ALWAYS">
+                  <VBox fx:id="mainContent" maxWidth="1200.0" spacing="0.0" VBox.vgrow="ALWAYS">
                      <children>
 
                         <AnchorPane id="header" prefHeight="100.0">
@@ -49,87 +49,90 @@
       </ScrollPane>
    </center>
    <left>
-      <AnchorPane fx:id="sidebarContainer" maxWidth="250.0" prefHeight="200.0" prefWidth="250.0" style="-fx-background-color: #66cc66;" BorderPane.alignment="CENTER">
+      <AnchorPane fx:id="sidebarContainer" maxWidth="250.0" prefHeight="200.0" prefWidth="250.0" BorderPane.alignment="CENTER">
          <children>
             <AnchorPane layoutX="64.0" layoutY="74.0" maxWidth="250.0" minWidth="250.0" prefHeight="720.0" prefWidth="250.0" style="-fx-padding: 10px;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <AnchorPane layoutX="-62.0" layoutY="79.0" maxWidth="250.0" minWidth="250.0" prefHeight="640.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="80.0">
                      <children>
-                        <VBox prefHeight="218.0" prefWidth="230.0" spacing="3.0" style="-fx-background-color: blue;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                        <VBox prefHeight="218.0" prefWidth="230.0" spacing="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                            <children>
                               <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#handleDashboardButton" prefHeight="39.0" prefWidth="250.0" styleClass="sidebar__button" text="Dashboard">
                                  <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../img/icon-test.png" />
+                                          <Image url="@../img/icon-dashboard.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
                               </Button>
                               <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#handleHistoryButton" prefHeight="39.0" prefWidth="250.0" styleClass="sidebar__button" text="Atividade Recente">
                                  <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../img/icon-test.png" />
+                                          <Image url="@../img/icon-history.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
                               </Button>
                               <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#handleEmployeesButton" prefHeight="39.0" prefWidth="250.0" styleClass="sidebar__button" text="Funcionários">
                                  <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../img/icon-test.png" />
+                                          <Image url="@../img/icon-employees.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
                               </Button>
                               <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#handleSuppliersButton" prefHeight="39.0" prefWidth="250.0" styleClass="sidebar__button" text="Fornecedores">
                                  <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../img/icon-test.png" />
+                                          <Image url="@../img/icon-suppliers.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
                               </Button>
                               <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#handleStockButton" prefHeight="39.0" prefWidth="250.0" styleClass="sidebar__button" text="Estoque">
                                  <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../img/icon-test.png" />
+                                          <Image url="@../img/icon-stock.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
                               </Button>
                            </children>
                         </VBox>
-                        <VBox prefHeight="145.0" prefWidth="230.0" spacing="3.0" style="-fx-background-color: blue;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                        <VBox prefHeight="145.0" prefWidth="230.0" spacing="3.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                            <children>
                               <Pane fx:id="userPane" prefHeight="56.0" prefWidth="187.0">
                                  <children>
-                                    <Label layoutX="6.0" layoutY="5.0" text="Administrador" />
+                                    <Label layoutX="6.0" layoutY="5.0" text="Administrador">
+                                       <font>
+                                          <Font name="System Italic" size="12.0" />
+                                       </font></Label>
                                     <Label layoutX="5.0" layoutY="19.0" text="Nome do Usuário">
                                        <font>
-                                          <Font size="18.0" />
+                                          <Font name="System Bold" size="18.0" />
                                        </font>
                                     </Label>
                                  </children>
                               </Pane>
                               <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="36.0" prefWidth="250.0" styleClass="sidebar__button" text="Notificações">
                                  <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../img/icon-test.png" />
+                                          <Image url="@../img/icon-notifications.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
                               </Button>
                               <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="36.0" prefWidth="352.0" styleClass="sidebar__button" text="Sair">
                                  <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../img/icon-test.png" />
+                                          <Image url="@../img/icon-logout.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -138,21 +141,25 @@
                         </VBox>
                      </children>
                   </AnchorPane>
-                  <AnchorPane layoutX="20.0" layoutY="20.0" prefHeight="66.0" prefWidth="230.0" style="-fx-background-color: blue;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <AnchorPane layoutX="20.0" layoutY="20.0" prefHeight="66.0" prefWidth="230.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
+                        <StackPane fx:id="menuBtnContainer" alignment="CENTER_RIGHT" prefHeight="66.0" prefWidth="231.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Button fx:id="btnToggle" maxWidth="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#handleToggleSidebar" prefHeight="35.0" prefWidth="35.0">
+                                 <graphic>
+                                    <ImageView fx:id="btnIcon" fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../img/icon-test.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </StackPane>
                         <ImageView fx:id="logoContainer" fitHeight="39.0" fitWidth="78.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0">
                            <image>
                               <Image url="@../img/logo.png" />
                            </image></ImageView>
-                        <Button fx:id="btnToggle" layoutX="164.0" layoutY="9.0" mnemonicParsing="false" onAction="#handleToggleSidebar" prefHeight="48.0" prefWidth="66.0" AnchorPane.rightAnchor="0.0">
-                           <graphic>
-                              <ImageView fitHeight="35.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../img/icon-test.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Button>
                      </children>
                   </AnchorPane>
                </children>

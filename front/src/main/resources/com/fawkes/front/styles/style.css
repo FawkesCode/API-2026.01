@@ -1,17 +1,66 @@
 .sidebar__button {
     -fx-text-overrun: clip;
+    -fx-background-color: transparent;
+    -fx-font-size: 16px;
+    -fx-padding: 5px;
 }
+
+.sidebar__button:hover {
+    -fx-translate-x: 5px;
+    -fx-background-color: #e7ecef;
+}
+
+.sidebar__button--closed:hover {
+    -fx-translate-x: 0px;
+    -fx-translate-y: -3px;
+}
+
+#sidebarContainer {
+    -fx-background-color: white;
+}
+
+#btnToggle {
+    -fx-background-color: #e7ecef;
+    -fx-background-radius: 50%;
+}
+
+#btnToggle:hover {
+    -fx-background-color: #f1f5f8;
+}
+
+
 
 .button {
     -fx-cursor: hand;
 }
 
 #header {
-    -fx-background-color: white;
     -fx-padding: 20px;
     -fx-background-radius: 10px;
 }
 
 .pageContent {
     -fx-padding: 0 0 0 20px;
+}
+
+.scroll-bar {
+    -fx-opacity: 1.0;
+}
+
+.scroll-bar .thumb {
+    -fx-opacity: 0.5;
+    -fx-background-color: #464c50;
+}
+
+.scroll-bar:vertical {
+    -fx-min-width: 10px;
+    -fx-pref-width: 10px;
+    -fx-max-width: 10px;
+    -fx-padding: 1;
+
+    -fx-background-color: #ffffff;
+}
+
+.scroll-bar:horizontal {
+    -fx-pref-height: 0.3em;
 }
