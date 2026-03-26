@@ -1,4 +1,4 @@
-package com.fawkes.api.Models;
+package com.fawkes.api.Models.entity;
 
 
 import java.time.LocalDateTime;

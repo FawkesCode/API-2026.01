@@ -1,10 +1,8 @@
-package com.fawkes.api.Models;
+package com.fawkes.api.Models.entity;
 
 import jakarta.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
