@@ -25,24 +25,7 @@ public class Produto {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fornecedor_id_FK", nullable = false)
-    private Fornecedor fornecedor;
+    private Supplier fornecedor;
 
-    // Getters e Setters
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-
-    public String getProdutoNome() { return produtoNome; }
-    public void setProdutoNome(String produtoNome) { this.produtoNome = produtoNome; }
-
-    public String getProdutoTipo() { return produtoTipo; }
-    public void setProdutoTipo(String produtoTipo) { this.produtoTipo = produtoTipo; }
-
-    public BigDecimal getValorUnitario() { return valorUnitario; }
-    public void setValorUnitario(BigDecimal valorUnitario) { this.valorUnitario = valorUnitario; }
-
-    public String getDescricao() { return descricao; }
-    public void setDescricao(String descricao) { this.descricao = descricao; }
-
-    public Fornecedor getFornecedor() { return fornecedor; }
-    public void setFornecedor(Fornecedor fornecedor) { this.fornecedor = fornecedor; }
+    
 }
