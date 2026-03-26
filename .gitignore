@@ -1,0 +1,19 @@
+# IntelliJ
+.idea/
+*.iml
+out/
+gen/
+
+# Maven
+target/
+
+# Compilados do Java
+*.class
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Temporários
+*.log
+*.tmp
