@@ -18,7 +18,7 @@ public class Pedido {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
+    private Users usuario;
 
     @Column(name = "created_at", updatable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -30,7 +30,7 @@ public class Pedido {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_departamento", nullable = false)
-    private Departamento departamento;
+    private Departament departamento;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_nota_fiscal")
@@ -65,8 +65,8 @@ public class Pedido {
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
-    public Usuario getUsuario() { return usuario; }
-    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+    public Users getUsuario() { return usuario; }
+    public void setUsuario(Users usuario) { this.usuario = usuario; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
@@ -74,8 +74,8 @@ public class Pedido {
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
-    public Departamento getDepartamento() { return departamento; }
-    public void setDepartamento(Departamento departamento) { this.departamento = departamento; }
+    public Departament getDepartamento() { return departamento; }
+    public void setDepartamento(Departament departamento) { this.departamento = departamento; }
 
     public NotaFiscal getNotaFiscal() { return notaFiscal; }
     public void setNotaFiscal(NotaFiscal notaFiscal) { this.notaFiscal = notaFiscal; }
