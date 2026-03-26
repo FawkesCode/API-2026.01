@@ -5,21 +5,23 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import jakarta.websocket.Decoder;
+
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="TBdepartament")
-public class Departament {
+@Table(name="TBpermissions")
+public class Permissions {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name="permissionName")
+    private String permissionName;
 
-    @Column(name="departamentName",nullable=false)
-    private String departamentName;
-
-    @Column(name="text",nullable=false)
-    private String text;
+      @Column(name="permissionDescription",nullable=false,unique=true)
+    private String permissionDescription;
 
 }
