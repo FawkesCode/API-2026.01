@@ -8,31 +8,26 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.websocket.Decoder;
 
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="TBgroups")
-public class Groups {
+@Table(name="TBdepartament")
+public class Departament {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "groupName",nullable=false, unique=true)
-    private String groupName;
+    @Column(name="departamentName",nullable=false)
+    private String departamentName;
 
-    @Column(name="groupDescription",nullable=false,unique=true)
-    private String groupDescription;
-    
+    @Column(name="text",nullable=false)
+    private String text;
+
 }
