@@ -4,20 +4,20 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "notas_fiscais")
-public class NotaFiscal {
+@Table(name = "orderNote")
+public class OrderNote {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "numero_nota", unique = true, length = 45, columnDefinition = "CHAR(45)")
+    @Column(name = "noteNumber", unique = true, length = 45, columnDefinition = "CHAR(45)")
     private String numeroNota;
 
     @Column(name = "serie", length = 20)
     private String serie;
 
-    @Column(name = "data_emissao")
+    @Column(name = "orderDate")
     private LocalDate dataEmissao;
 
     // Getters e Setters
