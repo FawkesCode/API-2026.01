@@ -20,7 +20,7 @@ public class Permissions {
     @Column(name="permissionName")
     private String permissionName;
 
-      @Column(name="permissionDescription",nullable=false,unique=true)
+    @Column(name="permissionDescription",nullable=false,unique=true)
     private String permissionDescription;
 
 }
