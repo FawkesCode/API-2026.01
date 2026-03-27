@@ -2,6 +2,10 @@
 
 **Período:** 13/04/2026 a 03/05/2026
 
+**Definições da Sprint:**
+- [Definition of Ready](./definition-of-ready.md)
+- [Definition of Done](./definition-of-done.md)
+
 ---
 
 | Capacidade estimada da equipe por Sprint: | 55 Story Points |
