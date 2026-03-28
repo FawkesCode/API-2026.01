@@ -35,11 +35,11 @@ public class Orders {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "departamentId", nullable = false)
-    private Department departamento;
+    private Departments departamento;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orderNoteId")
-    private OrderNote notaFiscal;
+    private OrderNotes notaFiscal;
 
     @Column(name = "orderDate",
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

@@ -8,7 +8,7 @@ import java.lang.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "TBproductOutput")
-public class ProductOutput {
+public class ProductOutputs {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

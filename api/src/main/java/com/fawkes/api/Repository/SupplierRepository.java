@@ -1,7 +1,9 @@
 package com.fawkes.api.Repository;
-import com.fawkes.api.Entities.OrderNotes;
+
+import com.fawkes.api.Entities.Suppliers;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
 @Repository
-public interface OrderNoteRepository extends JpaRepository<OrderNotes, Long> {
+public interface SupplierRepository extends JpaRepository<Suppliers, Long> {
 }

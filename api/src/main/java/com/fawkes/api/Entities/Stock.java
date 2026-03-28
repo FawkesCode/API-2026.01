@@ -37,7 +37,7 @@ public class Stock {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    private Product produto;
+    private Products produto;
 
 
     @PrePersist

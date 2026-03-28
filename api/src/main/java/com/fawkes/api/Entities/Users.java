@@ -48,7 +48,7 @@ public class Users {
 
     @ManyToOne
     @JoinColumn(name="departamentID",nullable=false)
-    private Department department;
+    private Departments departments;
 
     
 

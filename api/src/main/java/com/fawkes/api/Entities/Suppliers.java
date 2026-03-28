@@ -8,7 +8,7 @@ import java.lang.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "TBsupplier") 
-public class Supplier {
+public class Suppliers {
 
     public enum MeioPagamento {
         PIX, CREDITO, DEBITO, BOLETO
