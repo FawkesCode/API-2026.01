@@ -35,7 +35,7 @@ public class Orders {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "departamentId", nullable = false)
-    private Departament departamento;
+    private Department departamento;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orderNoteId")

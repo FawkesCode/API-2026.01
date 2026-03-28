@@ -2,9 +2,9 @@ services:
   mysql:
     image: mysql:latest
     environment:
-      - MYSQL_DATABASE=mydatabase
-      - MYSQL_PASSWORD=secret
-      - MYSQL_ROOT_PASSWORD=Senha@_123
-      - MYSQL_ROOT_USER=root
+      - MYSQL_DATABASE=FAWKES
+      - MYSQL_USER=james
+      - MYSQL_PASSWORD=EFN2026
+      - MYSQL_ROOT_PASSWORD=epsteinForever2026
     ports:
-      - 3306:3306
+      - 3367:3306
