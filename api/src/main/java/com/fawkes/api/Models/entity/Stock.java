@@ -3,7 +3,7 @@ package com.fawkes.api.Models.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-
+import java.lang.*;
 
 import lombok.*;
 
@@ -22,10 +22,10 @@ public class Stock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "produto_id_FK")
+    @JoinColumn(name = "id")
     private Product produto;
 
     @Column(name = "qtd_produtos", nullable = false)

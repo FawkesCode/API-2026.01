@@ -2,6 +2,7 @@ package com.fawkes.api.Models.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.lang.*;
 
 @Data
 @NoArgsConstructor
@@ -15,7 +16,7 @@ public class Supplier {
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "nome_fornecedor", length = 255)
     private String nomeFornecedor;

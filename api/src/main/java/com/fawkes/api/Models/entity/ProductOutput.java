@@ -3,7 +3,7 @@ package com.fawkes.api.Models.entity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.*;
-
+import java.lang.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,7 +13,7 @@ public class ProductOutput {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "outputDate", nullable = false)
     private LocalDateTime outputDate;
