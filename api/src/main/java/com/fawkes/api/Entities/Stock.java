@@ -1,5 +1,4 @@
-package com.fawkes.api.Models.entity;
-
+package com.fawkes.api.Entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
