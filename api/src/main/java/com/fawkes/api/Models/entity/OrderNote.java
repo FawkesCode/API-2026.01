@@ -9,7 +9,7 @@ import java.lang.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "orderNote")
+@Table(name = "TBorderNote")
 public class OrderNote {
 
     @Id

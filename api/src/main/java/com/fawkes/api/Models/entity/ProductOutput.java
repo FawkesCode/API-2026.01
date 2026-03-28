@@ -8,7 +8,7 @@ import java.lang.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "productOutput")
+@Table(name = "TBproductOutput")
 public class ProductOutput {
 
     @Id

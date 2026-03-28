@@ -8,7 +8,7 @@ import java.lang.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "fornecedor")
+@Table(name = "TBsupplier") 
 public class Supplier {
 
     public enum MeioPagamento {

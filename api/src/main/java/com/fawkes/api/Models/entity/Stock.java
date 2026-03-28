@@ -11,8 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "stock",
-       indexes = @Index(columnList = "productIdFk"),
+@Table(name = "TBstock",
        uniqueConstraints = {})
 public class Stock {
 
@@ -23,10 +22,6 @@ public class Stock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    private Product produto;
 
     @Column(name = "qtd_produtos", nullable = false)
     private Integer qtdProdutos;
@@ -39,6 +34,12 @@ public class Stock {
     @Column(name = "lastUpdate",
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime lastUpdate;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product produto;
+
 
     @PrePersist
     @PreUpdate
