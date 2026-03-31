@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.controller.LayoutController">
+
+   <center>
+      <ScrollPane fx:id="contentScrollPane" fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: #F7F7F7;" vbarPolicy="AS_NEEDED" BorderPane.alignment="CENTER">
+         <content>
+            <VBox alignment="TOP_CENTER" style="-fx-background-color: transparent;">
+               <children>
+
+                  <VBox fx:id="mainContent" maxWidth="1200.0" spacing="0.0" VBox.vgrow="ALWAYS">
+                     <children>
+
+                        <AnchorPane id="header" prefHeight="100.0">
+                           <children>
+                              <Label fx:id="pageName" layoutY="14.0" text="Página Tal" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="14.0">
+                                 <font>
+                                    <Font name="System Bold" size="27.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="pageDescription" layoutY="50.0" text="Descrição sobre o que o usuário vai encontrar nessa página." AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="50.0" />
+                           </children>
+                        </AnchorPane>
+
+                        <StackPane fx:id="contentWrapper" alignment="TOP_CENTER" style="-fx-background-color: #F7F7F7; -fx-padding: 10px 0px 0px 0px;" VBox.vgrow="ALWAYS">
+                           <children>
+                              <Label text="O conteúdo da página aparecerá aqui..." textFill="#9a9ea5" />
+                           </children>
+                        </StackPane>
+
+                     </children>
+                  </VBox>
+
+               </children>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </center>
+   <left>
+      <AnchorPane fx:id="sidebarContainer" maxWidth="250.0" prefHeight="200.0" prefWidth="250.0" BorderPane.alignment="CENTER">
+         <children>
+            <AnchorPane layoutX="64.0" layoutY="74.0" maxWidth="250.0" minWidth="250.0" prefHeight="720.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <AnchorPane layoutX="-62.0" layoutY="79.0" maxWidth="250.0" minWidth="250.0" prefHeight="640.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="80.0">
+                     <children>
+                        <VBox layoutY="25.0" prefHeight="218.0" prefWidth="230.0" spacing="3.0" style="-fx-padding: 0 10px 0 10px;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                           <children>
+                              <Button fx:id="btnDashboard" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#handleDashboardButton" prefHeight="39.0" prefWidth="250.0" styleClass="sidebar__button" text="Dashboard">
+                                 <graphic>
+                                    <ImageView fx:id="iconDashboard" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../img/icon-dashboard.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Button fx:id="btnHistory" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#handleHistoryButton" prefHeight="39.0" prefWidth="250.0" styleClass="sidebar__button" text="Atividade Recente">
+                                 <graphic>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../img/icon-history.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Button fx:id="btnEmployees" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#handleEmployeesButton" prefHeight="39.0" prefWidth="250.0" styleClass="sidebar__button" text="Funcionários">
+                                 <graphic>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../img/icon-employees.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Button fx:id="btnSuppliers" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#handleSuppliersButton" prefHeight="39.0" prefWidth="250.0" styleClass="sidebar__button" text="Fornecedores">
+                                 <graphic>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../img/icon-suppliers.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Button fx:id="btnStock" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#handleStockButton" prefHeight="39.0" prefWidth="250.0" styleClass="sidebar__button" text="Estoque">
+                                 <graphic>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../img/icon-stock.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="164.0" prefWidth="230.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                           <children>
+                              <VBox fx:id="userPane" alignment="CENTER" prefHeight="63.0" prefWidth="230.0">
+                                 <children>
+                                    <Separator fx:id="sidebarSeparator1" opacity="0.57" prefHeight="18.0" prefWidth="245.0" style="-fx-padding: 0 0 15px 0;" />
+                                    <Label id="userType" text="Administrador">
+                                       <font>
+                                          <Font name="System Italic" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Nome do Usuário">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Separator fx:id="sidebarSeparator2" opacity="0.57" prefWidth="250.0" style="-fx-padding: 15px 0 0 0;" />
+                                 </children>
+                              </VBox>
+                              <StackPane prefHeight="150.0" prefWidth="250.0" style="-fx-padding: 0 10px 0 10px;">
+                                 <children>
+                                    <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="36.0" prefWidth="352.0" styleClass="sidebar__button" text="Sair">
+                                       <graphic>
+                                          <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../img/icon-logout.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                 </children>
+                              </StackPane>
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="20.0" layoutY="20.0" prefHeight="66.0" prefWidth="230.0" style="-fx-padding: 10px 10px 0 10px;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <StackPane fx:id="menuBtnContainer" alignment="CENTER_RIGHT" prefHeight="66.0" prefWidth="231.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Button fx:id="btnToggle" maxWidth="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#handleToggleSidebar" prefHeight="30.0" prefWidth="30.0">
+                                 <graphic>
+                                    <ImageView fx:id="btnIcon" fitHeight="8.0" fitWidth="8.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../img/icon-test.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </StackPane>
+                        <ImageView fx:id="logoContainer" fitHeight="43.0" fitWidth="70.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+                           <image>
+                              <Image url="@../img/logo-sidebar.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+                  <Separator fx:id="sidebarSeparator" layoutY="77.0" opacity="0.57" prefWidth="250.0" />
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+   </left>
+</BorderPane>

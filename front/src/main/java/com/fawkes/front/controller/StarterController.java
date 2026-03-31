@@ -13,8 +13,4 @@ public class StarterController {
     protected void onHelloButtonClick() {
         welcomeText.setText("Welcome to JavaFX Application!");
     }
-
-    public static void main(String[] args) {
-        launch();
-    }
 }

@@ -1,0 +1,124 @@
+/* VARIÁVEIS */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Sofia+Sans+Condensed:ital,wght@0,1..1000;1,1..1000&display=swap');
+
+.root {
+    -fx-surface-0: #ffffff;
+    -fx-surface-50: #F7F8F9;
+    -fx-surface-100: #DADEE3;
+    -fx-surface-200: #BCC3CD;
+    -fx-surface-300: #9FA9B7;
+    -fx-surface-400: #818EA1;
+    -fx-surface-500: #64748B;
+    -fx-surface-600: #556376;
+    -fx-surface-700: #465161;
+    -fx-surface-800: #37404C;
+    -fx-surface-900: #282E38;
+    -fx-surface-1000: #000000;
+
+    -fx-primary-dark: #204AF4;
+    -fx-primary-light: #07B0F3;
+
+    -fx-font-family: "Poppins", sans-serif;
+}
+
+.label {
+    -fx-text-fill: -fx-surface-800;
+    -fx-font-family: "Montserrat", sans-serif;
+
+}
+
+.sidebar__button {
+    -fx-text-overrun: clip;
+    -fx-background-color: transparent;
+    -fx-font-size: 14px;
+    -fx-padding: 5px;
+    -fx-font-weight: 700;
+    -fx-graphic-text-gap: 13px;
+    -fx-text-fill: -fx-surface-600;
+}
+
+.sidebar__button:hover {
+    -fx-translate-x: 5px;
+    -fx-background-color: #e7ecef;
+}
+
+.sidebar__button--closed:hover {
+    -fx-translate-x: 0px;
+    -fx-translate-y: -3px;
+}
+
+
+
+
+#sidebarContainer {
+    -fx-background-color: -fx-surface-0;
+    -fx-font-family: "Montserrat", sans-serif;
+}
+
+#userName, #userType {
+    -fx-font-family: "Montserrat", sans-serif;
+}
+
+#userType {
+    -fx-font-weight: 900;
+    -fx-text-fill: -fx-primary-dark;
+}
+
+#btnToggle {
+    -fx-background-color: #e7ecef;
+    -fx-background-radius: 50%;
+}
+
+#btnToggle:hover {
+    -fx-background-color: #f1f5f8;
+}
+
+
+#pageName {
+    -fx-font-family: "Montserrat", sans-serif;
+    -fx-text-fill: -fx-surface-900;
+}
+
+#pageDescription {
+    -fx-text-fill: -fx-surface-900;
+}
+
+
+.button {
+    -fx-cursor: hand;
+}
+
+#header {
+    -fx-padding: 20px;
+    -fx-background-radius: 10px;
+}
+
+.pageContent {
+    -fx-padding: 0 0 0 20px;
+}
+
+.scroll-bar {
+    -fx-opacity: 1.0;
+}
+
+.scroll-bar .thumb {
+    -fx-opacity: 0.5;
+    -fx-background-color: #464c50;
+}
+
+.scroll-bar:vertical {
+    -fx-min-width: 10px;
+    -fx-pref-width: 10px;
+    -fx-max-width: 10px;
+    -fx-padding: 1;
+
+    -fx-background-color: #ffffff;
+}
+
+.scroll-bar:horizontal {
+    -fx-pref-height: 0.3em;
+}
+
+.sidebar__button--active {
+    -fx-text-fill: -fx-primary-dark;
+}
