@@ -1,0 +1,101 @@
+package com.fawkes.api.Services;
+
+import com.fawkes.api.Entities.*;
+import com.fawkes.api.Repositories.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+public class StockMovementService {
+
+    private final ProductStockRepository productStockRepository;
+    private final ProductInputsRepository productInputsRepository;
+    private final ProductOutputsRepository productOutputsRepository;
+    private final ProductsRepository productsRepository;
+    private final StockRepository stockRepository;
+
+    @Transactional
+    public ProductInputs registerInput(Long stockId, Long productId, Integer quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantidade de entrada deve ser maior que zero.");
+        }
+
+        Stock stock = stockRepository.findById(stockId)
+                .orElseThrow(() -> new RuntimeException("Estoque não encontrado: " + stockId));
+
+        Products product = productsRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + productId));
+
+        ProductStock productStock = productStockRepository.findByProductId(productId)
+                .orElseThrow(() -> new RuntimeException("Saldo do produto não encontrado: " + productId));
+
+        int novoSaldo = calcularSaldoEntrada(productStock, quantity);
+
+        productStock.setCurrentStockQuantity(novoSaldo);
+        productStockRepository.save(productStock);
+
+        ProductInputs input = new ProductInputs();
+        input.setStock(stock);
+        input.setProduct(product);
+        input.setQuantity(quantity);
+
+        return productInputsRepository.save(input);
+    }
+
+    @Transactional
+    public ProductOutputs registerOutput(Long stockId, Long productId, Integer quantity, Orders order) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantidade de saída deve ser maior que zero.");
+        }
+
+        Stock stock = stockRepository.findById(stockId)
+                .orElseThrow(() -> new RuntimeException("Estoque não encontrado: " + stockId));
+
+        Products product = productsRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + productId));
+
+        ProductStock productStock = productStockRepository.findByProductId(productId)
+                .orElseThrow(() -> new RuntimeException("Saldo do produto não encontrado: " + productId));
+
+        int novoSaldo = calcularSaldoSaida(productStock, quantity);
+
+        productStock.setCurrentStockQuantity(novoSaldo);
+        productStockRepository.save(productStock);
+
+        ProductOutputs output = new ProductOutputs();
+        output.setStock(stock);
+        output.setProduct(product);
+        output.setQuantity(quantity);
+        output.setOrder(order);
+
+        return productOutputsRepository.<ProductOutputs>save(output);
+    }
+
+    private int calcularSaldoEntrada(ProductStock productStock, int quantity) {
+        int novoSaldo = productStock.getCurrentStockQuantity() + quantity;
+        if (novoSaldo > productStock.getMaxStockQuantity()) {
+            throw new IllegalStateException(
+                    "Entrada excede o estoque máximo do produto. Máximo: "
+                            + productStock.getMaxStockQuantity()
+                            + ", Saldo atual: " + productStock.getCurrentStockQuantity()
+                            + ", Tentativa de entrada: " + quantity
+            );
+        }
+        return novoSaldo;
+    }
+
+    private int calcularSaldoSaida(ProductStock productStock, int quantity) {
+        int novoSaldo = productStock.getCurrentStockQuantity() - quantity;
+        if (novoSaldo < productStock.getMinStockQuantity()) {
+            throw new IllegalStateException(
+                    "Saída deixaria o estoque abaixo do mínimo do produto. Mínimo: "
+                            + productStock.getMinStockQuantity()
+                            + ", Saldo atual: " + productStock.getCurrentStockQuantity()
+                            + ", Tentativa de saída: " + quantity
+            );
+        }
+        return novoSaldo;
+    }
+}

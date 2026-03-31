@@ -12,11 +12,9 @@ import java.lang.*;
 @Entity
 @Table(name = "TBorders")
 public class Orders {
-
-    public enum Status {
+public enum Status {
         pendente, processando, concluido, cancelado
     }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

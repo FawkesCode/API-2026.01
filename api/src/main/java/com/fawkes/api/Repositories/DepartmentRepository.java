@@ -1,4 +1,4 @@
-package com.fawkes.api.Repository;
+package com.fawkes.api.Repositories;
 
 import com.fawkes.api.Entities.Departments;
 import org.springframework.data.jpa.repository.JpaRepository;

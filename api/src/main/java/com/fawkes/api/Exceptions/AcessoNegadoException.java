@@ -1,4 +1,4 @@
-package com.fawkes.api.exceptions;
+package com.fawkes.api.Exceptions;
 
 public class AcessoNegadoException extends RuntimeException {
     public AcessoNegadoException(String mensagem) {

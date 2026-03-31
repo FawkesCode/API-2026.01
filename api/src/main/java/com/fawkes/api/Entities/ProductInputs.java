@@ -1,3 +1,5 @@
+
+
 package com.fawkes.api.Entities;
 
 import jakarta.persistence.*;
@@ -8,8 +10,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "TB_product_output")
-public class ProductOutputs {
+@Table(name = "TB_product_input")
+public class ProductInputs {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,16 +28,11 @@ public class ProductOutputs {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @Column(name = "output_date", nullable = false)
-    private LocalDateTime outputDate;
-
-    // nullable → ON DELETE SET NULL
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id_fk", nullable = true)
-    private Orders order;
+    @Column(name = "input_date", nullable = false)
+    private LocalDateTime inputDate;
 
     @PrePersist
     protected void onCreate() {
-        outputDate = LocalDateTime.now();
+        inputDate = LocalDateTime.now();
     }
 }
