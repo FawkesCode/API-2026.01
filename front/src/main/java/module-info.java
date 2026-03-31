@@ -7,4 +7,6 @@ module com.fawkes.front {
     exports com.fawkes.front.controller;
     opens com.fawkes.front.controller to javafx.fxml;
     opens com.fawkes.front.utils to javafx.graphics, javafx.controls;
+    opens com.fawkes.front.view to javafx.fxml;
+
 }

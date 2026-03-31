@@ -6,6 +6,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.css.PseudoClass;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -20,6 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.HashMap;
@@ -50,8 +52,6 @@ public class LayoutController {
     @FXML private Button btnStock;
     @FXML private ImageView iconDashboard;
 
-    //private final PseudoClass activeClass = PseudoClass.getPseudoClass("active");
-
 
     private boolean isSidebarOpen = true;
     private final Image iconMenu = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/fawkes/front/img/menu-icon.png")));
@@ -59,15 +59,14 @@ public class LayoutController {
 
     private final Map<Button, String> navBtnLabels = new HashMap<>();
 
+    NavigationManager nm = new NavigationManager();
+
     @FXML
     public void initialize() {
-        NavigationManager.PageViewer.setCurPage("Dashboard", "Onde você e outros gerentes podem visualizar a situação das compras de forma rápida e simplificada.");
-        NavigationManager.navigateToPage(contentWrapper, "view/dashboard-page.fxml");
-        String name = NavigationManager.PageViewer.getCurPage();
-        String description = NavigationManager.PageViewer.getCurDescr();
+        nm.navigateToPage(contentWrapper, "view/dashboard-page.fxml", "Dashboard", "Onde você e outros gerentes podem visualizar a situação das compras de forma rápida e simplificada.");
 
-        pageName.setText(name);
-        pageDescription.setText(description);
+        pageName.textProperty().bind(nm.getCurrentPage());
+        pageDescription.textProperty().bind(nm.getCurrentPageDescription());
 
         btnIcon.setImage(iconClose);
 
@@ -76,12 +75,6 @@ public class LayoutController {
         sidebarSeparator1.maxWidthProperty().bind(sidebarContainer.widthProperty());
         sidebarSeparator2.maxWidthProperty().bind(sidebarContainer.widthProperty());
         updateActiveButton(btnDashboard);
-    }
-
-    public void setPageInfo(String name, String description) {
-        NavigationManager.PageViewer.setCurPage(name, description);
-        pageName.setText(name);
-        pageDescription.setText(description);
     }
 
     @FXML
@@ -165,36 +158,34 @@ public class LayoutController {
     }
 
     public void handleDashboardButton() {
-        NavigationManager.navigateToPage(contentWrapper, "view/dashboard-page.fxml");
-        setPageInfo("Dashboard", "Onde você e outros gerentes podem visualizar a situação das compras de forma rápida e simplificada.");
+        nm.navigateToPage(contentWrapper, "view/dashboard-page.fxml", "Dashboard", "Onde você e outros gerentes podem visualizar a situação das compras de forma rápida e simplificada.");
         updateActiveButton(btnDashboard);
     }
 
     public void handleHistoryButton() {
-        NavigationManager.navigateToPage(contentWrapper, "view/history-page.fxml");
-        setPageInfo("Atividade Recente", "Aqui é onde você e outros gerentes podem acessar e visualizar todas as alterações dentro do sistema.");
+        nm.navigateToPage(contentWrapper, "view/history-page.fxml", "Atividade Recente", "Aqui é onde você e outros gerentes podem acessar e visualizar todas as alterações dentro do sistema.");
         updateActiveButton(btnHistory);
     }
 
     public void handleEmployeesButton() {
-        NavigationManager.navigateToPage(contentWrapper, "view/employees-page.fxml");
-        setPageInfo("Funcionários", "Aqui é onde você e outros gerentes podem administrar os funcionários cadastrados na plataforma.");
+        nm.navigateToPage(contentWrapper, "view/employees-page.fxml", "Funcionários", "Aqui é onde você e outros gerentes podem administrar os funcionários cadastrados na plataforma.");
         updateActiveButton(btnEmployees);
     }
 
     public void handleSuppliersButton() {
-        NavigationManager.navigateToPage(contentWrapper, "view/suppliers-page.fxml");
-        setPageInfo("Fornecedores", "Aqui é onde você e outros gerentes podem administrar os fornecedores cadastrados na plataforma.");
+        nm.navigateToPage(contentWrapper, "view/suppliers-page.fxml", "Fornecedores", "Aqui é onde você e outros gerentes podem administrar os fornecedores cadastrados na plataforma.");
         updateActiveButton(btnSuppliers);
     }
 
     public void handleStockButton() {
-        NavigationManager.navigateToPage(contentWrapper, "view/stock-page.fxml");
-        setPageInfo("Estoque", "Onde você e os outros gerentes poderão ver e gerenciar os produtos estocados pela empresa.");
+        nm.navigateToPage(contentWrapper, "view/stock-page.fxml", "Estoque", "Onde você e os outros gerentes poderão ver e gerenciar os produtos estocados pela empresa.");
         updateActiveButton(btnStock);
     }
 
-
+    public void handleLogout(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        nm.navigateToLogin(stage);
+    }
 
 
 
