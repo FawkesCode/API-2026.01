@@ -4,8 +4,11 @@ import com.fawkes.front.MainApplication;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -30,6 +33,23 @@ public class NavigationManager {
             return curDescr;
         }
 
+    }
+
+    public void navigateToApp() {
+        try {
+            Stage appStage = new Stage();
+            FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("view/layout-page.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
+            appStage.setTitle("NEWE - We Logic");
+            appStage.setScene(scene);
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles/style.css")).toExternalForm());
+
+            Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("img/logo-icon.png")));
+            appStage.getIcons().add(icon);
+            appStage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

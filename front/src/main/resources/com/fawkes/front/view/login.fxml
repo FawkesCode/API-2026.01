@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane id="login__container" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.controller.LoginController">
+   <children>
+      <VBox alignment="TOP_CENTER" layoutX="83.0" layoutY="254.0" prefHeight="226.0" prefWidth="385.0" spacing="20.0">
+         <children>
+            <AnchorPane prefHeight="80.0" prefWidth="358.0">
+               <children>
+                  <Label layoutX="15.0" layoutY="14.0" styleClass="input__label--login" text="Email" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <TextField fx:id="emailField" layoutY="33.0" prefHeight="26.0" prefWidth="358.0" promptText="Digite seu email de acesso" styleClass="input__text--login" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+               </children></AnchorPane>
+            <AnchorPane prefHeight="80.0" prefWidth="358.0">
+               <children>
+                  <Label layoutX="15.0" layoutY="14.0" styleClass="input__label--login" text="Senha" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <PasswordField fx:id="passwordField" layoutY="25.0" promptText="Digite sua senha" styleClass="input__text--login" stylesheets="@../styles/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                  <ToggleButton id="login__password-toggle" fx:id="btnTogglePassword" layoutX="343.0" layoutY="44.0" mnemonicParsing="false">
+                     <graphic>
+                        <ImageView fx:id="btnToggleIcon" fitHeight="18.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../img/eye-open.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </ToggleButton>
+               </children>
+            </AnchorPane>
+         </children>
+      </VBox>
+      <ImageView fitHeight="119.0" fitWidth="130.0" layoutX="210.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/logo-login.png" />
+         </image>
+      </ImageView>
+      <Label id="login__title" alignment="CENTER" layoutY="145.0" prefHeight="18.0" prefWidth="600.0" text="Olá, Bem-vindo!" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <Label id="login__instructions" layoutX="131.0" layoutY="196.0" prefHeight="42.0" prefWidth="288.0" text="Preencha todas as informações abaixo para acessar a plataforma." textAlignment="CENTER" wrapText="true" />
+      <Label id="login__error" alignment="CENTER" layoutY="457.0" prefHeight="18.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <VBox alignment="CENTER" layoutX="1.0" layoutY="508.0" prefHeight="67.0" prefWidth="100.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="-1.0">
+         <children>
+            <JFXButton id="login__button" text="ENTRAR" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

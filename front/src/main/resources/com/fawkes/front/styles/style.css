@@ -17,6 +17,9 @@
 
     -fx-primary-dark: #204AF4;
     -fx-primary-light: #07B0F3;
+    -fx-primary-light-2: #2FB0F2;
+
+    -fx-error-color: #FF4A50;
 
     -fx-font-family: "Poppins", sans-serif;
 }
@@ -121,4 +124,67 @@
 
 .sidebar__button--active {
     -fx-text-fill: -fx-primary-dark;
+}
+
+
+
+/* LOGIN STYLES */
+
+#login__container {
+    -fx-background-color: -fx-surface-0;
+}
+
+#login__title {
+    -fx-font-size: 34px;
+    -fx-text-fill: -fx-primary-dark;
+    -fx-font-family: "Montserrat", sans-serif;
+    -fx-font-weight: 900;
+}
+
+#login__instructions {
+    -fx-text-fill: -fx-surface-700;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+}
+
+.input__label--login {
+    -fx-font-size: 16px;
+    -fx-text-fill: -fx-surface-600;
+    -fx-font-family: "Montserrat", sans-serif;
+    -fx-font-weight: 900;
+}
+
+.input__text--login {
+    -fx-border-color: -fx-surface-200;
+    -fx-border-style: solid;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 12px 10px;
+    -fx-prompt-text-fill: -fx-surface-300;
+    -fx-background-color: transparent;
+    -fx-font-size: 15px;
+    -fx-text-fill: -fx-surface-800;
+}
+
+.input__text--login:focused {
+    -fx-border-color: -fx-primary-light;
+    -fx-border-opacity: 0.5;
+}
+
+#login__button {
+    -fx-background-color: -fx-primary-light-2;
+    -fx-background-radius: 5px;
+    -fx-padding: 12px 38px;
+    -fx-text-fill: -fx-surface-0;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+}
+
+#login__error {
+    -fx-text-fill: -fx-error-color;
+}
+
+#login__password-toggle {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
 }
