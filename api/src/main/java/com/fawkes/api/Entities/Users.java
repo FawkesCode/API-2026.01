@@ -49,7 +49,7 @@ public class Users {
 
     @ManyToOne
     @JoinColumn(name ="groupID",nullable=false)
-    private Groups group;
+    private Group group;
 
     @ManyToOne
     @JoinColumn(name="departamentID",nullable=false)
