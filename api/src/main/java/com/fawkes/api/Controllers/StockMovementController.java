@@ -1,11 +1,16 @@
 package com.fawkes.api.Controllers;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.fawkes.api.Entities.ProductInputs;
 import com.fawkes.api.Entities.ProductOutputs;
 import com.fawkes.api.Services.StockMovementService;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/stock/movements")
@@ -14,7 +19,6 @@ public class StockMovementController {
 
     private final StockMovementService stockMovementService;
 
-    // POST /api/stock/movements/input?stockId=1&productId=2&quantity=50 exemplos de "paginação"
     @PostMapping("/input")
     public ResponseEntity<ProductInputs> registerInput(
             @RequestParam Long stockId,
@@ -25,7 +29,6 @@ public class StockMovementController {
         return ResponseEntity.ok(input);
     }
 
-    // POST /api/stock/movements/output?stockId=1&productId=2&quantity=10&orderId=5 exemplos de "paginação"
     @PostMapping("/output")
     public ResponseEntity<ProductOutputs> registerOutput(
             @RequestParam Long stockId,
@@ -33,7 +36,6 @@ public class StockMovementController {
             @RequestParam Integer quantity,
             @RequestParam(required = false) Long orderId) {
 
-        // order pode ser null — buscar na service se necessário
         ProductOutputs output = stockMovementService.registerOutput(stockId, productId, quantity, null);
         return ResponseEntity.ok(output);
     }

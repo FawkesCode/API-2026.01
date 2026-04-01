@@ -8,7 +8,6 @@ import com.fawkes.api.Entities.Users;
 @Repository
 public interface UserRepository extends JpaRepository<Users, Long> {
 
-
     boolean existsByUserMail(String userMail);
 
     boolean existsByUserName(String userName);
