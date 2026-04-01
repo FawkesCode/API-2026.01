@@ -1,5 +1,4 @@
-package com.fawkes.api.Service;
-import java.util.Optional;
+package com.fawkes.api.Services;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,6 +8,9 @@ import com.fawkes.api.Entities.Departments;
 import com.fawkes.api.Entities.Group;
 import com.fawkes.api.Entities.Users;
 import com.fawkes.api.Repositories.UserRepository;
+
+import jakarta.transaction.Transactional;
+
 import com.fawkes.api.Repositories.GroupRepository;
 import com.fawkes.api.Repositories.DepartmentRepository;
 
@@ -21,8 +23,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final GroupRepository groupRepository;
     private final DepartmentRepository departmentRepository;
-    private String userMail;
-
+  
 
     public UserService (
         UserRepository userRepository,
@@ -35,24 +36,30 @@ public class UserService {
         this.passwordEncoder = new BCryptPasswordEncoder();
         
     }
-    public boolean findExistentMail(){
-        
-    Optional<Users> userMailConfirm = userRepository.findByUserMail(this.userMail);
+    public boolean findExistentMail(String userMail) {
 
-    if (userMailConfirm.isPresent()){
-        return true;
-    }
-    return false;
-        
+    return userRepository.existsByUserMail(userMail);
+
     }
 
+    public boolean findExistentName(String userName){
+
+        return userRepository.existsByUserName(userName);
+    }
+
+    @Transactional
     public Users InsertUser( String userName,
         String userMail,
         Integer groupID,
         Integer departamentID,
         String password){
 
-        this.userMail = userMail;
+        if(findExistentMail(userMail)){
+            throw new RuntimeException("Este email já foi cadastrado");}
+
+        if(findExistentName(userName)){
+
+            throw new RuntimeException ("Este nome de usuário ja foi cadastrado!");}
 
         Group group = groupRepository.findById(Long.valueOf(groupID))
         .orElseThrow(() -> new RuntimeException("Grupo não encontrado"));
@@ -60,13 +67,8 @@ public class UserService {
         Departments dept = departmentRepository.findById(Long.valueOf(departamentID))
         .orElseThrow(() -> new RuntimeException("Departamento não encontrado"));
 
+
        
-
-
-
-        if(findExistentMail()){
-            throw new RuntimeException("Este email já exite");
-        }
         Users user = new Users();
 
         user.setUserName(userName);
