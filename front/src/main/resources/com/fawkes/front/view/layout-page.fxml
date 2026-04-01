@@ -124,7 +124,7 @@
                               </VBox>
                               <StackPane prefHeight="150.0" prefWidth="250.0" style="-fx-padding: 0 10px 0 10px;">
                                  <children>
-                                    <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="36.0" prefWidth="352.0" styleClass="sidebar__button" text="Sair">
+                                    <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#handleLogout" prefHeight="36.0" prefWidth="352.0" styleClass="sidebar__button" text="Sair">
                                        <graphic>
                                           <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
