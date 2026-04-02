@@ -24,5 +24,6 @@
             <AnchorPane maxWidth="-Infinity" minHeight="-Infinity" prefHeight="150.0" prefWidth="900.0" style="-fx-background-color: red;" />
          </children>
       </VBox>
+      <AnchorPane maxWidth="-Infinity" minHeight="-Infinity" prefHeight="238.0" prefWidth="206.0" style="-fx-background-color: red;" />
    </children>
 </VBox>
