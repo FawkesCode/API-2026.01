@@ -1,28 +1,4 @@
-/* VARIÁVEIS */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Sofia+Sans+Condensed:ital,wght@0,1..1000;1,1..1000&display=swap');
-
-.root {
-    -fx-surface-0: #ffffff;
-    -fx-surface-50: #F7F8F9;
-    -fx-surface-100: #DADEE3;
-    -fx-surface-200: #BCC3CD;
-    -fx-surface-300: #9FA9B7;
-    -fx-surface-400: #818EA1;
-    -fx-surface-500: #64748B;
-    -fx-surface-600: #556376;
-    -fx-surface-700: #465161;
-    -fx-surface-800: #37404C;
-    -fx-surface-900: #282E38;
-    -fx-surface-1000: #000000;
-
-    -fx-primary-dark: #204AF4;
-    -fx-primary-light: #07B0F3;
-    -fx-primary-light-2: #2FB0F2;
-
-    -fx-error-color: #FF4A50;
-
-    -fx-font-family: "Poppins", sans-serif;
-}
+@import "variables.css";
 
 .label {
     -fx-text-fill: -fx-surface-800;

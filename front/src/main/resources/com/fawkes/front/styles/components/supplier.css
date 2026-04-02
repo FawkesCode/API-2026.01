@@ -1,0 +1,20 @@
+@import "./components-shared-styles.css";
+
+
+.supplier {
+    -fx-padding: 15px;
+    -fx-background-color: -fx-surface-0;
+}
+
+.suppiler__name {
+    -fx-font-family: "Montserrat", sans-serif;
+    -fx-font-size: 24px;
+    -fx-text-fill: -fx-surface-800;
+    -fx-font-weight: 900;
+}
+
+.supplier__signed {
+    -fx-font-family: "Sofia Sans Condensed", sans-serif;
+    -fx-text-fill: -fx-surface-300;
+    -fx-font-size: 14px;
+}

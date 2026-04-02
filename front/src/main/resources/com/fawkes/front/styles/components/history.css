@@ -1,0 +1,29 @@
+@import "./components-shared-styles.css";
+
+.log {
+    -fx-background-color: -fx-surface-0;
+    -fx-padding: 10px;
+}
+
+.log__type {
+    -fx-font-weight: 700;
+    -fx-text-fill: -fx-surface-400;
+    -fx-font-size: 14px;
+}
+
+.log__owner, .log__date {
+    -fx-font-family: "Montserrat", sans-serif;
+    -fx-font-size: 24px;
+    -fx-text-fill: -fx-surface-800;
+    -fx-font-weight: 900;
+}
+
+.log__date {
+    -fx-font-size: 18px;
+}
+
+.log__description {
+    -fx-font-family: "Sofia Sans Condensed", sans-serif;
+    -fx-text-fill: -fx-surface-300;
+    -fx-font-size: 14px;
+}
