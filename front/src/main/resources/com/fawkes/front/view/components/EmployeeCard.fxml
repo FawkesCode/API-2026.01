@@ -8,14 +8,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="255.0" styleClass="employee" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="255.0" styleClass="container" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox layoutX="32.0" prefHeight="52.0" prefWidth="255.0" spacing="5.0" style="-fx-padding: 5px 10px;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <AnchorPane prefHeight="22.0" prefWidth="255.0">
                <children>
-                  <Label fx:id="status" layoutY="2.0" styleClass="employee__status" text="● Ativo" AnchorPane.leftAnchor="0.0" />
-                  <Button layoutX="210.4" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="24.0" styleClass="employee__edit" AnchorPane.rightAnchor="0.0">
+                  <Label fx:id="status" layoutY="2.0" styleClass="status-label" text="● Ativo" AnchorPane.leftAnchor="0.0" />
+                  <Button layoutX="210.4" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="24.0" styleClass="btn-edit" AnchorPane.rightAnchor="0.0">
                      <graphic>
                         <ImageView fitHeight="14.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                            <image>

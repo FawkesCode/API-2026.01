@@ -1,13 +1,5 @@
 @import "../variables.css";
-
-.employee {
-    -fx-background-color: -fx-card-background;
-    -fx-border-color: -fx-surface-100;
-    -fx-border-style: solid;
-    -fx-border-radius: 10px;
-    -fx-background-radius: 10px;
-
-}
+@import "./components-shared-styles.css";
 
 .employee__status {
     -fx-font-size: 11px;

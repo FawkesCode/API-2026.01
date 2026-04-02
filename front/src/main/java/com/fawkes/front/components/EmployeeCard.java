@@ -30,6 +30,7 @@ public class EmployeeCard extends AnchorPane {
 
         try {
             fxmlLoader.load();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -37,12 +38,15 @@ public class EmployeeCard extends AnchorPane {
 
     public void setData(Employee employee) {
         this.name.setText(employee.getName());
+        name.setText(name.getText().toUpperCase());
         this.email.setText(employee.getEmail());
         this.picture.setImage(employee.getPicture());
-        this.status.setText(employee.getStatus());
+        this.status.setText("● "+employee.getStatus());
         this.position.setText(employee.getPosition());
-        this.department.setText(employee.getDepartment());
-        this.signed.setText(employee.getSigned());
+        position.setText(position.getText().toUpperCase());
+        this.department.setText("SETOR | "+employee.getDepartment());
+        department.setText(department.getText().toUpperCase());
+        this.signed.setText("Cadastrado em "+ employee.getSigned());
     }
 
 

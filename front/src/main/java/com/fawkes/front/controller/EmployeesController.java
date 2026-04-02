@@ -17,7 +17,7 @@ public class EmployeesController {
     public void initialize() {
 
         Image picture = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/fawkes/front/img/menu-icon.png")));
-        Employee data = new Employee("Ativo", "DEPARTAMENTO", picture, "CARGO", "FULANO", "fulano@gmail.com", "Cadastrado em raiva");
+        Employee data = new Employee("Ativo", "Departamento", picture, "Cargo", "fulano", "fulano@gmail.com", "raiva");
         EmployeeCard card = new EmployeeCard();
         card.setData(data);
         employeesContainer.getChildren().add(card);
