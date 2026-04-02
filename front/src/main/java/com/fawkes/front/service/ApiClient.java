@@ -15,7 +15,7 @@ public class ApiClient {
     private static final String BASE_URL = "http://localhost:8080";
 
     private static final String USERNAME = "user";
-    private static final String PASSWORD = //"senha spring boot";
+    private static final String PASSWORD = "563a12bb-093b-4843-9cbb-96f660e6474b";
 
     private static final HttpClient client = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(5))
