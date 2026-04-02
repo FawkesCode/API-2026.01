@@ -6,6 +6,11 @@
     -fx-border-style: solid;
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
+    -fx-cursor: hand;
+}
+
+.container:hover {
+    -fx-translate-x: 2px;
 }
 
 .status-label {
@@ -25,4 +30,8 @@
     -fx-border-color: -fx-surface-200;
     -fx-border-radius: 5px;
     -fx-text-fill: -fx-surface-0;
+}
+
+.btn-edit:hover {
+    -fx-translate-y: 2px;
 }

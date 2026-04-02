@@ -1,38 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.String?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="125.0" prefWidth="900.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="107.0" prefWidth="900.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <VBox alignment="CENTER_LEFT" layoutY="-50.0" prefHeight="150.0" prefWidth="473.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <VBox alignment="CENTER_LEFT" layoutY="-50.0" prefHeight="150.0" prefWidth="473.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <Label fx:id="status" styleClass="status-label" text="● Ativo" />
-                <Label styleClass="suppiler__name" text="Nome do Fornecedor" />
-                <Label styleClass="supplier__signed" text="Cadastrado em 19 de Mar. 2026" />
+                <Label styleClass="log__type" text="Edição - Funcionário" />
+            <Label styleClass="log__owner" text="Nome do Funcionário" />
+                <Label prefHeight="18.0" prefWidth="473.0" styleClass="log__description" text="Descrição do que foi alterado" />
             </children>
         </VBox>
-        <VBox alignment="CENTER" layoutX="536.0" layoutY="-50.0" prefHeight="150.0" prefWidth="77.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <children>
-                <Button maxHeight="34.0" maxWidth="34.0" minHeight="34.0" minWidth="34.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="34.0" styleClass="btn-edit">
-                    <graphic>
-                        <ImageView fitHeight="23.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@../../img/edit-icon.png" />
-                            </image>
-                        </ImageView>
-                    </graphic>
-                </Button>
-            </children>
-        </VBox>
+      <VBox alignment="CENTER" layoutX="614.0" layoutY="-47.0" prefHeight="107.0" prefWidth="141.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+                <Label fx:id="status" styleClass="log__date" text="24/05/2026" />
+         </children>
+      </VBox>
     </children>
     <styleClass>
         <String fx:value="container" />
-        <String fx:value="supplier" />
+        <String fx:value="log" />
     </styleClass>
 </fx:root>
