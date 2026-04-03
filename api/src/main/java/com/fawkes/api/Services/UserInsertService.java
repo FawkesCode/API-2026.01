@@ -17,7 +17,7 @@ import com.fawkes.api.Repositories.DepartmentRepository;
 
 
 @Service
-public class UserService {
+public class UserInsertService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -25,7 +25,7 @@ public class UserService {
     private final DepartmentRepository departmentRepository;
   
 
-    public UserService (
+    public UserInsertService (
         UserRepository userRepository,
         GroupRepository groupRepository,
         DepartmentRepository departmentRepository
