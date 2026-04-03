@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import java.lang.String?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
@@ -10,19 +11,27 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="login__container" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.controller.LoginController">
+<AnchorPane id="login__container" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.controller.LoginController">
    <children>
       <VBox alignment="TOP_CENTER" layoutX="83.0" layoutY="254.0" prefHeight="226.0" prefWidth="385.0" spacing="20.0">
          <children>
             <AnchorPane prefHeight="80.0" prefWidth="358.0">
                <children>
                   <Label layoutX="15.0" layoutY="14.0" styleClass="input__label--login" text="Email" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                  <TextField fx:id="emailField" layoutY="33.0" prefHeight="26.0" prefWidth="358.0" promptText="Digite seu email de acesso" styleClass="input__text--login" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                  <TextField fx:id="emailField" layoutY="33.0" prefHeight="26.0" prefWidth="358.0" promptText="Digite seu email de acesso" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <styleClass>
+                        <String fx:value="input__text--login" />
+                        <String fx:value="input__text" />
+                     </styleClass></TextField>
                </children></AnchorPane>
             <AnchorPane prefHeight="80.0" prefWidth="358.0">
                <children>
                   <Label layoutX="15.0" layoutY="14.0" styleClass="input__label--login" text="Senha" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                  <PasswordField fx:id="passwordField" layoutY="25.0" promptText="Digite sua senha" styleClass="input__text--login" stylesheets="@../styles/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                  <PasswordField fx:id="passwordField" layoutY="25.0" promptText="Digite sua senha" stylesheets="@../styles/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <styleClass>
+                        <String fx:value="input__text--login" />
+                        <String fx:value="input__text" />
+                     </styleClass></PasswordField>
                   <ToggleButton id="login__password-toggle" fx:id="btnTogglePassword" layoutX="343.0" layoutY="44.0" mnemonicParsing="false">
                      <graphic>
                         <ImageView fx:id="btnToggleIcon" fitHeight="18.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">

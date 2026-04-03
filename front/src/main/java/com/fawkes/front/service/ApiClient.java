@@ -15,7 +15,7 @@ public class ApiClient {
     private static final String BASE_URL = "http://localhost:8080";
 
     private static final String USERNAME = "user";
-    private static final String PASSWORD = "563a12bb-093b-4843-9cbb-96f660e6474b";
+    private static final String PASSWORD = "6bd3d9b3-9c42-4e0c-b0bf-6e702ab1b0c2";
 
     private static final HttpClient client = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(5))

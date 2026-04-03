@@ -1,55 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 
-<VBox fx:id="pageContent" maxWidth="1200.0" minWidth="800.0" prefHeight="720.0"
-      styleClass="pageContent" spacing="16"
-      xmlns="http://javafx.com/javafx/21"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.fawkes.front.controller.EmployeePageController">
+<?import com.jfoenix.controls.JFXButton?>
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="pageContent" maxWidth="1200.0" minWidth="800.0" prefHeight="720.0" spacing="16" styleClass="pageContent" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.controller.EmployeePageController">
 
    <HBox alignment="CENTER_LEFT" spacing="12">
-      <TextField fx:id="searchField" promptText="Buscar funcionario..." prefWidth="260" onKeyReleased="#handleSearch"/>
-      <Region HBox.hgrow="ALWAYS"/>
-      <Button text="+ Novo Funcionario" styleClass="btn-primary" onAction="#handleOpenAddDialog"/>
-      <Button text="Atualizar" onAction="#loadEmployees"/>
+      <Label styleClass="label-status" text="Ativos">
+         <graphic>
+            <Label styleClass="label-status--active" text="●" />
+         </graphic>
+      </Label>
+      <Label styleClass="label-status" text="Inativos">
+         <graphic>
+            <Label styleClass="label-status--inactive" text="●" />
+         </graphic>
+      </Label>
+      <Region prefHeight="26.0" prefWidth="298.0" HBox.hgrow="ALWAYS" />
+      <TextField fx:id="searchField" onKeyReleased="#handleSearch" prefHeight="26.0" prefWidth="280.0" promptText="Buscar funcionario...">
+         <styleClass>
+            <String fx:value="input__text" />
+            <String fx:value="input__text--search" />
+         </styleClass></TextField>
+      <JFXButton onAction="#handleOpenAddDialog" styleClass="btn--primary" text="Novo Funcionário">
+         <graphic>
+            <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img/add-icon.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </JFXButton>
+      <Button onAction="#loadEmployees" styleClass="btn--refresh" text="Atualizar">
+         <graphic>
+            <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img/refresh-icon.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
    </HBox>
 
    <TableView fx:id="employeeTable" VBox.vgrow="ALWAYS">
       <columns>
-         <TableColumn fx:id="colId"       text="ID"          prefWidth="60"/>
-         <TableColumn fx:id="colNome"     text="Nome"        prefWidth="200"/>
-         <TableColumn fx:id="colEmail"    text="Email"       prefWidth="220"/>
-         <TableColumn fx:id="colAtivo"    text="Ativo"       prefWidth="80"/>
-         <TableColumn fx:id="colGrupo"    text="Grupo"       prefWidth="120"/>
-         <TableColumn fx:id="colDepto"    text="Departamento" prefWidth="150"/>
-         <TableColumn fx:id="colAcoes"    text="Acoes"       prefWidth="100"/>
+         <TableColumn fx:id="colId" prefWidth="60" text="ID" />
+         <TableColumn fx:id="colNome" prefWidth="200" text="Nome" />
+         <TableColumn fx:id="colEmail" prefWidth="220" text="Email" />
+         <TableColumn fx:id="colAtivo" prefWidth="80" text="Ativo" />
+         <TableColumn fx:id="colGrupo" prefWidth="120" text="Grupo" />
+         <TableColumn fx:id="colDepto" prefWidth="150" text="Departamento" />
+         <TableColumn fx:id="colAcoes" prefWidth="100" text="Acoes" />
       </columns>
       <placeholder>
-         <Label text="Nenhum funcionario cadastrado."/>
+         <Label text="Nenhum funcionario cadastrado." />
       </placeholder>
    </TableView>
 
-   <Label fx:id="statusLabel" text=""/>
+   <Label fx:id="statusLabel" text="" />
 
-   <VBox fx:id="addDialog" visible="false" managed="false"
-         style="-fx-background-color: white; -fx-border-color: #DADEE3; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);"
-         maxWidth="400" spacing="12">
-      <Label text="Novo Funcionario" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-      <Label text="Nome de usuario:"/>
-      <TextField fx:id="fieldUsername" promptText="usuario123"/>
-      <Label text="Email:"/>
-      <TextField fx:id="fieldEmail" promptText="email@empresa.com"/>
-      <Label text="Senha:"/>
-      <PasswordField fx:id="fieldPassword"/>
-      <Label text="ID do Grupo:"/>
-      <TextField fx:id="fieldGroupId" promptText="Ex: 1"/>
-      <Label text="ID do Departamento:"/>
-      <TextField fx:id="fieldDeptId" promptText="Ex: 1"/>
-      <Label fx:id="addErrorLabel" text="" style="-fx-text-fill: #FF4A50;"/>
-      <HBox spacing="10" alignment="CENTER_RIGHT">
-         <Button text="Cancelar" onAction="#handleCloseAddDialog"/>
-         <Button text="Cadastrar" styleClass="btn-primary" onAction="#handleConfirmAdd"/>
+   <VBox fx:id="addDialog" managed="false" maxWidth="400" spacing="12" style="-fx-background-color: white; -fx-border-color: #DADEE3; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);" visible="false">
+      <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Novo Funcionario" />
+      <Label text="Nome de usuario:" />
+      <TextField fx:id="fieldUsername" promptText="usuario123" />
+      <Label text="Email:" />
+      <TextField fx:id="fieldEmail" promptText="email@empresa.com" />
+      <Label text="Senha:" />
+      <PasswordField fx:id="fieldPassword" />
+      <Label text="ID do Grupo:" />
+      <TextField fx:id="fieldGroupId" promptText="Ex: 1" />
+      <Label text="ID do Departamento:" />
+      <TextField fx:id="fieldDeptId" promptText="Ex: 1" />
+      <Label fx:id="addErrorLabel" style="-fx-text-fill: #FF4A50;" text="" />
+      <HBox alignment="CENTER_RIGHT" spacing="10">
+         <Button onAction="#handleCloseAddDialog" text="Cancelar" />
+         <Button onAction="#handleConfirmAdd" styleClass="btn-primary" text="Cadastrar" />
       </HBox>
    </VBox>
 
