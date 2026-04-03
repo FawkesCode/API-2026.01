@@ -1,6 +1,9 @@
 module com.fawkes.front {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.net.http;
+    requires com.fasterxml.jackson.databind;
+    requires com.jfoenix;
 
     opens com.fawkes.front to javafx.fxml;
     exports com.fawkes.front;
