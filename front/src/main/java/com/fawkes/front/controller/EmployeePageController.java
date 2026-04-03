@@ -2,12 +2,18 @@ package com.fawkes.front.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fawkes.front.service.ApiClient;
+import com.fawkes.front.utils.ModalManager;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+
+import java.io.IOException;
+import java.util.Objects;
 
 public class EmployeePageController {
 
@@ -100,12 +106,14 @@ public class EmployeePageController {
     }
 
     @FXML
-    public void handleOpenAddDialog() {
-        fieldUsername.clear(); fieldEmail.clear();
-        fieldPassword.clear(); fieldGroupId.clear(); fieldDeptId.clear();
-        addErrorLabel.setText("");
-        addDialog.setVisible(true);
-        addDialog.setManaged(true);
+    public void handleOpenAddDialog() throws IOException {
+        //fieldUsername.clear(); fieldEmail.clear();
+        //fieldPassword.clear(); fieldGroupId.clear(); fieldDeptId.clear();
+        //addErrorLabel.setText("");
+        //addDialog.setVisible(true);
+        //addDialog.setManaged(true);
+        Parent formulario = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/fawkes/front/view/forms/new-employee-form.fxml")));
+        ModalManager.openModal(formulario, "Cadastrar Funcionário");
     }
 
     @FXML

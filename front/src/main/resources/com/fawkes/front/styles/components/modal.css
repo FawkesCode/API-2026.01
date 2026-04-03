@@ -1,0 +1,22 @@
+@import "../variables.css";
+
+.modal {
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 5);
+}
+
+.modal__title {
+    -fx-font-size: 18px;
+    -fx-font-family: "Sofia Sans Condensed", sans-serif;
+    -fx-text-fill: #37404C;
+    -fx-font-weight: 1000;
+}
+
+.modal__message {
+    -fx-text-fill: #BCC3CD;
+}
+
+.modal__close {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
