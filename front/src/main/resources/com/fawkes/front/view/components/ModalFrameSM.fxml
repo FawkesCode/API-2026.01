@@ -15,7 +15,7 @@
             <children>
                 <HBox alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="285.0" AnchorPane.rightAnchor="0.0">
                     <children>
-                        <Label prefHeight="18.0" prefWidth="234.0" styleClass="modal__message" text="Os campos com (*) são obrigatórios." />
+                        <Label fx:id="instructions" prefHeight="18.0" prefWidth="234.0" styleClass="modal__message" text="Os campos com (*) são obrigatórios." />
                         <Button mnemonicParsing="false" onAction="#closeModal" styleClass="modal__close">
                             <graphic>
                                 <ImageView fitHeight="9.0" fitWidth="10.0" pickOnBounds="true" preserveRatio="true">

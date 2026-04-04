@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 public class ModalFrameController {
     @FXML private Label modalTitle;
     @FXML private StackPane modalContent;
+    @FXML private Label instructions;
 
     public void setModalTitle(String title) {
         modalTitle.setText(title);
@@ -17,6 +18,14 @@ public class ModalFrameController {
 
     public void setContent(Node node) {
         modalContent.getChildren().setAll(node);
+    }
+
+    public void visibleInstructions() {
+        instructions.setVisible(true);
+    }
+
+    public void invisibleInstructions() {
+        instructions.setVisible(false);
     }
 
     @FXML

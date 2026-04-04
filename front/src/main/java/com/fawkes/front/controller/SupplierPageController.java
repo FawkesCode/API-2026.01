@@ -112,7 +112,7 @@ public class SupplierPageController {
         //addDialog.setManaged(true);
         Parent formulario = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/fawkes/front/view/forms/new-supplier-form.fxml")));
         Stage curStage = ((Stage) btnNewSupplier.getScene().getWindow());
-        ModalManager.openModal(curStage, formulario, "Cadastrar Fornecedor", 600, 400, "ModalFrameSM.fxml");
+        ModalManager.openModal(curStage, formulario, "Cadastrar Fornecedor", 600, 400, "ModalFrameSM.fxml", true); // OBS: Esses são o mesmo parâmetro para o modal de visualizar item no estoque
     }
 
     @FXML

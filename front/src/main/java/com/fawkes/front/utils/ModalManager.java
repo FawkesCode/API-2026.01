@@ -19,10 +19,10 @@ import java.util.Objects;
 public class ModalManager {
 
     public static void openModal(Stage curStage, Parent specificContent, String title) {
-        openModal(curStage, specificContent, title, 800.0, 400.0, "ModalFrame.fxml");
+        openModal(curStage, specificContent, title, 800.0, 400.0, "ModalFrame.fxml", true);
     }
 
-    public static void openModal(Stage curStage, Parent specificContent, String title, double width, double height, String modalFXML) {
+    public static void openModal(Stage curStage, Parent specificContent, String title, double width, double height, String modalFXML, boolean hasInstructions) {
         Stage overlayStage = new Stage();
 
         overlayStage.initModality(Modality.APPLICATION_MODAL);
@@ -36,6 +36,12 @@ public class ModalManager {
             ModalFrameController controller = loader.getController();
             controller.setContent(specificContent);
             controller.setModalTitle(title);
+
+            if (hasInstructions) {
+                controller.visibleInstructions();
+            } else {
+                controller.invisibleInstructions();
+            }
 
             StackPane backdrop = new StackPane();
             backdrop.setStyle("-fx-background-color: rgba(0, 0, 0, 0.2);");

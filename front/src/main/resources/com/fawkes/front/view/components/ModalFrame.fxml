@@ -9,14 +9,13 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" style="-fx-background-radius: 8px; -fx-padding: 10px;" styleClass="modal" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.components.ModalFrameController">
    <children>
       <AnchorPane prefHeight="26.0" prefWidth="779.0">
          <children>
             <HBox alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="285.0" AnchorPane.rightAnchor="0.0">
                <children>
-                  <Label prefHeight="18.0" prefWidth="234.0" styleClass="modal__message" text="Os campos com (*) são obrigatórios." />
+                  <Label fx:id="instructions" prefHeight="18.0" prefWidth="234.0" styleClass="modal__message" text="Os campos com (*) são obrigatórios." />
                   <Button mnemonicParsing="false" onAction="#closeModal" styleClass="modal__close">
                      <graphic>
                         <ImageView fitHeight="9.0" fitWidth="10.0" pickOnBounds="true" preserveRatio="true">

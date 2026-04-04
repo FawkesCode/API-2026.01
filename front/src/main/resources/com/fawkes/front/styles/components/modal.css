@@ -70,3 +70,8 @@
 .input__label--error {
     -fx-text-fill: -fx-error-color;
 }
+
+.input__label--desc {
+    -fx-text-fill: -fx-surface-400;
+    -fx-font-size: 14px;
+}
