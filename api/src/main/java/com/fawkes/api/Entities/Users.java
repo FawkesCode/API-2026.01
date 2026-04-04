@@ -1,23 +1,21 @@
 package com.fawkes.api.Entities;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-
+import static java.util.stream.Collectors.toList;
 
 
 @Data
@@ -26,6 +24,20 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "TBusers")
 public class Users {
+
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated (EnumType.STRING)
+    @Column(name = "role")
+    private Set<Roles> roles = new HashSet<>();
+
+
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream().map(r -> new SimpleGrantedAuthority(r.name()))
+                    .toList();
+    }
+
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,6 +68,7 @@ public class Users {
     private Departments departments;
 
 
+    public void setRoles(Set<Roles> role) {
 
-
+    }
 }

@@ -3,6 +3,7 @@ package com.fawkes.api.Controllers;
 import com.fawkes.api.DTOs.Request.LoginRequest;
 import com.fawkes.api.DTOs.Request.SignUpRequest;
 import com.fawkes.api.DTOs.Response.LoginResponse;
+import com.fawkes.api.Entities.Roles;
 import com.fawkes.api.Entities.Users;
 import com.fawkes.api.Services.UserLoginService;
 import com.fawkes.api.Services.UserService;
@@ -11,6 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.management.relation.Role;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/auth")
@@ -27,6 +31,7 @@ public class AuthController {
         String token = userLoginService.loginUser(loginRequest.email(), loginRequest.password());
         return ResponseEntity.ok(new LoginResponse(token));
     }
+
     @PostMapping("/register")
     public ResponseEntity<String> register(@Valid @RequestBody SignUpRequest signUpRequest) {
         Users user = userService.registerUser(
@@ -35,9 +40,12 @@ public class AuthController {
                 signUpRequest.getPassword(),
                 signUpRequest.getRole()
         );
+        if (signUpRequest.getRole() != null) {
+            user.setRoles(Set.of(signUpRequest.getRole()));
+        } else {
+            user.setRoles(Set.of(Roles.MANAGER));
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body("Usuário criado com sucesso: " + user.getUserMail());
     }
-
-
-
 }

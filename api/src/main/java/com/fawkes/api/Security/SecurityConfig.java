@@ -39,6 +39,9 @@ public class SecurityConfig {
                         // Health check
                         .requestMatchers("/actuator/health").permitAll()
                         // TUDO que não foi listado acima → exige autenticação
+                        .requestMatchers("/manager/**").hasRole("MANAGER")
+                        .requestMatchers("/operational/**").hasRole("OPERATIONAL")
+                        .requestMatchers("/director/**").hasRole("DIRECTOR")
                         .anyRequest().authenticated()
                 )
                 // Pra quem sabe ExpressJS, isso aqui é basicamente o Middleware
