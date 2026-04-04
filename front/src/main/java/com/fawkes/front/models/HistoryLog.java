@@ -2,14 +2,11 @@ package com.fawkes.front.models;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-/*
- Representa uma entrada do histórico de movimentações de estoque.
- Espelha ProductInputs / ProductOutputs do back-end.
-
- ATENÇÃO: ajuste os nomes dos campos conforme o JSON real retornado
- pelo endpoint de histórico quando ele for implementado no back.
+/**
+ * Representa uma entrada do histórico unificado de movimentações.
+ * Espelha o ActivityDTO do back-end.
+ * Campos: id, type, productName, quantity, date.
  */
-
 public class HistoryLog {
 
     public enum MovementType { ENTRADA, SAIDA }
@@ -19,7 +16,7 @@ public class HistoryLog {
     private String productName;
     private Integer quantity;
     private String date;
-    private String responsible;
+    private String responsible; // reservado para uso futuro
 
     public HistoryLog() {}
 
@@ -33,29 +30,66 @@ public class HistoryLog {
         this.responsible = responsible;
     }
 
-    public static HistoryLog fromJson(JsonNode node, MovementType type) {
+    /**
+     * Lê o JSON retornado pelo endpoint GET /api/stock/movements/activity.
+     * Campos esperados: id, type ("ENTRADA"/"SAIDA"), productName, quantity, date.
+     * O parâmetro movType é ignorado — o tipo vem do campo "type" do JSON.
+     */
+    public static HistoryLog fromJson(JsonNode node, MovementType movType) {
         Long id = node.path("id").asLong();
-        String productName = node.path("product").path("productName")
-                .asText(node.path("productName").asText("-"));
+
+        // tipo vem do JSON (ActivityDTO.type), fallback para o parâmetro
+        String typeStr = node.path("type").asText("");
+        MovementType type = "SAIDA".equals(typeStr) ? MovementType.SAIDA
+                : "ENTRADA".equals(typeStr) ? MovementType.ENTRADA
+                : movType;
+
+        // productName vem direto do ActivityDTO
+        String productName = node.path("productName").asText(
+                node.path("product").path("productName").asText("-"));
+
         Integer quantity = node.path("quantity").asInt(0);
-        String rawDate = node.path("movementDate")
-                .asText(node.path("date").asText(""));
-        String date = formatDate(rawDate);
-        String responsible = node.path("user").path("userName")
-                .asText(node.path("responsible").asText("-"));
+
+        // data: ActivityDTO serializa LocalDateTime como array [ano,mes,dia,hora,min,seg,nano]
+        // ou como string ISO — tratamos os dois casos
+        String date = parseDate(node.path("date"));
+
+        String responsible = node.path("responsible").asText("-");
+
         return new HistoryLog(id, type, productName, quantity, date, responsible);
     }
 
-    private static String formatDate(String iso) {
-        if (iso == null || iso.isBlank()) return "-";
+    /**
+     * Jackson serializa LocalDateTime de duas formas dependendo da config:
+     * - Array: [2026, 4, 3, 21, 30, 0, 0]
+     * - String ISO: "2026-04-03T21:30:00"
+     */
+    private static String parseDate(JsonNode dateNode) {
+        if (dateNode == null || dateNode.isMissingNode()) return "-";
+
+        if (dateNode.isArray() && dateNode.size() >= 5) {
+            int year  = dateNode.get(0).asInt();
+            int month = dateNode.get(1).asInt();
+            int day   = dateNode.get(2).asInt();
+            int hour  = dateNode.get(3).asInt();
+            int min   = dateNode.get(4).asInt();
+            String[] months = {"Jan.", "Fev.", "Mar.", "Abr.", "Mai.", "Jun.",
+                    "Jul.", "Ago.", "Set.", "Out.", "Nov.", "Dez."};
+            return String.format("%02d de %s %d às %02d:%02d",
+                    day, months[month - 1], year, hour, min);
+        }
+
+        // String ISO
+        String iso = dateNode.asText("");
+        if (iso.isBlank()) return "-";
         try {
             java.time.LocalDateTime dt = java.time.LocalDateTime.parse(
                     iso.length() > 19 ? iso.substring(0, 19) : iso);
             String[] months = {"Jan.", "Fev.", "Mar.", "Abr.", "Mai.", "Jun.",
                     "Jul.", "Ago.", "Set.", "Out.", "Nov.", "Dez."};
-            return dt.getDayOfMonth() + " de " + months[dt.getMonthValue() - 1]
-                    + " " + dt.getYear() + " às "
-                    + String.format("%02d:%02d", dt.getHour(), dt.getMinute());
+            return String.format("%02d de %s %d às %02d:%02d",
+                    dt.getDayOfMonth(), months[dt.getMonthValue() - 1],
+                    dt.getYear(), dt.getHour(), dt.getMinute());
         } catch (Exception e) {
             return iso;
         }

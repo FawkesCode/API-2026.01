@@ -1,5 +1,6 @@
 package com.fawkes.api.Controllers;
 
+import com.fawkes.api.DTOs.ActivityDTO;
 import com.fawkes.api.Entities.ProductInputs;
 import com.fawkes.api.Entities.ProductOutputs;
 import com.fawkes.api.Services.StockMovementService;
@@ -52,4 +53,11 @@ public class StockMovementController {
         ProductOutputs output = stockMovementService.registerOutput(stockId, productId, quantity, null);
         return ResponseEntity.ok(output);
     }
+
+    @GetMapping("/activity")
+    public ResponseEntity<List<ActivityDTO>> listActivity() {
+        return ResponseEntity.ok(stockMovementService.listActivity());
+    }
+
+
 }

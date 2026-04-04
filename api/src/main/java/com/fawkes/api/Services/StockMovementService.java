@@ -6,6 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fawkes.api.DTOs.ActivityDTO;
+import java.util.ArrayList;
+import java.util.Comparator;
+
 import java.util.List;
 
 @Service
@@ -112,4 +116,22 @@ public class StockMovementService {
         }
         return novoSaldo;
     }
+
+    public List<ActivityDTO> listActivity() {
+        List<ActivityDTO> activities = new ArrayList<>();
+
+        productInputsRepository.findAll()
+                .forEach(i -> activities.add(ActivityDTO.fromInput(i)));
+
+        productOutputsRepository.findAll()
+                .forEach(o -> activities.add(ActivityDTO.fromOutput(o)));
+
+        // Mais recente primeiro
+        activities.sort(Comparator.comparing(ActivityDTO::date).reversed());
+
+        return activities;
+    }
+
+
+
 }

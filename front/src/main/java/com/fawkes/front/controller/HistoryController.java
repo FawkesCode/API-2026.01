@@ -8,19 +8,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-/*
- Controller da tela de Atividade Recente.
-
- Depende de dois endpoints GET que ainda precisam ser criados no back:
-    GET /api/stock/movements/inputs   → lista ProductInputs
-    GET /api/stock/movements/outputs  → lista ProductOutputs
-
- Enquanto esses endpoints não existirem, a tela exibe uma mensagem orientativa.
- Assim que o back os implementar, basta reiniciar o front — nenhuma alteração necessária aqui.
- */
 public class HistoryController {
 
-    @FXML private VBox  historyContainer;
+    @FXML private VBox historyContainer;
 
     @FXML
     public void initialize() {
@@ -30,47 +20,37 @@ public class HistoryController {
     public void loadHistory() {
         historyContainer.getChildren().clear();
 
-        int count = 0;
-
-        // Entradas
         try {
-            JsonNode inputs = ApiClient.get("/api/stock/movements/inputs");
-            for (JsonNode node : inputs) {
-                HistoryLog log = HistoryLog.fromJson(node, HistoryLog.MovementType.ENTRADA);
+            // Endpoint unificado — retorna entradas e saídas já ordenadas
+            // por data decrescente (mais recente primeiro)
+            JsonNode data = ApiClient.get("/api/stock/movements/activity");
+
+            if (!data.isArray() || data.isEmpty()) {
+                addEmpty("Nenhuma atividade registrada ainda.");
+                return;
+            }
+
+            for (JsonNode node : data) {
+                String type = node.path("type").asText("ENTRADA");
+                HistoryLog.MovementType movType = "SAIDA".equals(type)
+                        ? HistoryLog.MovementType.SAIDA
+                        : HistoryLog.MovementType.ENTRADA;
+
+                HistoryLog log = HistoryLog.fromJson(node, movType);
                 HistoryLogCard card = new HistoryLogCard();
                 card.setData(log);
                 historyContainer.getChildren().add(card);
-                count++;
             }
-        } catch (Exception e) {
-            addWarning("Entradas indisponíveis: endpoint GET /api/stock/movements/inputs ainda não implementado no back.");
-        }
 
-        // Saídas
-        try {
-            JsonNode outputs = ApiClient.get("/api/stock/movements/outputs");
-            for (JsonNode node : outputs) {
-                HistoryLog log = HistoryLog.fromJson(node, HistoryLog.MovementType.SAIDA);
-                HistoryLogCard card = new HistoryLogCard();
-                card.setData(log);
-                historyContainer.getChildren().add(card);
-                count++;
-            }
         } catch (Exception e) {
-            addWarning("Saídas indisponíveis: endpoint GET /api/stock/movements/outputs ainda não implementado no back.");
-        }
-
-        if (count == 0 && historyContainer.getChildren().isEmpty()) {
-            Label empty = new Label("Nenhuma atividade registrada ainda.");
-            empty.setStyle("-fx-text-fill: #9a9ea5; -fx-font-size: 14px;");
-            historyContainer.getChildren().add(empty);
+            addEmpty("Erro ao carregar histórico: " + e.getMessage());
         }
     }
 
-    private void addWarning(String msg) {
-        Label warn = new Label(msg);
-        warn.setStyle("-fx-text-fill: #FF4A50; -fx-font-size: 12px; -fx-padding: 4 0;");
-        warn.setWrapText(true);
-        historyContainer.getChildren().add(warn);
+    private void addEmpty(String msg) {
+        Label label = new Label(msg);
+        label.setStyle("-fx-text-fill: #9a9ea5; -fx-font-size: 13px; -fx-padding: 8 0;");
+        label.setWrapText(true);
+        historyContainer.getChildren().add(label);
     }
 }
