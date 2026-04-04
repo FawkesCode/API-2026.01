@@ -35,11 +35,11 @@ public class DataInitializer {
                 return groupRepository.save(g);
             });
 
-            // ==================== DEPARTAMENTO (CORRIGIDO) ====================
+            // ==================== DEPARTAMENTO ====================
             Departments logisticaDept = departmentRepository.findById(1L).orElseGet(() -> {
                 Departments d = new Departments();
-                d.setDepartamentName("Logística");           // nome exato do campo
-                d.setText("Departamento de Logística");      // ← CAMPO OBRIGATÓRIO QUE FALTAVA
+                d.setDepartamentName("Logística");
+                d.setText("Departamento de Logística");
                 return departmentRepository.save(d);
             });
 
