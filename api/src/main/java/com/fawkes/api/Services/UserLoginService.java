@@ -1,17 +1,27 @@
 package com.fawkes.api.Services;
-import java.util.Optional;
+import com.fawkes.api.Exceptions.RecursoNaoEncontradoException;
+import com.fawkes.api.Security.JwtUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.fawkes.api.Repositories.UserRepository;
 import com.fawkes.api.Entities.Users;
 
 @Service
 public class UserLoginService {
-    private final UserRepository UserRepository;
+    private final JwtUtils jwtUtils;
+    private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserLoginService(UserRepository UserRepository) {
-        this.UserRepository = UserRepository;
+    public UserLoginService(JwtUtils jwtUtils, UserService userService, PasswordEncoder passwordEncoder) {
+        this.jwtUtils = jwtUtils;
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
-    public Optional<Users> FindByEmail(String email){
-        return UserRepository.findByUserMail(email);
+    public String loginUser(String email, String password) {
+        Users user = userService.findByEmail(email)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new RecursoNaoEncontradoException("Senha inválida");
+        }
+        return jwtUtils.generateToken(user.getUserMail());
     }
-}
+    }

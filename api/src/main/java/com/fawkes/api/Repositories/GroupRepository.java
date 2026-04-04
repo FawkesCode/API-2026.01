@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {
-    Optional<Roles> findByName (Roles nome);
+    Optional<Group> findByRole(Roles role);
 }

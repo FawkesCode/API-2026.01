@@ -1,4 +1,4 @@
-package com.fawkes.api.DTOs;
+package com.fawkes.api.DTOs.Response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

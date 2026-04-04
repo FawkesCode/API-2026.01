@@ -2,6 +2,7 @@ package com.fawkes.api.Services;
 
 import com.fawkes.api.Entities.Departments;
 import com.fawkes.api.Entities.Group;
+import com.fawkes.api.Entities.Roles;
 import com.fawkes.api.Entities.Users;
 import com.fawkes.api.Repositories.DepartmentRepository;
 import com.fawkes.api.Repositories.GroupRepository;
@@ -65,6 +66,30 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(password));
         user.setGroup(group);
         user.setDepartments(dept);
+        user.setIsActive(true);
+
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    public Users registerUser(String userName, String userMail, String password, Roles role) {
+        if (findExistentMail(userMail))
+            throw new RuntimeException("Este email já foi cadastrado");
+        if (findExistentName(userName))
+            throw new RuntimeException("Este nome de usuário já foi cadastrado");
+
+        Group group = groupRepository.findByRole(role)
+                .orElseThrow(() -> new RuntimeException("Grupo não encontrado para a role: " + role));
+
+        Departments defaultDept = departmentRepository.findAll().stream().findFirst()
+                .orElseThrow(() -> new RuntimeException("Nenhum departamento encontrado"));
+
+        Users user = new Users();
+        user.setUserName(userName);
+        user.setUserMail(userMail);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setGroup(group);
+        user.setDepartments(defaultDept);
         user.setIsActive(true);
 
         return userRepository.save(user);

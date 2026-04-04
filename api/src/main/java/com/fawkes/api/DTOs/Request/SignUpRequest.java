@@ -1,4 +1,4 @@
-package com.fawkes.api.DTOs;
+package com.fawkes.api.DTOs.Request;
 
 import com.fawkes.api.Entities.Roles;
 import lombok.Data;
