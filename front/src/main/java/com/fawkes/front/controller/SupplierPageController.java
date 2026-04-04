@@ -2,12 +2,20 @@ package com.fawkes.front.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fawkes.front.service.ApiClient;
+import com.fawkes.front.utils.ModalManager;
+import com.jfoenix.controls.JFXButton;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.Objects;
 
 public class SupplierPageController {
 
@@ -19,6 +27,7 @@ public class SupplierPageController {
     @FXML private TableColumn<JsonNode, String> colAcoes;
     @FXML private Label statusLabel;
     @FXML private TextField searchField;
+    @FXML private JFXButton btnNewSupplier;
 
     @FXML private VBox addDialog;
     @FXML private TextField fieldNome;
@@ -95,12 +104,15 @@ public class SupplierPageController {
     }
 
     @FXML
-    public void handleOpenAddDialog() {
-        fieldNome.clear(); fieldCnpj.clear();
-        comboPagamento.setValue("PIX");
-        addErrorLabel.setText("");
-        addDialog.setVisible(true);
-        addDialog.setManaged(true);
+    public void handleOpenAddDialog() throws IOException {
+        //fieldNome.clear(); fieldCnpj.clear();
+        //comboPagamento.setValue("PIX");
+        //addErrorLabel.setText("");
+        //addDialog.setVisible(true);
+        //addDialog.setManaged(true);
+        Parent formulario = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/fawkes/front/view/forms/new-supplier-form.fxml")));
+        Stage curStage = ((Stage) btnNewSupplier.getScene().getWindow());
+        ModalManager.openModal(curStage, formulario, "Cadastrar Fornecedor", 600, 400, "ModalFrameSM.fxml", true); // OBS: Esses são o mesmo parâmetro para o modal de visualizar item no estoque
     }
 
     @FXML

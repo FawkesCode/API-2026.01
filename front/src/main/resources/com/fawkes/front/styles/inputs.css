@@ -1,0 +1,23 @@
+/* INPUT STYLES */
+
+.combo-box {
+    -fx-prompt-text-fill: -fx-surface-300;
+    -fx-cursor: hand;
+}
+
+.input__text {
+    -fx-border-color: -fx-surface-200;
+    -fx-border-style: solid;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 6px;
+    -fx-prompt-text-fill: -fx-surface-300;
+    -fx-background-color: -fx-surface-0;
+    -fx-font-size: 12px;
+    -fx-text-fill: -fx-surface-800;
+}
+
+.input__text:focused {
+    -fx-border-color: -fx-primary-light;
+    -fx-border-opacity: 0.5;
+}
