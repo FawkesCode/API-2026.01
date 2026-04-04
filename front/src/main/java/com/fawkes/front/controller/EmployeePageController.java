@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -35,6 +36,7 @@ public class EmployeePageController {
     @FXML private TextField fieldGroupId;
     @FXML private TextField fieldDeptId;
     @FXML private Label addErrorLabel;
+    @FXML private Button newEmployee;
 
     private ObservableList<JsonNode> allItems = FXCollections.observableArrayList();
 
@@ -113,7 +115,8 @@ public class EmployeePageController {
         //addDialog.setVisible(true);
         //addDialog.setManaged(true);
         Parent formulario = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/fawkes/front/view/forms/new-employee-form.fxml")));
-        ModalManager.openModal(formulario, "Cadastrar Funcionário");
+        Stage curStage = ((Stage) newEmployee.getScene().getWindow());
+        ModalManager.openModal(curStage, formulario, "Cadastrar Funcionário");
     }
 
     @FXML

@@ -1,11 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="364.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="364.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.controller.AddEmployeeForm">
    <children>
-      <Label layoutX="168.0" layoutY="131.0" text="Cadastro de funcionários" />
+      <VBox layoutY="14.0" prefHeight="295.0" prefWidth="562.0" spacing="15.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane prefHeight="78.0" prefWidth="562.0">
+               <children>
+                  <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Email*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                  <TextField layoutY="39.0" promptText="Digite o email" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                     <styleClass>
+                        <String fx:value="input__text" />
+                        <String fx:value="input__text--form" />
+                     </styleClass>
+                  </TextField>
+               </children>
+            </AnchorPane>
+            <HBox prefHeight="86.0" prefWidth="562.0">
+               <children>
+                  <AnchorPane prefHeight="100.0" prefWidth="294.0">
+                     <children>
+                        <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Senha para acesso*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <PasswordField fx:id="passwordField" layoutX="12.0" layoutY="39.0" promptText="Digite a senha" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                           <styleClass>
+                              <String fx:value="input__text" />
+                              <String fx:value="input__text--form" />
+                           </styleClass>
+                        </PasswordField>
+                        <ToggleButton id="input__password-toggle" fx:id="btnTogglePassword" layoutX="234.40000000000003" layoutY="46.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="25.0" AnchorPane.rightAnchor="15.199999999999989">
+                           <graphic>
+                              <ImageView fx:id="btnToggleIcon" fitHeight="12.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../img/eye-open.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </ToggleButton>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="100.0" prefWidth="294.0">
+                     <children>
+                        <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Grupo de Usuário*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <ComboBox layoutY="39.0" prefWidth="150.0" promptText="Selecionar" styleClass="input__text" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </HBox>
+            <HBox prefHeight="86.0" prefWidth="562.0">
+               <children>
+                  <AnchorPane prefHeight="100.0" prefWidth="294.0">
+                     <children>
+                        <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Departamento:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <ComboBox layoutY="39.0" prefWidth="150.0" promptText="Selecionar" styleClass="input__text" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="100.0" prefWidth="294.0">
+                     <children>
+                        <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Cargo:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <TextField layoutY="39.0" promptText="Digite o cargo" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                           <styleClass>
+                              <String fx:value="input__text" />
+                              <String fx:value="input__text--form" />
+                           </styleClass>
+                        </TextField>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <VBox alignment="CENTER" layoutX="575.0" layoutY="59.0" prefHeight="295.0" prefWidth="226.0" spacing="20.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label styleClass="input__label" text="Foto do Usuário:" />
+            <ImageView fx:id="employeeView" fitHeight="172.0" fitWidth="172.0" pickOnBounds="true" preserveRatio="true" />
+            <Button fx:id="btnUploadImg" mnemonicParsing="false" onAction="#handleOpenExplorer" styleClass="btn--upload" text="Carregar do Dispositivo" />
+         </children>
+      </VBox>
+      <HBox alignment="CENTER_RIGHT" layoutX="574.0" layoutY="264.0" prefHeight="54.0" prefWidth="246.0" spacing="15.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0">
+         <children>
+            <JFXButton styleClass="btn--submit" text="Cadastrar" />
+            <JFXButton fx:id="btnClose" onAction="#closeModal" styleClass="btn--cancel" text="Cancelar" />
+         </children>
+      </HBox>
    </children>
 </AnchorPane>

@@ -1,4 +1,5 @@
 @import "../variables.css";
+@import "../inputs.css";
 
 .modal {
     -fx-background-color: #ffffff;
@@ -17,6 +18,51 @@
 }
 
 .modal__close {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+
+.input__text--form {
+    -fx-padding: 10px 6px;
+}
+
+.input__label {
+    -fx-font-size: 14px;
+    -fx-font-family: "Montserrat", sans-serif;
+    -fx-text-fill: -fx-surface-800;
+    -fx-font-weight: 900;
+}
+
+.btn--upload {
+    -fx-underline: true;
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-primary-light;
+    -fx-cursor: hand;
+}
+
+.btn--upload:hover {
+    -fx-text-fill: -fx-primary-dark;
+}
+
+.btn--submit, .btn--cancel {
+    -fx-background-color: -fx-surface-1000;
+    -fx-background-radius: 5px;
+    -fx-text-fill: -fx-surface-50;
+    -fx-padding: 5px 18px;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-cursor: hand;
+}
+
+.btn--cancel {
+    -fx-background-color: transparent;
+    -fx-border-color: -fx-surface-300;
+    -fx-border-style: solid;
+    -fx-border-radius: 5px;
+    -fx-text-fill: -fx-surface-300;
+}
+
+#input__password-toggle {
     -fx-background-color: transparent;
     -fx-cursor: hand;
 }
