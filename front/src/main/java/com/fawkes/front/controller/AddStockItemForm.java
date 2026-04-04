@@ -1,11 +1,13 @@
 package com.fawkes.front.controller;
 
-import com.fawkes.front.utils.PasswordFieldSkin;
 import com.jfoenix.controls.JFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
@@ -13,37 +15,37 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import java.io.File;
-import java.util.Objects;
+import java.util.function.UnaryOperator;
 
-public class AddEmployeeForm {
-
-    @FXML private ToggleButton btnTogglePassword;
-    @FXML private ImageView btnToggleIcon;
+public class AddStockItemForm {
     @FXML private JFXButton btnClose;
     @FXML private Label errorLabel;
 
     // FORM INPUTS
-    @FXML private PasswordField passwordField;
-    @FXML private ImageView employeeView;
-    @FXML private TextField emailField;
-    @FXML private TextField positionField;
-    @FXML private ComboBox<String> userGroupField;
-    @FXML private ComboBox<String> departmentField;
+    @FXML private TextField nameField;
+    @FXML private TextField priceField;
+    @FXML private TextField qtdField;
+    @FXML private TextField minValField;
+    @FXML private ImageView productView;
+    @FXML private ComboBox<String> suppilerField;
 
-    private final Image eyeOpen = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/fawkes/front/img/eye-open.png")));
-    private final Image eyeClosed = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/fawkes/front/img/eye-closed.png")));
-
+    @FXML
     public void initialize() {
-        passwordField.setSkin(new PasswordFieldSkin(passwordField, btnTogglePassword));
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String text = change.getControlNewText();
 
-        btnTogglePassword.selectedProperty().addListener((obs, wasSelected, isSelected)-> {
-            if(isSelected) {
-                btnToggleIcon.setImage(eyeOpen);
-            } else {
-                btnToggleIcon.setImage(eyeClosed);
+            if(text.matches("\\d*")) {
+                return change;
             }
-        });
+
+            return null;
+        };
+
+        priceField.setTextFormatter(new TextFormatter<>(filter));
+        qtdField.setTextFormatter(new TextFormatter<>(filter));
+        minValField.setTextFormatter(new TextFormatter<>(filter));
     }
+
 
     @FXML
     private void closeModal(ActionEvent event) {
@@ -62,18 +64,17 @@ public class AddEmployeeForm {
 
         if (file != null) {
             Image image = new Image(file.toURI().toString());
-            employeeView.setImage(image);
+            productView.setImage(image);
         }
     }
 
     @FXML
     private void handleOnSubmit(ActionEvent event) {
-        if (emailField.getText().isEmpty() || passwordField.getText().isEmpty() || positionField.getText().isEmpty() || userGroupField.getSelectionModel().getSelectedItem() == null || departmentField.getSelectionModel().getSelectedItem() == null) {
+        if (nameField.getText().isEmpty() || priceField.getText().isEmpty() || qtdField.getText().isEmpty() || minValField.getText().isEmpty() || suppilerField.getSelectionModel().getSelectedItem() == null) {
             errorLabel.setText("Verfique se todos os campos obrigatórios foram preenchidos.");
         } else {
             System.out.println("Fazer a lógica de upload aqui");
         }
 
     }
-
 }

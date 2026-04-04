@@ -22,7 +22,7 @@
             <AnchorPane prefHeight="78.0" prefWidth="562.0">
                <children>
                   <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Email*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-                  <TextField layoutY="39.0" promptText="Digite o email" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                  <TextField fx:id="emailField" layoutY="39.0" promptText="Digite o email" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
                      <styleClass>
                         <String fx:value="input__text" />
                         <String fx:value="input__text--form" />
@@ -55,7 +55,7 @@
                   <AnchorPane prefHeight="100.0" prefWidth="294.0">
                      <children>
                         <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Grupo de Usuário*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-                        <ComboBox layoutY="39.0" prefWidth="150.0" promptText="Selecionar" styleClass="input__text" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                        <ComboBox fx:id="userGroupField" layoutY="39.0" prefWidth="150.0" promptText="Selecionar" styleClass="input__text" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                      </children>
                   </AnchorPane>
                </children>
@@ -65,13 +65,13 @@
                   <AnchorPane prefHeight="100.0" prefWidth="294.0">
                      <children>
                         <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Departamento:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-                        <ComboBox layoutY="39.0" prefWidth="150.0" promptText="Selecionar" styleClass="input__text" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                        <ComboBox fx:id="departmentField" layoutY="39.0" prefWidth="150.0" promptText="Selecionar" styleClass="input__text" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                      </children>
                   </AnchorPane>
                   <AnchorPane prefHeight="100.0" prefWidth="294.0">
                      <children>
                         <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Cargo:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-                        <TextField layoutY="39.0" promptText="Digite o cargo" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                        <TextField fx:id="positionField" layoutY="39.0" promptText="Digite o cargo" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
                            <styleClass>
                               <String fx:value="input__text" />
                               <String fx:value="input__text--form" />
@@ -86,15 +86,20 @@
       <VBox alignment="CENTER" layoutX="575.0" layoutY="59.0" prefHeight="295.0" prefWidth="226.0" spacing="20.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label styleClass="input__label" text="Foto do Usuário:" />
-            <ImageView fx:id="employeeView" fitHeight="172.0" fitWidth="172.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="employeeView" fitHeight="172.0" fitWidth="172.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../img/default-image.png" />
+               </image>
+            </ImageView>
             <Button fx:id="btnUploadImg" mnemonicParsing="false" onAction="#handleOpenExplorer" styleClass="btn--upload" text="Carregar do Dispositivo" />
          </children>
       </VBox>
       <HBox alignment="CENTER_RIGHT" layoutX="574.0" layoutY="264.0" prefHeight="54.0" prefWidth="246.0" spacing="15.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0">
          <children>
-            <JFXButton styleClass="btn--submit" text="Cadastrar" />
+            <JFXButton onAction="#handleOnSubmit" styleClass="btn--submit" text="Cadastrar" />
             <JFXButton fx:id="btnClose" onAction="#closeModal" styleClass="btn--cancel" text="Cancelar" />
          </children>
       </HBox>
+      <Label fx:id="errorLabel" layoutX="24.0" layoutY="297.0" prefHeight="18.0" prefWidth="542.0" styleClass="input__label--error" />
    </children>
 </AnchorPane>

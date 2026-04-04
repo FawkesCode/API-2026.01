@@ -66,3 +66,7 @@
     -fx-background-color: transparent;
     -fx-cursor: hand;
 }
+
+.input__label--error {
+    -fx-text-fill: -fx-error-color;
+}

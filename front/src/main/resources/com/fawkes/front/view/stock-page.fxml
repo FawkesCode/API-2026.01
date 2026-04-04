@@ -22,7 +22,7 @@
             <String fx:value="input__text--search" />
          </styleClass></TextField>
       <Region HBox.hgrow="ALWAYS" />
-      <JFXButton fx:id="btnInput" onAction="#handleOpenInputDialog" styleClass="btn--primary" text="Entrada">
+      <JFXButton fx:id="btnInput" onAction="#handleOpenInputDialog" styleClass="btn--primary" text="Novo Produto">
          <graphic>
             <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                <image>
