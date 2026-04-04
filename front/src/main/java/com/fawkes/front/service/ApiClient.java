@@ -14,28 +14,26 @@ public class ApiClient {
 
     private static final String BASE_URL = "http://localhost:8080";
 
-    private static final String USERNAME = "user";
-    private static final String PASSWORD = "6bd3d9b3-9c42-4e0c-b0bf-6e702ab1b0c2";
-
     private static final HttpClient client = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(5))
             .build();
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    private static String basicAuth() {
-        String credentials = USERNAME + ":" + PASSWORD;
+    // ---------------- Basic Auth ----------------
+    private static String basicAuthHeader() {
+        String credentials = "admin:fawkes2026";
         return "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes());
     }
 
+    // ---------------- Stock ----------------
     public static JsonNode listStock() throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "/api/stock"))
                 .GET()
                 .header("Accept", "application/json")
-                .header("Authorization", basicAuth())
+                .header("Authorization", basicAuthHeader())
                 .build();
-
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertOk(response);
         return mapper.readTree(response.body());
@@ -46,14 +44,12 @@ public class ApiClient {
                 + "?stockId=" + stockId
                 + "&productId=" + productId
                 + "&quantity=" + quantity;
-
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .POST(HttpRequest.BodyPublishers.noBody())
                 .header("Accept", "application/json")
-                .header("Authorization", basicAuth())
+                .header("Authorization", basicAuthHeader())
                 .build();
-
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertOk(response);
         return mapper.readTree(response.body());
@@ -64,57 +60,74 @@ public class ApiClient {
                 + "?stockId=" + stockId
                 + "&productId=" + productId
                 + "&quantity=" + quantity;
-
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .POST(HttpRequest.BodyPublishers.noBody())
                 .header("Accept", "application/json")
-                .header("Authorization", basicAuth())
+                .header("Authorization", basicAuthHeader())
                 .build();
-
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertOk(response);
         return mapper.readTree(response.body());
     }
 
-    private static void assertOk(HttpResponse<String> response) {
-        if (response.statusCode() < 200 || response.statusCode() >= 300) {
-            throw new RuntimeException("Erro HTTP " + response.statusCode() + ": " + response.body());
-        }
-    }
-
+    // ---------------- Generic GET ----------------
     public static JsonNode get(String path) throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + path))
                 .GET()
                 .header("Accept", "application/json")
-                .header("Authorization", basicAuth())
+                .header("Authorization", basicAuthHeader())
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertOk(response);
         return mapper.readTree(response.body());
     }
 
+    // ---------------- Generic POST ----------------
     public static JsonNode post(String path, String jsonBody) throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + path))
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
-                .header("Authorization", basicAuth())
+                .header("Authorization", basicAuthHeader())
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertOk(response);
         return mapper.readTree(response.body());
     }
 
+    // ---------------- Generic PUT ----------------
+    public static JsonNode put(String path, String jsonBody) throws Exception {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + path))
+                .PUT(HttpRequest.BodyPublishers.ofString(jsonBody))
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .header("Authorization", basicAuthHeader())
+                .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertOk(response);
+        return mapper.readTree(response.body());
+    }
+
+    // ---------------- Generic DELETE ----------------
     public static void delete(String path) throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + path))
                 .DELETE()
-                .header("Authorization", basicAuth())
+                .header("Accept", "application/json")
+                .header("Authorization", basicAuthHeader())
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertOk(response);
+    }
+
+    // ---------------- Helper ----------------
+    private static void assertOk(HttpResponse<String> response) {
+        if (response.statusCode() < 200 || response.statusCode() >= 300) {
+            throw new RuntimeException("Erro HTTP " + response.statusCode() + ": " + response.body());
+        }
     }
 }

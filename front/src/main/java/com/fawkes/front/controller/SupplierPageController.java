@@ -11,22 +11,26 @@ import javafx.scene.layout.VBox;
 
 public class SupplierPageController {
 
-    @FXML private TableView<JsonNode> supplierTable;
+    // Tabela
+    @FXML private TableView<JsonNode>           supplierTable;
     @FXML private TableColumn<JsonNode, String> colId;
     @FXML private TableColumn<JsonNode, String> colNome;
     @FXML private TableColumn<JsonNode, String> colCnpj;
     @FXML private TableColumn<JsonNode, String> colPagamento;
     @FXML private TableColumn<JsonNode, String> colAcoes;
-    @FXML private Label statusLabel;
-    @FXML private TextField searchField;
 
-    @FXML private VBox addDialog;
+    // Barra superior
+    @FXML private TextField searchField;
+    @FXML private Label     statusLabel;
+
+    // Dialog de cadastro
+    @FXML private VBox      addDialog;
     @FXML private TextField fieldNome;
     @FXML private TextField fieldCnpj;
     @FXML private ComboBox<String> comboPagamento;
-    @FXML private Label addErrorLabel;
+    @FXML private Label     addErrorLabel;
 
-    private ObservableList<JsonNode> allItems = FXCollections.observableArrayList();
+    private final ObservableList<JsonNode> allRows = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
@@ -39,13 +43,14 @@ public class SupplierPageController {
         colPagamento.setCellValueFactory(d ->
                 new SimpleStringProperty(d.getValue().path("meioPagamento").asText("-")));
 
+        // Coluna de ações: botão Excluir
         colAcoes.setCellFactory(col -> new TableCell<>() {
             private final Button btnDelete = new Button("Excluir");
             {
-                btnDelete.setStyle("-fx-text-fill: #FF4A50;");
+                btnDelete.setStyle("-fx-text-fill: #FF4A50; -fx-cursor: hand;");
                 btnDelete.setOnAction(e -> {
-                    JsonNode item = getTableView().getItems().get(getIndex());
-                    handleDelete(item.path("id").asLong());
+                    JsonNode row = getTableView().getItems().get(getIndex());
+                    handleDelete(row.path("id").asLong());
                 });
             }
             @Override
@@ -55,8 +60,10 @@ public class SupplierPageController {
             }
         });
 
-        comboPagamento.setItems(FXCollections.observableArrayList("PIX", "CREDITO", "DEBITO", "BOLETO"));
-        comboPagamento.setValue("PIX");
+        // Preenche o ComboBox com as opções do enum do back
+        comboPagamento.setItems(FXCollections.observableArrayList(
+                "PIX", "CREDITO", "DEBITO", "BOLETO"));
+        comboPagamento.getSelectionModel().selectFirst();
 
         loadSuppliers();
     }
@@ -64,31 +71,30 @@ public class SupplierPageController {
     @FXML
     public void loadSuppliers() {
         statusLabel.setText("Carregando...");
-        new Thread(() -> {
-            try {
-                JsonNode data = ApiClient.get("/api/suppliers");
-                javafx.application.Platform.runLater(() -> {
-                    allItems.clear();
-                    for (JsonNode item : data) allItems.add(item);
-                    supplierTable.setItems(allItems);
-                    statusLabel.setText("Fornecedores carregados. " + allItems.size() + " registro(s).");
-                });
-            } catch (Exception e) {
-                javafx.application.Platform.runLater(() ->
-                        statusLabel.setText("Erro: " + e.getMessage()));
-            }
-        }).start();
+        allRows.clear();
+        try {
+            JsonNode data = ApiClient.get("/api/suppliers");
+            for (JsonNode node : data) allRows.add(node);
+            supplierTable.setItems(allRows);
+            statusLabel.setText(allRows.size() + " fornecedor(es) carregado(s).");
+        } catch (Exception e) {
+            statusLabel.setText("Erro ao carregar: " + e.getMessage());
+        }
     }
 
     @FXML
     public void handleSearch() {
-        String query = searchField.getText().trim().toLowerCase();
-        if (query.isEmpty()) { supplierTable.setItems(allItems); return; }
+        String q = searchField.getText().trim().toLowerCase();
+        if (q.isEmpty()) {
+            supplierTable.setItems(allRows);
+            return;
+        }
         ObservableList<JsonNode> filtered = FXCollections.observableArrayList();
-        for (JsonNode item : allItems) {
-            if (item.path("nomeFornecedor").asText("").toLowerCase().contains(query) ||
-                    item.path("cnpjFornecedor").asText("").toLowerCase().contains(query)) {
-                filtered.add(item);
+        for (JsonNode row : allRows) {
+            if (row.path("nomeFornecedor").asText("").toLowerCase().contains(q)
+                    || row.path("cnpjFornecedor").asText("").toLowerCase().contains(q)
+                    || row.path("meioPagamento").asText("").toLowerCase().contains(q)) {
+                filtered.add(row);
             }
         }
         supplierTable.setItems(filtered);
@@ -96,8 +102,9 @@ public class SupplierPageController {
 
     @FXML
     public void handleOpenAddDialog() {
-        fieldNome.clear(); fieldCnpj.clear();
-        comboPagamento.setValue("PIX");
+        fieldNome.clear();
+        fieldCnpj.clear();
+        comboPagamento.getSelectionModel().selectFirst();
         addErrorLabel.setText("");
         addDialog.setVisible(true);
         addDialog.setManaged(true);
@@ -111,42 +118,40 @@ public class SupplierPageController {
 
     @FXML
     public void handleConfirmAdd() {
-        String nome = fieldNome.getText().trim();
-        String cnpj = fieldCnpj.getText().trim();
+        String nome      = fieldNome.getText().trim();
+        String cnpj      = fieldCnpj.getText().trim();
         String pagamento = comboPagamento.getValue();
 
         if (nome.isEmpty() || cnpj.isEmpty()) {
-            addErrorLabel.setText("Preencha todos os campos.");
+            addErrorLabel.setText("Preencha nome e CNPJ.");
             return;
         }
 
-        String body = String.format(
-                "{\"nomeFornecedor\":\"%s\",\"cnpjFornecedor\":\"%s\",\"meioPagamento\":\"%s\"}",
-                nome, cnpj, pagamento);
-
-        new Thread(() -> {
-            try {
-                ApiClient.post("/api/suppliers", body);
-                javafx.application.Platform.runLater(() -> {
-                    handleCloseAddDialog();
-                    loadSuppliers();
-                });
-            } catch (Exception e) {
-                javafx.application.Platform.runLater(() ->
-                        addErrorLabel.setText("Erro: " + e.getMessage()));
-            }
-        }).start();
+        try {
+            String body = String.format(
+                    "{\"nomeFornecedor\":\"%s\",\"cnpjFornecedor\":\"%s\",\"meioPagamento\":\"%s\"}",
+                    nome, cnpj, pagamento);
+            ApiClient.post("/api/suppliers", body);
+            handleCloseAddDialog();
+            loadSuppliers();
+        } catch (Exception e) {
+            addErrorLabel.setText("Erro: " + e.getMessage());
+        }
     }
 
     private void handleDelete(Long id) {
-        new Thread(() -> {
-            try {
-                ApiClient.delete("/api/suppliers/" + id);
-                javafx.application.Platform.runLater(this::loadSuppliers);
-            } catch (Exception e) {
-                javafx.application.Platform.runLater(() ->
-                        statusLabel.setText("Erro ao excluir: " + e.getMessage()));
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                "Deseja excluir este fornecedor?", ButtonType.YES, ButtonType.NO);
+        confirm.setHeaderText(null);
+        confirm.showAndWait().ifPresent(bt -> {
+            if (bt == ButtonType.YES) {
+                try {
+                    ApiClient.delete("/api/suppliers/" + id);
+                    loadSuppliers();
+                } catch (Exception e) {
+                    statusLabel.setText("Erro ao excluir: " + e.getMessage());
+                }
             }
-        }).start();
+        });
     }
 }

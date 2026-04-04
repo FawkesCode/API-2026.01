@@ -1,6 +1,8 @@
 package com.fawkes.front.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fawkes.front.models.Employee;
 import com.fawkes.front.service.ApiClient;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -11,7 +13,8 @@ import javafx.scene.layout.VBox;
 
 public class EmployeePageController {
 
-    @FXML private TableView<JsonNode> employeeTable;
+    // Tabela
+    @FXML private TableView<JsonNode>           employeeTable;
     @FXML private TableColumn<JsonNode, String> colId;
     @FXML private TableColumn<JsonNode, String> colNome;
     @FXML private TableColumn<JsonNode, String> colEmail;
@@ -19,18 +22,22 @@ public class EmployeePageController {
     @FXML private TableColumn<JsonNode, String> colGrupo;
     @FXML private TableColumn<JsonNode, String> colDepto;
     @FXML private TableColumn<JsonNode, String> colAcoes;
-    @FXML private Label statusLabel;
+
+    // Barra superior
     @FXML private TextField searchField;
+    @FXML private Label     statusLabel;
 
-    @FXML private VBox addDialog;
-    @FXML private TextField fieldUsername;
-    @FXML private TextField fieldEmail;
+    // Dialog de cadastro
+    @FXML private VBox          addDialog;
+    @FXML private TextField     fieldUsername;
+    @FXML private TextField     fieldEmail;
     @FXML private PasswordField fieldPassword;
-    @FXML private TextField fieldGroupId;
-    @FXML private TextField fieldDeptId;
-    @FXML private Label addErrorLabel;
+    @FXML private TextField     fieldGroupId;
+    @FXML private TextField     fieldDeptId;
+    @FXML private Label         addErrorLabel;
 
-    private ObservableList<JsonNode> allItems = FXCollections.observableArrayList();
+    private final ObservableList<JsonNode> allRows = FXCollections.observableArrayList();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @FXML
     public void initialize() {
@@ -40,20 +47,25 @@ public class EmployeePageController {
                 new SimpleStringProperty(d.getValue().path("userName").asText("-")));
         colEmail.setCellValueFactory(d ->
                 new SimpleStringProperty(d.getValue().path("userMail").asText("-")));
-        colAtivo.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().path("isActive").asBoolean() ? "Sim" : "Nao"));
+        colAtivo.setCellValueFactory(d -> {
+            boolean active = d.getValue().path("isActive").asBoolean(true);
+            return new SimpleStringProperty(active ? "Ativo" : "Inativo");
+        });
         colGrupo.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().path("group").path("id").asText("-")));
+                new SimpleStringProperty(
+                        d.getValue().path("group").path("groupName").asText("-")));
         colDepto.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().path("departments").path("id").asText("-")));
+                new SimpleStringProperty(
+                        d.getValue().path("departments").path("departmentName").asText("-")));
 
+        // Coluna de ações: botão Excluir
         colAcoes.setCellFactory(col -> new TableCell<>() {
             private final Button btnDelete = new Button("Excluir");
             {
-                btnDelete.setStyle("-fx-text-fill: #FF4A50;");
+                btnDelete.setStyle("-fx-text-fill: #FF4A50; -fx-cursor: hand;");
                 btnDelete.setOnAction(e -> {
-                    JsonNode item = getTableView().getItems().get(getIndex());
-                    handleDelete(item.path("id").asLong());
+                    JsonNode row = getTableView().getItems().get(getIndex());
+                    handleDelete(row.path("id").asLong());
                 });
             }
             @Override
@@ -69,31 +81,31 @@ public class EmployeePageController {
     @FXML
     public void loadEmployees() {
         statusLabel.setText("Carregando...");
-        new Thread(() -> {
-            try {
-                JsonNode data = ApiClient.get("/api/users");
-                javafx.application.Platform.runLater(() -> {
-                    allItems.clear();
-                    for (JsonNode item : data) allItems.add(item);
-                    employeeTable.setItems(allItems);
-                    statusLabel.setText("Funcionarios carregados. " + allItems.size() + " registro(s).");
-                });
-            } catch (Exception e) {
-                javafx.application.Platform.runLater(() ->
-                        statusLabel.setText("Erro: " + e.getMessage()));
-            }
-        }).start();
+        allRows.clear();
+        try {
+            JsonNode data = ApiClient.get("/api/users");
+            for (JsonNode node : data) allRows.add(node);
+            employeeTable.setItems(allRows);
+            statusLabel.setText(allRows.size() + " funcionário(s) carregado(s).");
+        } catch (Exception e) {
+            statusLabel.setText("Erro ao carregar: " + e.getMessage());
+        }
     }
 
     @FXML
     public void handleSearch() {
-        String query = searchField.getText().trim().toLowerCase();
-        if (query.isEmpty()) { employeeTable.setItems(allItems); return; }
+        String q = searchField.getText().trim().toLowerCase();
+        if (q.isEmpty()) {
+            employeeTable.setItems(allRows);
+            return;
+        }
         ObservableList<JsonNode> filtered = FXCollections.observableArrayList();
-        for (JsonNode item : allItems) {
-            if (item.path("userName").asText("").toLowerCase().contains(query) ||
-                    item.path("userMail").asText("").toLowerCase().contains(query)) {
-                filtered.add(item);
+        for (JsonNode row : allRows) {
+            if (row.path("userName").asText("").toLowerCase().contains(q)
+                    || row.path("userMail").asText("").toLowerCase().contains(q)
+                    || row.path("group").path("groupName").asText("").toLowerCase().contains(q)
+                    || row.path("departments").path("departmentName").asText("").toLowerCase().contains(q)) {
+                filtered.add(row);
             }
         }
         employeeTable.setItems(filtered);
@@ -101,8 +113,11 @@ public class EmployeePageController {
 
     @FXML
     public void handleOpenAddDialog() {
-        fieldUsername.clear(); fieldEmail.clear();
-        fieldPassword.clear(); fieldGroupId.clear(); fieldDeptId.clear();
+        fieldUsername.clear();
+        fieldEmail.clear();
+        fieldPassword.clear();
+        fieldGroupId.clear();
+        fieldDeptId.clear();
         addErrorLabel.setText("");
         addDialog.setVisible(true);
         addDialog.setManaged(true);
@@ -119,42 +134,52 @@ public class EmployeePageController {
         String username = fieldUsername.getText().trim();
         String email    = fieldEmail.getText().trim();
         String password = fieldPassword.getText().trim();
-        String groupId  = fieldGroupId.getText().trim();
-        String deptId   = fieldDeptId.getText().trim();
+        String groupStr = fieldGroupId.getText().trim();
+        String deptStr  = fieldDeptId.getText().trim();
 
         if (username.isEmpty() || email.isEmpty() || password.isEmpty()
-                || groupId.isEmpty() || deptId.isEmpty()) {
+                || groupStr.isEmpty() || deptStr.isEmpty()) {
             addErrorLabel.setText("Preencha todos os campos.");
             return;
         }
 
-        String body = String.format(
-                "{\"userName\":\"%s\",\"userMail\":\"%s\",\"password\":\"%s\",\"isActive\":true,\"group\":{\"id\":%s},\"departments\":{\"id\":%s}}",
-                username, email, password, groupId, deptId);
+        long groupId, deptId;
+        try {
+            groupId = Long.parseLong(groupStr);
+            deptId  = Long.parseLong(deptStr);
+        } catch (NumberFormatException e) {
+            addErrorLabel.setText("ID do Grupo e Departamento devem ser números.");
+            return;
+        }
 
-        new Thread(() -> {
-            try {
-                ApiClient.post("/api/users", body);
-                javafx.application.Platform.runLater(() -> {
-                    handleCloseAddDialog();
-                    loadEmployees();
-                });
-            } catch (Exception e) {
-                javafx.application.Platform.runLater(() ->
-                        addErrorLabel.setText("Erro: " + e.getMessage()));
-            }
-        }).start();
+        try {
+            // Monta o JSON manualmente para evitar dependência extra
+            String body = String.format(
+                    "{\"userName\":\"%s\",\"userMail\":\"%s\",\"password\":\"%s\"," +
+                            "\"isActive\":true,\"group\":{\"id\":%d},\"departments\":{\"id\":%d}}",
+                    username, email, password, groupId, deptId);
+
+            ApiClient.post("/api/users", body);
+            handleCloseAddDialog();
+            loadEmployees();
+        } catch (Exception e) {
+            addErrorLabel.setText("Erro: " + e.getMessage());
+        }
     }
 
     private void handleDelete(Long id) {
-        new Thread(() -> {
-            try {
-                ApiClient.delete("/api/users/" + id);
-                javafx.application.Platform.runLater(this::loadEmployees);
-            } catch (Exception e) {
-                javafx.application.Platform.runLater(() ->
-                        statusLabel.setText("Erro ao excluir: " + e.getMessage()));
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                "Deseja excluir este funcionário?", ButtonType.YES, ButtonType.NO);
+        confirm.setHeaderText(null);
+        confirm.showAndWait().ifPresent(bt -> {
+            if (bt == ButtonType.YES) {
+                try {
+                    ApiClient.delete("/api/users/" + id);
+                    loadEmployees();
+                } catch (Exception e) {
+                    statusLabel.setText("Erro ao excluir: " + e.getMessage());
+                }
             }
-        }).start();
+        });
     }
 }

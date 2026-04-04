@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/stock/movements")
 @RequiredArgsConstructor
@@ -14,26 +16,39 @@ public class StockMovementController {
 
     private final StockMovementService stockMovementService;
 
-    // POST /api/stock/movements/input?stockId=1&productId=2&quantity=50 exemplos de "paginação"
+    // ----------------------------------------------------------------
+    // GETs de histórico — necessários para a tela de Atividade Recente
+    // ----------------------------------------------------------------
+
+    @GetMapping("/inputs")
+    public ResponseEntity<List<ProductInputs>> listInputs() {
+        return ResponseEntity.ok(stockMovementService.listAllInputs());
+    }
+
+    @GetMapping("/outputs")
+    public ResponseEntity<List<ProductOutputs>> listOutputs() {
+        return ResponseEntity.ok(stockMovementService.listAllOutputs());
+    }
+
+    // ----------------------------------------------------------------
+    // POSTs existentes — mantidos sem alteração
+    // ----------------------------------------------------------------
+
     @PostMapping("/input")
     public ResponseEntity<ProductInputs> registerInput(
             @RequestParam Long stockId,
             @RequestParam Long productId,
             @RequestParam Integer quantity) {
-
         ProductInputs input = stockMovementService.registerInput(stockId, productId, quantity);
         return ResponseEntity.ok(input);
     }
 
-    // POST /api/stock/movements/output?stockId=1&productId=2&quantity=10&orderId=5 exemplos de "paginação"
     @PostMapping("/output")
     public ResponseEntity<ProductOutputs> registerOutput(
             @RequestParam Long stockId,
             @RequestParam Long productId,
             @RequestParam Integer quantity,
             @RequestParam(required = false) Long orderId) {
-
-        // order pode ser null — buscar na service se necessário
         ProductOutputs output = stockMovementService.registerOutput(stockId, productId, quantity, null);
         return ResponseEntity.ok(output);
     }

@@ -219,3 +219,23 @@
     -fx-cursor: hand;
 }
 
+/* FIX TÍTULO */
+#pageName {
+    -fx-font-size: 28px !important;
+    -fx-font-weight: 700 !important;
+    -fx-text-fill: -fx-surface-900 !important;
+    -fx-font-family: "Montserrat", sans-serif !important;
+
+    /* Força o título a manter o tamanho SEMPRE */
+    -fx-pref-width: 450px !important;
+    -fx-min-width: 350px !important;
+    -fx-max-width: Infinity !important;
+
+    -fx-min-height: 40px !important;
+    -fx-alignment: center-left !important;
+    -fx-focus-traversable: false !important;
+    -fx-text-overrun: clip !important;
+
+    /* Proteção extra contra recalculo de layout */
+    -fx-effect: null !important;
+}

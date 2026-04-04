@@ -62,7 +62,7 @@ public class StockPageController {
         colMax.setCellValueFactory(d ->
                 new SimpleStringProperty(d.getValue().path("maxStockQuantity").asText("-")));
 
-        stockTable.setRowFactory(tv -> new TableRow<>() {
+        /*stockTable.setRowFactory(tv -> new TableRow<>() {
             @Override
             protected void updateItem(JsonNode item, boolean empty) {
                 super.updateItem(item, empty);
@@ -74,7 +74,7 @@ public class StockPageController {
                     setStyle(current <= min ? "-fx-background-color: #fff0f0;" : "");
                 }
             }
-        });
+        });*/
 
         loadStock();
     }

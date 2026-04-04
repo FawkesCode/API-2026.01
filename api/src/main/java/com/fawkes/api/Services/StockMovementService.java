@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class StockMovementService {
@@ -72,6 +74,18 @@ public class StockMovementService {
 
         return productOutputsRepository.<ProductOutputs>save(output);
     }
+
+    // --- Métodos adicionados para a tela de Atividade Recente ---
+
+    public List<ProductInputs> listAllInputs() {
+        return productInputsRepository.findAll();
+    }
+
+    public List<ProductOutputs> listAllOutputs() {
+        return productOutputsRepository.findAll();
+    }
+
+    // --- Métodos privados de cálculo ---
 
     private int calcularSaldoEntrada(ProductStock productStock, int quantity) {
         int novoSaldo = productStock.getCurrentStockQuantity() + quantity;
