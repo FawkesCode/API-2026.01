@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fawkes.front.components.HistoryLogCard;
 import com.fawkes.front.models.HistoryLog;
 import com.fawkes.front.service.ApiClient;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -20,13 +22,25 @@ public class HistoryController {
     public void loadHistory() {
         historyContainer.getChildren().clear();
 
-        try {
-            // Endpoint unificado — retorna entradas e saídas já ordenadas
-            // por data decrescente (mais recente primeiro)
-            JsonNode data = ApiClient.get("/api/stock/movements/activity");
+        // Feedback imediato enquanto carrega
+        Label loading = new Label("Carregando atividades...");
+        loading.setStyle("-fx-text-fill: #9a9ea5; -fx-font-size: 13px; -fx-padding: 8 0;");
+        historyContainer.getChildren().add(loading);
+
+        // Chamada HTTP em thread separada — não trava a UI
+        Task<JsonNode> task = new Task<>() {
+            @Override
+            protected JsonNode call() throws Exception {
+                return ApiClient.get("/api/stock/movements/activity");
+            }
+        };
+
+        task.setOnSucceeded(e -> Platform.runLater(() -> {
+            historyContainer.getChildren().clear();
+            JsonNode data = task.getValue();
 
             if (!data.isArray() || data.isEmpty()) {
-                addEmpty("Nenhuma atividade registrada ainda.");
+                addMessage("Nenhuma atividade registrada ainda.");
                 return;
             }
 
@@ -41,13 +55,19 @@ public class HistoryController {
                 card.setData(log);
                 historyContainer.getChildren().add(card);
             }
+        }));
 
-        } catch (Exception e) {
-            addEmpty("Erro ao carregar histórico: " + e.getMessage());
-        }
+        task.setOnFailed(e -> Platform.runLater(() -> {
+            historyContainer.getChildren().clear();
+            addMessage("Erro ao carregar histórico: " + task.getException().getMessage());
+        }));
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
     }
 
-    private void addEmpty(String msg) {
+    private void addMessage(String msg) {
         Label label = new Label(msg);
         label.setStyle("-fx-text-fill: #9a9ea5; -fx-font-size: 13px; -fx-padding: 8 0;");
         label.setWrapText(true);

@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -120,13 +123,14 @@ public class StockMovementService {
     public List<ActivityDTO> listActivity() {
         List<ActivityDTO> activities = new ArrayList<>();
 
-        productInputsRepository.findAll()
+        // findAllWithProduct() usa JOIN FETCH — carrega product junto,
+        // evitando N+1 queries (uma query para tudo, não uma por registro).
+        productInputsRepository.findAllWithProduct()
                 .forEach(i -> activities.add(ActivityDTO.fromInput(i)));
 
-        productOutputsRepository.findAll()
+        productOutputsRepository.findAllWithProduct()
                 .forEach(o -> activities.add(ActivityDTO.fromOutput(o)));
 
-        // Mais recente primeiro
         activities.sort(Comparator.comparing(ActivityDTO::date).reversed());
 
         return activities;
