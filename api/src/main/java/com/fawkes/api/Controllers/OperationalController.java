@@ -11,6 +11,6 @@ public class OperationalController {
 
     @GetMapping(value = "/panel")
     public String operationalpanel() {
-        return "Somente Gerente Acessa!";
+        return "Somente Operacional Acessa!";
     }
 }
