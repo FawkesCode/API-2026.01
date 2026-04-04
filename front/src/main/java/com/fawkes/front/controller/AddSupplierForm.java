@@ -47,8 +47,6 @@ public class AddSupplierForm {
         } );
     }
 
-
-
     @FXML
     private void closeModal(ActionEvent event) {
         ((Stage) btnClose.getScene().getWindow()).close();
