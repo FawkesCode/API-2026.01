@@ -25,11 +25,8 @@
 
                         <AnchorPane id="header" prefHeight="100.0">
                            <children>
-                              <Label fx:id="pageName" layoutY="14.0" text="Página Tal" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="14.0">
-                                 <font>
-                                    <Font name="System Bold" size="27.0" />
-                                 </font>
-                              </Label>
+                               <Label fx:id="pageName" layoutY="14.0" text="Página Tal"
+                                      AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="14.0" />
                               <Label fx:id="pageDescription" layoutY="50.0" text="Descrição sobre o que o usuário vai encontrar nessa página." AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="50.0" />
                            </children>
                         </AnchorPane>

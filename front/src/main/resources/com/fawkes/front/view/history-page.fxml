@@ -6,10 +6,8 @@
 
 <VBox fx:id="pageContent" maxHeight="-Infinity" maxWidth="1200.0" minWidth="800.0" prefHeight="720.0" styleClass="pageContent" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.controller.HistoryController">
    <children>
-      <Label alignment="TOP_LEFT" text="Conteúdo de Atividades Recentes">
-         <font>
-            <Font name="System Bold" size="20.0" />
-         </font></Label>
+       <Label alignment="TOP_LEFT" text="Conteúdo de Atividades Recentes"
+              style="-fx-font-size: 20px; -fx-font-weight: bold;" />
       <VBox fx:id="historyContainer" alignment="CENTER" prefHeight="302.0" prefWidth="800.0" />
    </children>
 </VBox>
