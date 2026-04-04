@@ -19,13 +19,19 @@ import java.util.Objects;
 public class ModalManager {
 
     public static void openModal(Stage curStage, Parent specificContent, String title) {
+        openModal(curStage, specificContent, title, 800.0, 400.0, "ModalFrame.fxml");
+    }
+
+    public static void openModal(Stage curStage, Parent specificContent, String title, double width, double height, String modalFXML) {
         Stage overlayStage = new Stage();
 
         overlayStage.initModality(Modality.APPLICATION_MODAL);
         overlayStage.initStyle(StageStyle.TRANSPARENT);
+        String path = "/com/fawkes/front/view/components/" + modalFXML;
 
         try {
-            FXMLLoader loader = new FXMLLoader(ModalManager.class.getResource("/com/fawkes/front/view/components/ModalFrame.fxml"));
+
+            FXMLLoader loader = new FXMLLoader(ModalManager.class.getResource(path));
             Parent modalFrame = loader.load();
             ModalFrameController controller = loader.getController();
             controller.setContent(specificContent);
