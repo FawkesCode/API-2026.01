@@ -65,7 +65,6 @@ public class AddEmployeeForm {
             employeeView.setImage(image);
         }
     }
-
     @FXML
     private void handleOnSubmit(ActionEvent event) {
         if (emailField.getText().isEmpty() || passwordField.getText().isEmpty() || positionField.getText().isEmpty() || userGroupField.getSelectionModel().getSelectedItem() == null || departmentField.getSelectionModel().getSelectedItem() == null) {
