@@ -14,8 +14,9 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "groupName",nullable=false, unique=true)
-    private String groupName;
+    private Roles role = Roles.OPERATIONAL;
 
     @Column(name="groupDescription",nullable=false,unique=true)
     private String groupDescription;

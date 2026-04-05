@@ -1,4 +1,4 @@
-package com.fawkes.api.config;
+package com.fawkes.api.Config;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.context.ApplicationContextInitializer;

@@ -2,15 +2,21 @@ package com.fawkes.front.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fawkes.front.service.ApiClient;
+import com.fawkes.front.utils.ModalManager;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Objects;
 
 public class StockPageController {
 
@@ -24,6 +30,7 @@ public class StockPageController {
     @FXML private TableColumn<JsonNode, String> colMax;
     @FXML private Label statusLabel;
     @FXML private TextField searchField;
+    @FXML private Button btnInput;
 
     @FXML private VBox      inputDialog;
     @FXML private TextField inputStockId;
@@ -113,12 +120,15 @@ public class StockPageController {
     }
 
     @FXML
-    public void handleOpenInputDialog() {
-        clearDialog(inputStockId, inputProductId, inputQuantity, inputErrorLabel);
-        outputDialog.setVisible(false);
-        outputDialog.setManaged(false);
-        inputDialog.setVisible(true);
-        inputDialog.setManaged(true);
+    public void handleOpenInputDialog() throws IOException {
+        //clearDialog(inputStockId, inputProductId, inputQuantity, inputErrorLabel);
+        //outputDialog.setVisible(false);
+        //outputDialog.setManaged(false);
+        //inputDialog.setVisible(true);
+        //inputDialog.setManaged(true);
+        Parent formulario = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/fawkes/front/view/forms/new-stockItem-form.fxml")));
+        Stage curStage = ((Stage) btnInput.getScene().getWindow());
+        ModalManager.openModal(curStage, formulario, "Cadastrar Produto");
     }
 
     @FXML

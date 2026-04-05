@@ -33,7 +33,7 @@
             <String fx:value="input__text" />
             <String fx:value="input__text--search" />
          </styleClass></TextField>
-      <JFXButton onAction="#handleOpenAddDialog" styleClass="btn--primary" text="Novo Fornecedor">
+      <JFXButton fx:id="btnNewSupplier" onAction="#handleOpenAddDialog" styleClass="btn--primary" text="Novo Fornecedor">
          <graphic>
             <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                <image>
