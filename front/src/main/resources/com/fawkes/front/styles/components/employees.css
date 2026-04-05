@@ -1,0 +1,48 @@
+@import "../variables.css";
+@import "./components-shared-styles.css";
+
+.employee__status {
+    -fx-font-size: 11px;
+    -fx-text-fill: -fx-surface-0;
+    -fx-background-color: -fx-primary-light;
+    -fx-padding: 5px 7px;
+    -fx-background-radius: 100px;
+    -fx-border-radius: 100px;
+    -fx-font-weight: 700;
+}
+
+.employee__department, .employee__signed {
+    -fx-font-family: "Sofia Sans Condensed", sans-serif;
+    -fx-text-fill: -fx-surface-300;
+    -fx-font-size: 14px;
+}
+
+.employee__department {
+    -fx-font-size: 16px;
+}
+
+.employee__position {
+    -fx-text-fill: -fx-surface-300;
+    -fx-font-weight: 700;
+    -fx-font-size: 13px;
+}
+
+.employee__name {
+    -fx-font-weight: 700;
+    -fx-text-fill: -fx-surface-800;
+    -fx-font-size: 18px;
+}
+
+.employee__email {
+    -fx-text-fill: -fx-surface-700;
+    -fx-font-size: 14px;
+}
+
+.employee__edit {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10px;
+    -fx-border-style: solid;
+    -fx-border-color: -fx-surface-200;
+    -fx-border-radius: 5px;
+}
+

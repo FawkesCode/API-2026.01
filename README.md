@@ -47,12 +47,12 @@ O objetivo é padronizar o processo, eliminar compras não autorizadas e gerar d
 
 ## ✅ DoR — Definition of Ready <a id="dor"></a>
 
-[DOR](./docs/dor.md)
+[DOR](./docs/dor_geral.md)
 
 ---
 
 ## 🏆 DoD — Definition of Done <a id="dod"></a>
-[DOR](./docs/dod.md)
+[DOR](./docs/dod_geral.md)
 
 ---
 
@@ -163,3 +163,21 @@ Consulte o [Manual de Instalação](./docs/manual-instalacao.md) para prosseguir
 ---
 
 <sub>Fawkes · 2º ADS · Fatec SJC · 2026-1</sub>
+
+---
+
+## 🎯 Definições do Projeto
+
+Este projeto segue uma estrutura clara de "pronto" e "feito" para garantir a qualidade e o alinhamento em todas as fases.
+
+### Readiness (Estar Pronto)
+
+- **Projeto (`Project DoR`):** Define os critérios para o início do projeto, como visão, backlog e arquitetura. Veja os detalhes em `docs/project-definition-of-ready.md`.
+- **Sprint (`Sprint DoR`):** Checklist para iniciar uma nova Sprint, garantindo que as metas e o backlog estejam claros.
+- **User Story (`US DoR`):** Critérios para que uma história esteja pronta para ser puxada para uma Sprint, incluindo CAs e protótipos.
+
+### Doneness (Estar Feito)
+
+- **User Story (`US DoD`):** Checklist para considerar uma história concluída, incluindo testes, revisão de código e validação.
+- **Sprint (`Sprint DoD`):** Critérios para finalizar uma Sprint, como a demonstração ao PO e a integração do código.
+- **Projeto (`Project DoD`):** Define quando o produto está pronto para a entrega final, incluindo UAT, documentação e implantação. Veja os detalhes em `docs/project-definition-of-done.md`.
