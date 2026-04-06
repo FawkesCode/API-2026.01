@@ -34,11 +34,14 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        // Rotas públicas — qualquer um pode acessar
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/auth/register").hasRole("DIRECTOR")
                         // Health check
                         .requestMatchers("/actuator/health").permitAll()
-                        // TUDO que não foi listado acima → exige autenticação
+                        // TUDO que foi listado acima (tirando o register) → NÃO exige autenticação
+                        .requestMatchers("/manager/**").hasRole("MANAGER")
+                        .requestMatchers("/operational/**").hasRole("OPERATIONAL")
+                        .requestMatchers("/director/**").hasRole("DIRECTOR")
                         .anyRequest().authenticated()
                 )
                 // Pra quem sabe ExpressJS, isso aqui é basicamente o Middleware

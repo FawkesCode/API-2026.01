@@ -3,7 +3,6 @@ package com.fawkes.api.Services;
 import com.fawkes.api.Entities.Departments;
 import com.fawkes.api.Entities.Group;
 import com.fawkes.api.Entities.Roles;
-
 import com.fawkes.api.Entities.Users;
 import com.fawkes.api.Repositories.DepartmentRepository;
 import com.fawkes.api.Repositories.GroupRepository;
@@ -12,11 +11,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -52,7 +49,7 @@ public class UserService {
 
     @Transactional
     public Users insertUser(String userName, String userMail,
-                            Integer groupID, Integer departamentID, String password) {
+                            Integer groupID, Integer departamentID, String password, Roles role) {
 
         if (findExistentMail(userMail))
             throw new RuntimeException("Este email já foi cadastrado");
@@ -72,7 +69,7 @@ public class UserService {
         user.setGroup(group);
         user.setDepartments(dept);
         user.setIsActive(true);
-
+        user.setRoles(Set.of(role));
         return userRepository.save(user);
     }
 
@@ -96,6 +93,7 @@ public class UserService {
         user.setGroup(group);
         user.setDepartments(defaultDept);
         user.setIsActive(true);
+        user.setRoles(Set.of(role));
 
         return userRepository.save(user);
     }
