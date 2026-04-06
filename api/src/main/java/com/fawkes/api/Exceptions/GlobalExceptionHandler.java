@@ -1,6 +1,8 @@
 package com.fawkes.api.Exceptions;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -19,6 +21,20 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AcessoNegadoException.class)
     public ResponseEntity<Map<String, Object>> handleAcessoNegado(AcessoNegadoException ex) {
         return buildResponse(403, "FORBIDDEN", ex.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAccessDenied(AccessDeniedException ex) {
+        String mensagem = "Acesso negado: Você não possui as permissões necessárias para acessar este recurso. " +
+                "Verifique seu token JWT e certifique-se de que possui a role correta (DIRECTOR, MANAGER ou OPERATIONAL).";
+        return buildResponse(403, "ACCESS_DENIED", mensagem);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Map<String, Object>> handleAuthenticationException(AuthenticationException ex) {
+        String mensagem = "Erro de autenticação: Token inválido, expirado ou ausente. " +
+                "Por favor, faça login novamente e inclua o token JWT no header 'Authorization: Bearer {token}'.";
+        return buildResponse(401, "UNAUTHORIZED", mensagem);
     }
 
     @ExceptionHandler(RegraDeNegocioException.class)
