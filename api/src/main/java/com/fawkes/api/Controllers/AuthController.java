@@ -5,22 +5,22 @@ import com.fawkes.api.DTOs.Request.SignUpRequest;
 import com.fawkes.api.DTOs.Response.LoginResponse;
 import com.fawkes.api.Entities.Roles;
 import com.fawkes.api.Entities.Users;
+import com.fawkes.api.Exceptions.AcessoNegadoException;
 import com.fawkes.api.Services.UserLoginService;
 import com.fawkes.api.Services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.management.relation.Role;
 import java.util.Set;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-
-// Adicionar lógica do controller aqui (Login e Registro) verificando roles!
 public class AuthController {
 
     private final UserLoginService userLoginService;
@@ -34,6 +34,19 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@Valid @RequestBody SignUpRequest signUpRequest) {
+        // ✅ Verificação explícita de role DIRECTOR
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isDirector = authentication != null && 
+                            authentication.getAuthorities().stream()
+                            .anyMatch(auth -> auth.getAuthority().equals("ROLE_DIRECTOR"));
+        
+        if (!isDirector) {
+            throw new AcessoNegadoException(
+                "Você não tem permissão para criar usuários. Apenas DIRECTORS podem registrar novos usuários. " +
+                "Sua role atual não permite esta ação."
+            );
+        }
+
         Users user = userService.registerUser(
                 signUpRequest.getUserName(),
                 signUpRequest.getUserMail(),

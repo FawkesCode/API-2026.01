@@ -15,9 +15,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
     private final AuthTokenFilter authTokenFilter;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
-    public SecurityConfig(AuthTokenFilter authTokenFilter) {
+    public SecurityConfig(AuthTokenFilter authTokenFilter, CustomAccessDeniedHandler customAccessDeniedHandler) {
         this.authTokenFilter = authTokenFilter;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
     }
 
     @Bean
@@ -43,6 +45,10 @@ public class SecurityConfig {
                         .requestMatchers("/operational/**").hasRole("OPERATIONAL")
                         .requestMatchers("/director/**").hasRole("DIRECTOR")
                         .anyRequest().authenticated()
+                )
+                // ✅ Adicionar handler customizado para 403
+                .exceptionHandling(exception -> 
+                        exception.accessDeniedHandler(customAccessDeniedHandler)
                 )
                 // Pra quem sabe ExpressJS, isso aqui é basicamente o Middleware
                 .addFilterBefore(
