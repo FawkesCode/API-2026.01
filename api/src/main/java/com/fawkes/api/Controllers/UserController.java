@@ -1,6 +1,7 @@
 package com.fawkes.api.Controllers;
 
 import com.fawkes.api.DTOs.Request.SignUpRequest;
+import com.fawkes.api.DTOs.UserDTO;
 import com.fawkes.api.Entities.Users;
 import com.fawkes.api.Services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +18,11 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<Users>> listAll() {
-        return ResponseEntity.ok(userService.listAll());
+    public ResponseEntity<List<UserDTO>> listAll() {
+        List<UserDTO> users = userService.listAllWithDetails().stream()
+                .map(UserDTO::fromEntity)
+                .toList();
+        return ResponseEntity.ok(users);
     }
 
     @PostMapping

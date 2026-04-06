@@ -137,6 +137,11 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    @Transactional
+    public List<Users> listAllWithDetails() {
+        return userRepository.findAllWithGroupAndDepartment();
+    }
+
     public Users create(Users user) {
         if (userRepository.existsByUserMail(user.getUserMail())) {
             throw new RuntimeException("Email já cadastrado.");

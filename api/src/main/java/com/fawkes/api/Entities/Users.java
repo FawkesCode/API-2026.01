@@ -69,6 +69,6 @@ public class Users {
 
 
     public void setRoles(Set<Roles> role) {
-
+        this.roles = role;
     }
 }
