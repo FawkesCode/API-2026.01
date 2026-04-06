@@ -57,11 +57,9 @@ public class EmployeePageController {
             return new SimpleStringProperty(active ? "Ativo" : "Inativo");
         });
         colGrupo.setCellValueFactory(d ->
-                new SimpleStringProperty(
-                        d.getValue().path("group").path("groupName").asText("-")));
+                new SimpleStringProperty(d.getValue().path("groupName").asText("-")));
         colDepto.setCellValueFactory(d ->
-                new SimpleStringProperty(
-                        d.getValue().path("departments").path("departmentName").asText("-")));
+                new SimpleStringProperty(d.getValue().path("departamentName").asText("-")));
 
         // Coluna de ações: botão Excluir
         colAcoes.setCellFactory(col -> new TableCell<>() {
@@ -108,8 +106,8 @@ public class EmployeePageController {
         for (JsonNode row : allRows) {
             if (row.path("userName").asText("").toLowerCase().contains(q)
                     || row.path("userMail").asText("").toLowerCase().contains(q)
-                    || row.path("group").path("groupName").asText("").toLowerCase().contains(q)
-                    || row.path("departments").path("departmentName").asText("").toLowerCase().contains(q)) {
+                    || row.path("groupName").asText("").toLowerCase().contains(q)
+                    || row.path("departamentName").asText("").toLowerCase().contains(q)) {
                 filtered.add(row);
             }
         }
