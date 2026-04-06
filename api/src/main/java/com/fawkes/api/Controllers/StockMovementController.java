@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/stock/movements")
+@RequestMapping("/api/stock/movements")
 @RequiredArgsConstructor
 public class StockMovementController {
 

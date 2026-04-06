@@ -36,8 +36,8 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login").permitAll()
-                        .requestMatchers("/auth/register").hasRole("DIRECTOR")
+                        .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/register").hasRole("DIRECTOR")
                         // Health check
                         .requestMatchers("/actuator/health").permitAll()
                         // TUDO que foi listado acima (tirando o register) → NÃO exige autenticação

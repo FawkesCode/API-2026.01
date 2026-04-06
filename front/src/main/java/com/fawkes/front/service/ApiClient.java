@@ -9,6 +9,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ApiClient {
 
@@ -20,10 +22,44 @@ public class ApiClient {
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    // ---------------- Basic Auth ----------------
-    private static String basicAuthHeader() {
-        String credentials = "admin:fawkes2026";
-        return "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes());
+    // ---------------- Authentication ----------------
+    /**
+     * Login with email and password, stores JWT token for subsequent requests
+     */
+    public static JsonNode login(String email, String password) throws Exception {
+        // Use ObjectMapper to properly serialize the login request
+        Map<String, String> loginData = new HashMap<>();
+        loginData.put("email", email);
+        loginData.put("password", password);
+        String json = mapper.writeValueAsString(loginData);
+        
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/api/auth/login"))
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertOk(response);
+        JsonNode responseBody = mapper.readTree(response.body());
+        
+        // Extract token and store it
+        if (responseBody.has("token")) {
+            String token = responseBody.get("token").asText();
+            TokenManager.getInstance().setToken(token);
+        }
+        
+        return responseBody;
+    }
+
+    // ---------------- Bearer Token Auth ----------------
+    private static String getBearerAuthHeader() {
+        TokenManager tokenManager = TokenManager.getInstance();
+        String bearer = tokenManager.getBearerToken();
+        if (bearer == null || bearer.isEmpty()) {
+            throw new RuntimeException("No authentication token available. Please login first.");
+        }
+        return bearer;
     }
 
     // ---------------- Stock ----------------
@@ -32,7 +68,7 @@ public class ApiClient {
                 .uri(URI.create(BASE_URL + "/api/stock"))
                 .GET()
                 .header("Accept", "application/json")
-                .header("Authorization", basicAuthHeader())
+                .header("Authorization", getBearerAuthHeader())
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertOk(response);
@@ -48,7 +84,7 @@ public class ApiClient {
                 .uri(URI.create(url))
                 .POST(HttpRequest.BodyPublishers.noBody())
                 .header("Accept", "application/json")
-                .header("Authorization", basicAuthHeader())
+                .header("Authorization", getBearerAuthHeader())
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertOk(response);
@@ -64,7 +100,7 @@ public class ApiClient {
                 .uri(URI.create(url))
                 .POST(HttpRequest.BodyPublishers.noBody())
                 .header("Accept", "application/json")
-                .header("Authorization", basicAuthHeader())
+                .header("Authorization", getBearerAuthHeader())
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertOk(response);
@@ -77,7 +113,7 @@ public class ApiClient {
                 .uri(URI.create(BASE_URL + path))
                 .GET()
                 .header("Accept", "application/json")
-                .header("Authorization", basicAuthHeader())
+                .header("Authorization", getBearerAuthHeader())
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertOk(response);
@@ -91,7 +127,7 @@ public class ApiClient {
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
-                .header("Authorization", basicAuthHeader())
+                .header("Authorization", getBearerAuthHeader())
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertOk(response);
@@ -105,7 +141,7 @@ public class ApiClient {
                 .PUT(HttpRequest.BodyPublishers.ofString(jsonBody))
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
-                .header("Authorization", basicAuthHeader())
+                .header("Authorization", getBearerAuthHeader())
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertOk(response);
@@ -118,7 +154,7 @@ public class ApiClient {
                 .uri(URI.create(BASE_URL + path))
                 .DELETE()
                 .header("Accept", "application/json")
-                .header("Authorization", basicAuthHeader())
+                .header("Authorization", getBearerAuthHeader())
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertOk(response);

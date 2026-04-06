@@ -12,7 +12,6 @@ public interface ProductOutputsRepository extends JpaRepository<ProductOutputs, 
 
     // JOIN FETCH carrega product e stock junto numa única query SQL,
     // eliminando o problema N+1 que causava lentidão no histórico
-    // DISTINCT evita cartesian product quando há múltiplos joins
-    @Query("SELECT DISTINCT o FROM ProductOutputs o JOIN FETCH o.product JOIN FETCH o.stock")
+    @Query("SELECT o FROM ProductOutputs o LEFT JOIN FETCH o.product LEFT JOIN FETCH o.stock")
     List<ProductOutputs> findAllWithProduct();
 }

@@ -3,6 +3,7 @@ package com.fawkes.api.Services;
 import com.fawkes.api.Entities.*;
 import com.fawkes.api.Repositories.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,12 +12,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class StockMovementService {
 
     private final ProductStockRepository productStockRepository;
@@ -122,19 +121,49 @@ public class StockMovementService {
 
     @Transactional(readOnly = true)
     public List<ActivityDTO> listActivity() {
-        List<ActivityDTO> activities = new ArrayList<>();
+        try {
+            log.info("Iniciando listActivity()");
+            List<ActivityDTO> activities = new ArrayList<>();
 
-        // findAllWithProduct() usa JOIN FETCH — carrega product junto,
-        // evitando N+1 queries (uma query para tudo, não uma por registro).
-        productInputsRepository.findAllWithProduct()
-                .forEach(i -> activities.add(ActivityDTO.fromInput(i)));
+            // findAllWithProduct() usa LEFT JOIN FETCH — carrega product junto,
+            // evitando N+1 queries (uma query para tudo, não uma por registro).
+            log.info("Buscando ProductInputs com LEFT JOIN FETCH");
+            List<ProductInputs> inputs = productInputsRepository.findAllWithProduct();
+            log.info("Encontrados {} ProductInputs", inputs.size());
+            
+            inputs.forEach(i -> {
+                try {
+                    ActivityDTO dto = ActivityDTO.fromInput(i);
+                    activities.add(dto);
+                    log.debug("Convertido input {} para ActivityDTO", i.getId());
+                } catch (Exception e) {
+                    log.error("Erro ao converter ProductInputs ID {} para ActivityDTO", i.getId(), e);
+                    throw e;
+                }
+            });
 
-        productOutputsRepository.findAllWithProduct()
-                .forEach(o -> activities.add(ActivityDTO.fromOutput(o)));
+            log.info("Buscando ProductOutputs com LEFT JOIN FETCH");
+            List<ProductOutputs> outputs = productOutputsRepository.findAllWithProduct();
+            log.info("Encontrados {} ProductOutputs", outputs.size());
+            
+            outputs.forEach(o -> {
+                try {
+                    ActivityDTO dto = ActivityDTO.fromOutput(o);
+                    activities.add(dto);
+                    log.debug("Convertido output {} para ActivityDTO", o.getId());
+                } catch (Exception e) {
+                    log.error("Erro ao converter ProductOutputs ID {} para ActivityDTO", o.getId(), e);
+                    throw e;
+                }
+            });
 
-        activities.sort(Comparator.comparing(ActivityDTO::date).reversed());
-
-        return activities;
+            activities.sort(Comparator.comparing(ActivityDTO::date).reversed());
+            log.info("listActivity() retornando {} atividades", activities.size());
+            return activities;
+        } catch (Exception e) {
+            log.error("Erro em listActivity()", e);
+            throw e;
+        }
     }
 
 
