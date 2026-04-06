@@ -1,5 +1,7 @@
 package com.fawkes.front.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fawkes.front.service.ApiClient;
 import com.jfoenix.controls.JFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,6 +17,8 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import java.io.File;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.UnaryOperator;
 
 public class AddStockItemForm {
@@ -28,6 +32,8 @@ public class AddStockItemForm {
     @FXML private TextField minValField;
     @FXML private ImageView productView;
     @FXML private ComboBox<String> suppilerField;
+
+    private final Map<String, Long> supplierNameToId = new LinkedHashMap<>();
 
     @FXML
     public void initialize() {
@@ -44,6 +50,22 @@ public class AddStockItemForm {
         priceField.setTextFormatter(new TextFormatter<>(filter));
         qtdField.setTextFormatter(new TextFormatter<>(filter));
         minValField.setTextFormatter(new TextFormatter<>(filter));
+
+        loadSuppliers();
+    }
+
+    private void loadSuppliers() {
+        try {
+            JsonNode data = ApiClient.get("/api/suppliers");
+            for (JsonNode node : data) {
+                String name = node.path("nomeFornecedor").asText("Sem nome");
+                Long id = node.path("id").asLong();
+                supplierNameToId.put(name, id);
+                suppilerField.getItems().add(name);
+            }
+        } catch (Exception e) {
+            errorLabel.setText("Erro ao carregar fornecedores: " + e.getMessage());
+        }
     }
 
 
