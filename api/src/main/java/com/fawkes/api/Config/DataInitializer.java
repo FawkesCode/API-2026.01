@@ -30,8 +30,8 @@ public class DataInitializer {
             // ==================== GRUPO ====================
             Group adminGroup = groupRepository.findById(1L).orElseGet(() -> {
                 Group g = new Group();
-                g.setGroupName("Administradores");
-                g.setGroupDescription("Grupo de administradores do sistema");
+                g.setRole(Roles.DIRECTOR);
+                g.setGroupDescription("Grupo de Diretores do sistema");
                 return groupRepository.save(g);
             });
 
