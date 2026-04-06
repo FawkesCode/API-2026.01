@@ -1,5 +1,6 @@
 package com.fawkes.api.Security;
 
+import com.fawkes.api.Config.ErrorMessagesConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,6 +16,12 @@ import java.util.Map;
 @Component
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
+    private final ErrorMessagesConfig errorMessages;
+
+    public CustomAccessDeniedHandler(ErrorMessagesConfig errorMessages) {
+        this.errorMessages = errorMessages;
+    }
+
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
                        AccessDeniedException accessDeniedException) throws IOException, ServletException {
@@ -26,8 +33,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         body.put("timestamp", LocalDateTime.now().toString());
         body.put("status", 403);
         body.put("erro", "ACCESS_DENIED");
-        body.put("mensagem", "Acesso negado: Você não possui as permissões necessárias para acessar este recurso. " +
-                "Verifique seu token JWT e certifique-se de que possui a role correta (DIRECTOR, MANAGER ou OPERATIONAL).");
+        body.put("mensagem", errorMessages.getInsufficientPermissions());
 
         response.getWriter().write(convertMapToJson(body));
     }

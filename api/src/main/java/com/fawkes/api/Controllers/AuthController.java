@@ -1,5 +1,6 @@
 package com.fawkes.api.Controllers;
 
+import com.fawkes.api.Config.ErrorMessagesConfig;
 import com.fawkes.api.DTOs.Request.LoginRequest;
 import com.fawkes.api.DTOs.Request.SignUpRequest;
 import com.fawkes.api.DTOs.Response.LoginResponse;
@@ -25,6 +26,7 @@ public class AuthController {
 
     private final UserLoginService userLoginService;
     private final UserService userService;
+    private final ErrorMessagesConfig errorMessages;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
@@ -41,10 +43,7 @@ public class AuthController {
                             .anyMatch(auth -> auth.getAuthority().equals("ROLE_DIRECTOR"));
         
         if (!isDirector) {
-            throw new AcessoNegadoException(
-                "Você não tem permissão para criar usuários. Apenas DIRECTORS podem registrar novos usuários. " +
-                "Sua role atual não permite esta ação."
-            );
+            throw new AcessoNegadoException(errorMessages.getRegisterOnlyDirector());
         }
 
         Users user = userService.registerUser(

@@ -1,5 +1,6 @@
 package com.fawkes.api.Exceptions;
 
+import com.fawkes.api.Config.ErrorMessagesConfig;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
@@ -13,43 +14,45 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private final ErrorMessagesConfig errorMessages;
+
+    public GlobalExceptionHandler(ErrorMessagesConfig errorMessages) {
+        this.errorMessages = errorMessages;
+    }
+
     @ExceptionHandler(RecursoNaoEncontradoException.class)
     public ResponseEntity<Map<String, Object>> handleRecursoNaoEncontrado(RecursoNaoEncontradoException ex) {
-        return buildResponse(404, "NOT_FOUND", ex.getMessage());
+        return buildResponse(404, "NOT_FOUND", errorMessages.getResourceNotFound());
     }
 
     @ExceptionHandler(AcessoNegadoException.class)
     public ResponseEntity<Map<String, Object>> handleAcessoNegado(AcessoNegadoException ex) {
-        return buildResponse(403, "FORBIDDEN", ex.getMessage());
+        return buildResponse(403, "FORBIDDEN", errorMessages.getAccessDenied());
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Map<String, Object>> handleAccessDenied(AccessDeniedException ex) {
-        String mensagem = "Acesso negado: Você não possui as permissões necessárias para acessar este recurso. " +
-                "Verifique seu token JWT e certifique-se de que possui a role correta (DIRECTOR, MANAGER ou OPERATIONAL).";
-        return buildResponse(403, "ACCESS_DENIED", mensagem);
+        return buildResponse(403, "ACCESS_DENIED", errorMessages.getInsufficientPermissions());
     }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Map<String, Object>> handleAuthenticationException(AuthenticationException ex) {
-        String mensagem = "Erro de autenticação: Token inválido, expirado ou ausente. " +
-                "Por favor, faça login novamente e inclua o token JWT no header 'Authorization: Bearer {token}'.";
-        return buildResponse(401, "UNAUTHORIZED", mensagem);
+        return buildResponse(401, "UNAUTHORIZED", errorMessages.getUnauthorized());
     }
 
     @ExceptionHandler(RegraDeNegocioException.class)
     public ResponseEntity<Map<String, Object>> handleRegraDeNegocio(RegraDeNegocioException ex) {
-        return buildResponse(422, "UNPROCESSABLE_ENTITY", ex.getMessage());
+        return buildResponse(422, "UNPROCESSABLE_ENTITY", errorMessages.getBusinessRuleError());
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, Object>> handleRuntimeException(RuntimeException ex) {
-        return buildResponse(500, "INTERNAL_SERVER_ERROR", ex.getMessage());
+        return buildResponse(500, "INTERNAL_SERVER_ERROR", errorMessages.getInternalServerError());
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleException(Exception ex) {
-        return buildResponse(500, "INTERNAL_SERVER_ERROR", "Erro interno no servidor.");
+        return buildResponse(500, "INTERNAL_SERVER_ERROR", errorMessages.getInternalServerError());
     }
 
     private ResponseEntity<Map<String, Object>> buildResponse(int status, String erro, String mensagem) {
