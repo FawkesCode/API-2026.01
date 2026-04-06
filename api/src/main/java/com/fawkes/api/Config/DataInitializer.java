@@ -33,9 +33,23 @@ public class DataInitializer {
             Group adminGroup = groupRepository.findById(1L).orElseGet(() -> {
                 Group g = new Group();
                 g.setRole(Roles.DIRECTOR);
-                g.setGroupDescription("Grupo de Diretores do sistema");
+                g.setGroupDescription("Grupo de diretores do sistema");
                 return groupRepository.save(g);
             });
+
+            Group managerGroup = groupRepository.findById(2L).orElseGet(() -> {
+                Group g = new Group();
+                g.setRole(Roles.MANAGER);
+                g.setGroupDescription("Grupo de gerentes do sistema");
+                return groupRepository.save(g);
+            });
+            Group operationalGroup = groupRepository.findById(3L).orElseGet(() -> {
+                Group g = new Group();
+                g.setRole(Roles.OPERATIONAL);
+                g.setGroupDescription("Grupo de operários do sistema");
+                return groupRepository.save(g);
+            });
+
 
             // ==================== DEPARTAMENTO ====================
             Departments logisticaDept = departmentRepository.findById(1L).orElseGet(() -> {

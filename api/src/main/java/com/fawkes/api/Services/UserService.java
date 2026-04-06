@@ -74,6 +74,41 @@ public class UserService {
     }
 
     @Transactional
+    public Users insertUserSimple(String userName, String userMail, String password, 
+                                   String roleName, String departamentName) {
+        if (findExistentMail(userMail))
+            throw new RuntimeException("Este email já foi cadastrado");
+        if (findExistentName(userName))
+            throw new RuntimeException("Este nome de usuário já foi cadastrado");
+
+        Roles role;
+        try {
+            role = Roles.valueOf(roleName);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Role inválida. Use: DIRECTOR, MANAGER ou OPERATIONAL");
+        }
+
+        Group group = groupRepository.findByRole(role)
+                .orElseThrow(() -> new RuntimeException("Grupo não encontrado para a role: " + role));
+
+        Departments dept = new Departments();
+        dept.setDepartamentName(departamentName);
+        dept.setText("Departamento " + departamentName);
+        dept = departmentRepository.save(dept);
+
+        Users user = new Users();
+        user.setUserName(userName);
+        user.setUserMail(userMail);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setGroup(group);
+        user.setDepartments(dept);
+        user.setIsActive(true);
+        user.setRoles(Set.of(role));
+
+        return userRepository.save(user);
+    }
+
+    @Transactional
     public Users registerUser(String userName, String userMail, String password, Roles role) {
         if (findExistentMail(userMail))
             throw new RuntimeException("Este email já foi cadastrado");

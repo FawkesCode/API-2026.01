@@ -1,5 +1,6 @@
 package com.fawkes.api.Controllers;
 
+import com.fawkes.api.DTOs.Request.SignUpRequest;
 import com.fawkes.api.Entities.Users;
 import com.fawkes.api.Services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,15 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Users> create(@RequestBody Users user) {
-        return ResponseEntity.ok(userService.create(user));
+    public ResponseEntity<Users> create(@RequestBody SignUpRequest request) {
+        Users newUser = userService.insertUserSimple(
+                request.getUserName(),
+                request.getUserMail(),
+                request.getPassword(),
+                request.getRole().name(),
+                request.getDepartamentName()
+        );
+        return ResponseEntity.ok(newUser);
     }
 
     @DeleteMapping("/{id}")

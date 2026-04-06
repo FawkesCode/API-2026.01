@@ -11,7 +11,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class EmployeePageController {
+
+    private static final List<String> GRUPOS = Arrays.asList("DIRECTOR", "MANAGER", "OPERATIONAL");
 
     // Tabela
     @FXML private TableView<JsonNode>           employeeTable;
@@ -32,8 +37,8 @@ public class EmployeePageController {
     @FXML private TextField     fieldUsername;
     @FXML private TextField     fieldEmail;
     @FXML private PasswordField fieldPassword;
-    @FXML private TextField     fieldGroupId;
-    @FXML private TextField     fieldDeptId;
+    @FXML private ComboBox<String> fieldGroup;
+    @FXML private TextField     fieldDept;
     @FXML private Label         addErrorLabel;
 
     private final ObservableList<JsonNode> allRows = FXCollections.observableArrayList();
@@ -116,9 +121,12 @@ public class EmployeePageController {
         fieldUsername.clear();
         fieldEmail.clear();
         fieldPassword.clear();
-        fieldGroupId.clear();
-        fieldDeptId.clear();
+        fieldGroup.getSelectionModel().clearSelection();
+        fieldDept.clear();
         addErrorLabel.setText("");
+        
+        fieldGroup.setItems(FXCollections.observableArrayList(GRUPOS));
+        
         addDialog.setVisible(true);
         addDialog.setManaged(true);
     }
@@ -134,30 +142,20 @@ public class EmployeePageController {
         String username = fieldUsername.getText().trim();
         String email    = fieldEmail.getText().trim();
         String password = fieldPassword.getText().trim();
-        String groupStr = fieldGroupId.getText().trim();
-        String deptStr  = fieldDeptId.getText().trim();
+        String group    = fieldGroup.getSelectionModel().getSelectedItem();
+        String dept     = fieldDept.getText().trim();
 
         if (username.isEmpty() || email.isEmpty() || password.isEmpty()
-                || groupStr.isEmpty() || deptStr.isEmpty()) {
+                || group == null || dept.isEmpty()) {
             addErrorLabel.setText("Preencha todos os campos.");
             return;
         }
 
-        long groupId, deptId;
         try {
-            groupId = Long.parseLong(groupStr);
-            deptId  = Long.parseLong(deptStr);
-        } catch (NumberFormatException e) {
-            addErrorLabel.setText("ID do Grupo e Departamento devem ser números.");
-            return;
-        }
-
-        try {
-            // Monta o JSON manualmente para evitar dependência extra
             String body = String.format(
                     "{\"userName\":\"%s\",\"userMail\":\"%s\",\"password\":\"%s\"," +
-                            "\"isActive\":true,\"group\":{\"id\":%d},\"departments\":{\"id\":%d}}",
-                    username, email, password, groupId, deptId);
+                            "\"isActive\":true,\"role\":\"%s\",\"departamentName\":\"%s\"}",
+                    username, email, password, group, dept);
 
             ApiClient.post("/api/users", body);
             handleCloseAddDialog();

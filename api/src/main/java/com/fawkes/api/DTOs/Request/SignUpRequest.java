@@ -9,4 +9,5 @@ public class SignUpRequest {
     private String userMail;
     private String password;
     private Roles role;
+    private String departamentName;
 }
