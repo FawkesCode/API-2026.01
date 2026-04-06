@@ -120,6 +120,7 @@ public class StockMovementService {
         return novoSaldo;
     }
 
+    @Transactional(readOnly = true)
     public List<ActivityDTO> listActivity() {
         List<ActivityDTO> activities = new ArrayList<>();
 

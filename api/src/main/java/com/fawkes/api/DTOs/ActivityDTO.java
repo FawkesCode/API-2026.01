@@ -13,20 +13,22 @@ public record ActivityDTO(
         LocalDateTime date
 ) {
     public static ActivityDTO fromInput(ProductInputs input) {
+        String productName = (input.getProduct() != null) ? input.getProduct().getProductName() : "Produto Indisponível";
         return new ActivityDTO(
                 input.getId(),
                 "ENTRADA",
-                input.getProduct().getProductName(),
+                productName,
                 input.getQuantity(),
                 input.getInputDate()
         );
     }
 
     public static ActivityDTO fromOutput(ProductOutputs output) {
+        String productName = (output.getProduct() != null) ? output.getProduct().getProductName() : "Produto Indisponível";
         return new ActivityDTO(
                 output.getId(),
                 "SAIDA",
-                output.getProduct().getProductName(),
+                productName,
                 output.getQuantity(),
                 output.getOutputDate()
         );
