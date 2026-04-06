@@ -1,4 +1,4 @@
-package com.fawkes.api.config;
+package com.fawkes.api.Config;
 
 import com.fawkes.api.Entities.*;
 import com.fawkes.api.Repositories.*;
@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,7 +23,8 @@ public class DataInitializer {
             SupplierRepository supplierRepository,
             ProductsRepository productsRepository,
             ProductStockRepository productStockRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder) {
 
         return args -> {
             System.out.println("🚀 Iniciando seed de dados de teste...");
@@ -87,17 +89,17 @@ public class DataInitializer {
                     });
 
             // ==================== USUÁRIO DE TESTE ====================
-            if (!userRepository.existsByUserMail("teste.123@gmail.com")) {
+            if (!userRepository.existsByUserMail("teste@gmail.com") && !userRepository.existsByUserName("admin")) {
                 Users user = new Users();
                 user.setUserName("admin");
-                user.setUserMail("teste.123@gmail.com");
-                user.setPassword("$2a$10$8K7z7z7z7z7z7z7z7z7z7u7z7z7z7z7z7z7z7z7z7z7z7z7z7z7z7");
+                user.setUserMail("teste@gmail.com");
+                user.setPassword(passwordEncoder.encode("niggasForever"));
                 user.setIsActive(true);
                 user.setGroup(adminGroup);
                 user.setDepartments(logisticaDept);
                 user.setCreationDate(LocalDateTime.now());
                 userRepository.save(user);
-                System.out.println("✅ Usuário de teste criado → teste.123@gmail.com / teste123");
+                System.out.println("✅ Usuário de teste criado → teste@gmail.com / niggasForever");
             }
 
             System.out.println("✅ Seed de dados concluído com sucesso!");
