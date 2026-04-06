@@ -94,9 +94,27 @@ public class AddStockItemForm {
     private void handleOnSubmit(ActionEvent event) {
         if (nameField.getText().isEmpty() || priceField.getText().isEmpty() || qtdField.getText().isEmpty() || minValField.getText().isEmpty() || suppilerField.getSelectionModel().getSelectedItem() == null) {
             errorLabel.setText("Verfique se todos os campos obrigatórios foram preenchidos.");
-        } else {
-            System.out.println("Fazer a lógica de upload aqui");
+            return;
         }
 
+        try {
+            String selectedSupplier = suppilerField.getSelectionModel().getSelectedItem();
+            Long supplierId = supplierNameToId.get(selectedSupplier);
+
+            String body = String.format(
+                "{\"productName\":\"%s\",\"productType\":\"%s\",\"measurementUnit\":\"NAO_DEFINIDO\"," +
+                "\"unitValue\":%s,\"description\":\"\",\"supplierId\":%d,\"stockId\":1}",
+                nameField.getText().trim(),
+                nameField.getText().trim(),
+                priceField.getText().trim(),
+                supplierId
+            );
+
+            ApiClient.post("/api/products", body);
+
+            ((Stage) btnClose.getScene().getWindow()).close();
+        } catch (Exception e) {
+            errorLabel.setText("Erro ao cadastrar produto: " + e.getMessage());
+        }
     }
 }
