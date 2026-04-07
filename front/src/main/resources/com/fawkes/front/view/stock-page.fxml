@@ -3,6 +3,7 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import java.lang.String?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -84,12 +85,12 @@
 
    <VBox fx:id="outputDialog" managed="false" maxWidth="400.0" spacing="12.0" style="-fx-background-color: white; -fx-border-color: #DADEE3; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);" visible="false">
       <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Registrar Saída" />
-      <Label text="ID do Estoque:" />
-      <TextField fx:id="outputStockId" promptText="Ex: 1" />
-      <Label text="ID do Produto:" />
-      <TextField fx:id="outputProductId" promptText="Ex: 2" />
+      <Label text="Estoque:" />
+      <ComboBox fx:id="outputStockCombo" promptText="Selecione um estoque..." />
+      <Label text="Produto:" />
+      <ComboBox fx:id="outputProductCombo" promptText="Selecione um produto..." />
       <Label text="Quantidade:" />
-      <TextField fx:id="outputQuantity" promptText="Ex: 10" />
+      <TextField fx:id="outputQuantity" promptText="Digite a quantidade a remover (ex: 10)" />
       <Label fx:id="outputErrorLabel" style="-fx-text-fill: #FF4A50;" text="" />
       <HBox alignment="CENTER_RIGHT" spacing="10">
          <Button onAction="#handleCloseOutputDialog" text="Cancelar" />
