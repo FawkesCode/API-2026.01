@@ -31,7 +31,7 @@ O desafio é construir uma ferramenta que organize, governe e dê transparência
 
 ## 💡 Solução <a id="solucao"></a>
 
-O **Sistema (nome)** é uma aplicação desktop desenvolvida em Java com JavaFX, voltada à gestão completa do processo de compras da Newe Log.
+O Sistema **Newe Logic** é uma aplicação desktop desenvolvida em Java com JavaFX, voltada à gestão completa do processo de compras da Newe Log.
 
 A solução contempla abertura de pedidos com numeração automática, fluxo de aprovação com parecer registrado, controle de estoque com alertas de nível mínimo, módulo de cotações com comparativo entre fornecedores, registro de recebimento com anexo de nota fiscal e dashboard gerencial com indicadores financeiros e operacionais.
 
