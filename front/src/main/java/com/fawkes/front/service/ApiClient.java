@@ -47,9 +47,34 @@ public class ApiClient {
         if (responseBody.has("token")) {
             String token = responseBody.get("token").asText();
             TokenManager.getInstance().setToken(token);
+            
+            // Fetch and store user info
+            JsonNode userInfo = getCurrentUser();
+            if (userInfo != null) {
+                UserInfoManager userMgr = UserInfoManager.getInstance();
+                userMgr.setUserId(userInfo.path("id").asText(null));
+                userMgr.setUserName(userInfo.path("userName").asText(null));
+                userMgr.setUserEmail(userInfo.path("userMail").asText(null));
+                userMgr.setUserRole(userInfo.path("groupName").asText(null));
+            }
         }
         
         return responseBody;
+    }
+    
+    /**
+     * Get current logged in user info
+     */
+    public static JsonNode getCurrentUser() throws Exception {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/api/users/me"))
+                .GET()
+                .header("Accept", "application/json")
+                .header("Authorization", getBearerAuthHeader())
+                .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertOk(response);
+        return mapper.readTree(response.body());
     }
 
     // ---------------- Bearer Token Auth ----------------

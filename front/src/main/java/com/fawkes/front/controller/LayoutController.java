@@ -1,6 +1,7 @@
 package com.fawkes.front.controller;
 
 import com.fawkes.front.utils.NavigationManager;
+import com.fawkes.front.utils.RBACUtil;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -63,6 +64,9 @@ public class LayoutController {
 
     @FXML
     public void initialize() {
+        // Apply RBAC restrictions based on user role
+        applyRBACRestrictions();
+
         nm.navigateToPage(contentWrapper, "view/dashboard-page.fxml", "Dashboard", "Onde você e outros gerentes podem visualizar a situação das compras de forma rápida e simplificada.");
 
         pageName.textProperty().bind(nm.getCurrentPage());
@@ -75,6 +79,20 @@ public class LayoutController {
         sidebarSeparator1.maxWidthProperty().bind(sidebarContainer.widthProperty());
         sidebarSeparator2.maxWidthProperty().bind(sidebarContainer.widthProperty());
         updateActiveButton(btnDashboard);
+    }
+
+    private void applyRBACRestrictions() {
+        // OPERATIONAL users can only access Stock
+        if (RBACUtil.isOperational()) {
+            // Hide tabs for operational users
+            btnDashboard.setVisible(false);
+            btnHistory.setVisible(false);
+            btnEmployees.setVisible(false);
+            btnSuppliers.setVisible(false);
+
+            // Navigate to Stock by default for operational users
+            handleStockButton();
+        }
     }
 
     @FXML

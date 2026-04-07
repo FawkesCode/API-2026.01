@@ -2,6 +2,7 @@ package com.fawkes.front.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fawkes.front.service.ApiClient;
+import com.fawkes.front.utils.RBACUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,6 +23,7 @@ public class SupplierPageController {
     // Barra superior
     @FXML private TextField searchField;
     @FXML private Label     statusLabel;
+    @FXML private Button    btnNewSupplier;
 
     // Dialog de cadastro
     @FXML private VBox      addDialog;
@@ -34,6 +36,9 @@ public class SupplierPageController {
 
     @FXML
     public void initialize() {
+        // Apply RBAC restrictions based on user role
+        applyRBACRestrictions();
+
         colId.setCellValueFactory(d ->
                 new SimpleStringProperty(d.getValue().path("id").asText("-")));
         colNome.setCellValueFactory(d ->
@@ -66,6 +71,14 @@ public class SupplierPageController {
         comboPagamento.getSelectionModel().selectFirst();
 
         loadSuppliers();
+    }
+
+    private void applyRBACRestrictions() {
+        // Only DIRECTOR and MANAGER can create new suppliers
+        if (!RBACUtil.canManageSuppliers()) {
+            btnNewSupplier.setVisible(false);
+            btnNewSupplier.setManaged(false);
+        }
     }
 
     @FXML

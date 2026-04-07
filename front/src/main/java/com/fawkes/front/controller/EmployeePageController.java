@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fawkes.front.models.Employee;
 import com.fawkes.front.service.ApiClient;
+import com.fawkes.front.utils.RBACUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,6 +32,7 @@ public class EmployeePageController {
     // Barra superior
     @FXML private TextField searchField;
     @FXML private Label     statusLabel;
+    @FXML private Button    newEmployee;
 
     // Dialog de cadastro
     @FXML private VBox          addDialog;
@@ -46,6 +48,9 @@ public class EmployeePageController {
 
     @FXML
     public void initialize() {
+        // Apply RBAC restrictions based on user role
+        applyRBACRestrictions();
+
         colId.setCellValueFactory(d ->
                 new SimpleStringProperty(d.getValue().path("id").asText("-")));
         colNome.setCellValueFactory(d ->
@@ -79,6 +84,14 @@ public class EmployeePageController {
         });
 
         loadEmployees();
+    }
+
+    private void applyRBACRestrictions() {
+        // Only DIRECTOR and MANAGER can create new employees
+        if (!RBACUtil.canManageEmployees()) {
+            newEmployee.setVisible(false);
+            newEmployee.setManaged(false);
+        }
     }
 
     @FXML

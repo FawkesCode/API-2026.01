@@ -3,6 +3,7 @@ package com.fawkes.front.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fawkes.front.service.ApiClient;
 import com.fawkes.front.utils.ModalManager;
+import com.fawkes.front.utils.RBACUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,6 +33,7 @@ public class StockPageController {
     @FXML private Label statusLabel;
     @FXML private TextField searchField;
     @FXML private Button btnInput;
+    @FXML private Button btnOutput;
 
     @FXML private VBox      inputDialog;
     @FXML private TextField inputStockId;
@@ -54,6 +56,9 @@ public class StockPageController {
 
     @FXML
     public void initialize() {
+        // Apply RBAC restrictions based on user role
+        applyRBACRestrictions();
+
         colName.setCellValueFactory(d ->
                 new SimpleStringProperty(d.getValue().path("productName").asText("-")));
         colType.setCellValueFactory(d ->
@@ -86,6 +91,14 @@ public class StockPageController {
         });*/
 
         loadStock();
+    }
+
+    private void applyRBACRestrictions() {
+        // OPERATIONAL users cannot create new products, only register output
+        if (!RBACUtil.canManageProducts()) {
+            btnInput.setVisible(false);
+            btnInput.setManaged(false);
+        }
     }
 
     @FXML
