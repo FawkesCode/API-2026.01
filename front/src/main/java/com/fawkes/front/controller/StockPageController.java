@@ -41,14 +41,13 @@ public class StockPageController {
 
     // --- Diálogo de Saída ---
     @FXML private VBox      outputDialog;
-    @FXML private ComboBox<String> outputStockCombo;
     @FXML private ComboBox<String> outputProductCombo;
     @FXML private TextField outputQuantity;
     @FXML private Label     outputErrorLabel;
 
     private ObservableList<JsonNode> allItems = FXCollections.observableArrayList();
-    private HashMap<String, Long> stockMap = new HashMap<>();
     private HashMap<String, Long> productMap = new HashMap<>();
+    private static final Long DEFAULT_STOCK_ID = 1L; // Estoque padrão da empresa
 
     private static final NumberFormat CURRENCY_FMT =
             NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
@@ -161,7 +160,7 @@ public class StockPageController {
     @FXML
     public void handleOpenOutputDialog() {
         clearOutputDialog();
-        loadStocksAndProducts();
+        loadProducts();
         inputDialog.setVisible(false);
         inputDialog.setManaged(false);
         outputDialog.setVisible(true);
@@ -176,15 +175,10 @@ public class StockPageController {
 
     @FXML
     public void handleConfirmOutput() {
-        String selectedStock = outputStockCombo.getSelectionModel().getSelectedItem();
         String selectedProduct = outputProductCombo.getSelectionModel().getSelectedItem();
         String qtyText = outputQuantity.getText().trim();
 
-        // Validação: verificar se seleções foram feitas
-        if (selectedStock == null || selectedStock.isEmpty()) {
-            setErrorStyle(outputErrorLabel, "Por favor, selecione um estoque.");
-            return;
-        }
+        // Validação: verificar se seleção foi feita
         if (selectedProduct == null || selectedProduct.isEmpty()) {
             setErrorStyle(outputErrorLabel, "Por favor, selecione um produto.");
             return;
@@ -193,11 +187,11 @@ public class StockPageController {
         Integer qty = parseInt(qtyText, "Quantidade", outputErrorLabel);
         if (qty == null) return;
 
-        Long stockId = stockMap.get(selectedStock);
         Long productId = productMap.get(selectedProduct);
 
         try {
-            ApiClient.registerOutput(stockId, productId, qty);
+            // Usa o estoque padrão da empresa
+            ApiClient.registerOutput(DEFAULT_STOCK_ID, productId, qty);
             setSuccessStyle(outputErrorLabel, "Saída registrada com sucesso!");
             loadStock();
             handleCloseOutputDialog();
@@ -207,25 +201,11 @@ public class StockPageController {
     }
 
     /**
-     * Carrega estoques e produtos do API e popula os ComboBoxes
+     * Carrega produtos do API e popula o ComboBox
      */
-    private void loadStocksAndProducts() {
+    private void loadProducts() {
         new Thread(() -> {
             try {
-                // Carregar estoques
-                JsonNode stockData = ApiClient.listStock();
-                ObservableList<String> stockItems = FXCollections.observableArrayList();
-                stockMap.clear();
-
-                for (JsonNode stock : stockData) {
-                    Long id = stock.path("stockId").asLong();
-                    String name = stock.path("productName").asText("Produto " + id);
-                    String displayName = name + " (ID: " + id + ")";
-                    stockItems.add(displayName);
-                    stockMap.put(displayName, id);
-                }
-
-                // Carregar produtos
                 JsonNode productData = ApiClient.listStock();
                 ObservableList<String> productItems = FXCollections.observableArrayList();
                 productMap.clear();
@@ -240,17 +220,15 @@ public class StockPageController {
 
                 // Atualizar UI na thread principal
                 javafx.application.Platform.runLater(() -> {
-                    outputStockCombo.setItems(stockItems);
                     outputProductCombo.setItems(productItems);
                 });
             } catch (Exception e) {
-                System.err.println("Erro ao carregar estoques/produtos: " + e.getMessage());
+                System.err.println("Erro ao carregar produtos: " + e.getMessage());
             }
         }).start();
     }
 
     private void clearOutputDialog() {
-        outputStockCombo.getSelectionModel().clearSelection();
         outputProductCombo.getSelectionModel().clearSelection();
         outputQuantity.clear();
         outputErrorLabel.setText("");
