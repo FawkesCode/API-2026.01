@@ -15,10 +15,11 @@
 
 ---
 
-| Rank | Prioridade | User Story | Estimativa | Sprint |
-|:----:|:----------:|------------|:----------:|:------:|
-| 5 | Alta | Como gerente, quero visualizar o histórico completo de alterações realizadas no sistema, para identificar inconsistências e garantir a integridade dos dados ao longo do tempo. | 13 | 2 |
-| 6 | Alta | Como operacional, quero abrir um pedido de compra com número automático, informando solicitante, setor, itens, justificativa, valor estimado e centro de custo, para formalizar e registrar as necessidades de reposição de forma organizada. | 13 | 2 |
-| 7 | Alta | Como diretor, quero visualizar os pedidos de compra pendentes atribuídos a mim e aprovar ou reprovar cada um com parecer registrado, para avaliar e autorizar as solicitações antes de sua efetivação. | 8 | 2 |
-| 8 | Média | Como gerente, quero registrar entradas e saídas de estoque vinculadas a pedidos aprovados ou uso interno, para monitorar o fluxo de produtos e evitar rupturas ou excessos. | 8 | 2 |
-| 9 | Média | *(extra)* Como gerente, quero rastrear o status de cada pedido de compra e editar informações incorretas antes da aprovação, para garantir que as compras sejam concluídas corretamente e sem retrabalho. | 13 | 2 |
+| Rank | Prioridade | User Story                                                                                                                                                                                                                                    | Estimativa | Sprint |
+| :--: | :--------: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------: | :----: |
+|  6   |    Alta    | Como operacional, quero abrir um pedido de compra com número automático, informando solicitante, setor, itens, justificativa, valor estimado e centro de custo, para formalizar e registrar as necessidades de reposição de forma organizada. |     13     |   2    |
+|  7   |   Média    | Como operacional, quero abrir um pedido de saídas, com o produto que irá sair, quantidade e justificativa opcional.                                                                                                                           |     8      |   2    |
+|  8   |   Média    | Como gerente, quero rastrear o status de cada pedido de compra e editar informações incorretas antes da aprovação, para garantir que as compras sejam concluídas corretamente e sem retrabalho.                                               |     5      |   2    |
+|  9   |   Média    | Como gerente, quero realizar cotações comparando propostas de múltiplos fornecedores para um mesmo pedido, para selecionar a opção mais vantajosa antes de efetuar a compra.                                                                  |     8      |   2    |
+|  10  |    Alta    | Como diretor, quero visualizar os pedidos de entradas e saídas pendentes atribuídos a mim e aprovar ou reprovar cada um com parecer registrado, para avaliar e autorizar as solicitações antes de sua efetivação.                             |     8      |   2    |
+|  11  |    Alta    | (Extra) Como diretor, quero visualizar um dashboard gerencial com indicadores de pedidos, gastos por centro de custo e alertas de estoque, para tomar decisões estratégicas com base em informações atualizadas.                              |     13     |   2    |
