@@ -136,153 +136,22 @@ public class StockPageController {
 
     @FXML
     public void handleOpenInputDialog() throws IOException {
-        //clearDialog(inputStockId, inputProductId, inputQuantity, inputErrorLabel);
-        //outputDialog.setVisible(false);
-        //outputDialog.setManaged(false);
-        //inputDialog.setVisible(true);
-        //inputDialog.setManaged(true);
-        Parent formulario = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/fawkes/front/view/forms/new-stockItem-form.fxml")));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/fawkes/front/view/forms/new-stockItem-form.fxml"));
+        Parent formulario = loader.load();
+        AddStockItemForm controller = loader.getController();
+        controller.setOnSaveSuccess(this::loadStock);
         Stage curStage = ((Stage) btnInput.getScene().getWindow());
         ModalManager.openModal(curStage, formulario, "Cadastrar Produto");
     }
 
     @FXML
-    public void handleCloseInputDialog() {
-        inputDialog.setVisible(false);
-        inputDialog.setManaged(false);
+    public void handleOpenOutputDialog() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/fawkes/front/view/forms/new-stockItemExit-form.fxml"));
+        Parent formulario = loader.load();
+        ExitStockItemForm controller = loader.getController();
+        controller.setOnSaveSuccess(this::loadStock);
+        Stage curStage = ((Stage) btnOutput.getScene().getWindow());
+        ModalManager.openModal(curStage, formulario, "Registrar Saída", 600, 400, "ModalFrameSM.fxml", true);
     }
 
-    @FXML
-    public void handleConfirmInput() {
-        Long stockId   = parseLong(inputStockId.getText(), "ID do Estoque", inputErrorLabel);
-        Long productId = parseLong(inputProductId.getText(), "ID do Produto", inputErrorLabel);
-        Integer qty    = parseInt(inputQuantity.getText(), "Quantidade", inputErrorLabel);
-        if (stockId == null || productId == null || qty == null) return;
-
-        try {
-            ApiClient.registerInput(stockId, productId, qty);
-            inputErrorLabel.setStyle("-fx-text-fill: #2e7d32;");
-            inputErrorLabel.setText("Entrada registrada com sucesso!");
-            loadStock();
-        } catch (Exception e) {
-            inputErrorLabel.setStyle("-fx-text-fill: #FF4A50;");
-            inputErrorLabel.setText("Erro: " + e.getMessage());
-        }
-    }
-
-    @FXML
-    public void handleOpenOutputDialog() {
-        clearOutputDialog();
-        loadProducts();
-        inputDialog.setVisible(false);
-        inputDialog.setManaged(false);
-        outputDialog.setVisible(true);
-        outputDialog.setManaged(true);
-    }
-
-    @FXML
-    public void handleCloseOutputDialog() {
-        outputDialog.setVisible(false);
-        outputDialog.setManaged(false);
-    }
-
-    @FXML
-    public void handleConfirmOutput() {
-        String selectedProduct = outputProductCombo.getSelectionModel().getSelectedItem();
-        String qtyText = outputQuantity.getText().trim();
-
-        // Validação: verificar se seleção foi feita
-        if (selectedProduct == null || selectedProduct.isEmpty()) {
-            setErrorStyle(outputErrorLabel, "Por favor, selecione um produto.");
-            return;
-        }
-
-        Integer qty = parseInt(qtyText, "Quantidade", outputErrorLabel);
-        if (qty == null) return;
-
-        Long productId = productMap.get(selectedProduct);
-
-        try {
-            // Usa o estoque padrão da empresa
-            ApiClient.registerOutput(DEFAULT_STOCK_ID, productId, qty);
-            setSuccessStyle(outputErrorLabel, "Saída registrada com sucesso!");
-            loadStock();
-            handleCloseOutputDialog();
-        } catch (Exception e) {
-            setErrorStyle(outputErrorLabel, "Erro: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Carrega produtos do API e popula o ComboBox
-     */
-    private void loadProducts() {
-        new Thread(() -> {
-            try {
-                JsonNode productData = ApiClient.listStock();
-                ObservableList<String> productItems = FXCollections.observableArrayList();
-                productMap.clear();
-
-                for (JsonNode product : productData) {
-                    Long id = product.path("productId").asLong();
-                    String name = product.path("productName").asText("Produto " + id);
-                    String displayName = name + " (ID: " + id + ")";
-                    productItems.add(displayName);
-                    productMap.put(displayName, id);
-                }
-
-                // Atualizar UI na thread principal
-                javafx.application.Platform.runLater(() -> {
-                    outputProductCombo.setItems(productItems);
-                });
-            } catch (Exception e) {
-                System.err.println("Erro ao carregar produtos: " + e.getMessage());
-            }
-        }).start();
-    }
-
-    private void clearOutputDialog() {
-        outputProductCombo.getSelectionModel().clearSelection();
-        outputQuantity.clear();
-        outputErrorLabel.setText("");
-        outputErrorLabel.setStyle("-fx-text-fill: #FF4A50;");
-    }
-
-    private Long parseLong(String text, String fieldName, Label err) {
-        try {
-            long v = Long.parseLong(text.trim());
-            if (v <= 0) throw new NumberFormatException();
-            return v;
-        } catch (NumberFormatException e) {
-            err.setStyle("-fx-text-fill: #FF4A50;");
-            err.setText(fieldName + " deve ser um número inteiro positivo.");
-            return null;
-        }
-    }
-
-    private Integer parseInt(String text, String fieldName, Label err) {
-        if (text == null || text.trim().isEmpty()) {
-            setErrorStyle(err, fieldName + " é obrigatório.");
-            return null;
-        }
-        try {
-            int v = Integer.parseInt(text.trim());
-            if (v <= 0) throw new NumberFormatException();
-            err.setText("");
-            return v;
-        } catch (NumberFormatException e) {
-            setErrorStyle(err, fieldName + " deve ser um número inteiro positivo.");
-            return null;
-        }
-    }
-
-    private void setErrorStyle(Label label, String message) {
-        label.setStyle("-fx-text-fill: #FF4A50;");
-        label.setText(message);
-    }
-
-    private void setSuccessStyle(Label label, String message) {
-        label.setStyle("-fx-text-fill: #2e7d32;");
-        label.setText(message);
-    }
 }

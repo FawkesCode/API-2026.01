@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import java.lang.String?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="364.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.controller.ExitStockItemForm">
+    <children>
+      <VBox layoutX="57.0" layoutY="47.0" prefHeight="179.0" prefWidth="486.0" spacing="15.0">
+         <children>
+            <AnchorPane prefHeight="100.0" prefWidth="294.0">
+               <children>
+                  <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Produto*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                  <ComboBox fx:id="productField" layoutY="39.0" prefWidth="150.0" promptText="Selecionar" styleClass="input__text" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+               </children>
+            </AnchorPane>
+            <HBox prefHeight="86.0" prefWidth="562.0">
+               <children>
+                  <AnchorPane prefHeight="86.0" prefWidth="486.0">
+                     <children>
+                        <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Quantidade*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <TextField fx:id="qtdField" layoutX="11.0" layoutY="39.0" promptText="Digite a quantidade a remover" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                           <styleClass>
+                              <String fx:value="input__text" />
+                              <String fx:value="input__text--form" />
+                           </styleClass>
+                        </TextField>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <HBox alignment="CENTER_RIGHT" layoutX="296.0" layoutY="275.0" prefHeight="54.0" prefWidth="246.0" spacing="15.0">
+         <children>
+            <JFXButton onAction="#handleOnSubmit" styleClass="btn--submit" text="Confirmar" />
+            <JFXButton fx:id="btnClose" onAction="#closeModal" styleClass="btn--cancel" text="Cancelar" />
+         </children>
+      </HBox>
+      <Label fx:id="errorLabel" layoutX="71.0" layoutY="241.0" prefHeight="18.0" prefWidth="430.0" styleClass="input__label--error" />
+    </children>
+</AnchorPane>

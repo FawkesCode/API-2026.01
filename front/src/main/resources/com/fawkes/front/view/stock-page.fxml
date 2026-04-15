@@ -68,6 +68,7 @@
 
    <Label fx:id="statusLabel" text="" />
 
+   <!--
    <VBox fx:id="inputDialog" managed="false" maxWidth="400.0" spacing="12.0" style="-fx-background-color: white; -fx-border-color: #DADEE3; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);" visible="false">
       <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Registrar Entrada" />
       <Label text="ID do Estoque:" />
@@ -95,5 +96,7 @@
          <Button onAction="#handleConfirmOutput" styleClass="btn-danger" text="Confirmar Saída" />
       </HBox>
    </VBox>
+   -->
+
 
 </VBox>

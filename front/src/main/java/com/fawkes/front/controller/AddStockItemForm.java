@@ -27,6 +27,7 @@ public class AddStockItemForm {
 
     // FORM INPUTS
     @FXML private TextField nameField;
+    @FXML private TextField typeField;
     @FXML private TextField priceField;
     @FXML private TextField qtdField;
     @FXML private TextField minValField;
@@ -34,22 +35,38 @@ public class AddStockItemForm {
     @FXML private ComboBox<String> suppilerField;
 
     private final Map<String, Long> supplierNameToId = new LinkedHashMap<>();
+    private Runnable onSaveSuccess;
+
+    public void setOnSaveSuccess(Runnable onSaveSuccess) {
+        this.onSaveSuccess = onSaveSuccess;
+    }
 
     @FXML
     public void initialize() {
-        UnaryOperator<TextFormatter.Change> filter = change -> {
+        UnaryOperator<TextFormatter.Change> numInput = change -> {
             String text = change.getControlNewText();
 
-            if(text.matches("\\d*")) {
+            if(text.isEmpty() || text.matches("[1-9]\\d*")) {
                 return change;
             }
 
             return null;
         };
 
-        priceField.setTextFormatter(new TextFormatter<>(filter));
-        qtdField.setTextFormatter(new TextFormatter<>(filter));
-        minValField.setTextFormatter(new TextFormatter<>(filter));
+        UnaryOperator<TextFormatter.Change> priceInput = change -> {
+            String text = change.getControlNewText();
+
+            // Regex for monetary values
+            if(text.isEmpty() || text.matches("[1-9]\\d*(.\\d{0,2})?")) {
+                return change;
+            }
+
+            return null;
+        };
+
+        priceField.setTextFormatter(new TextFormatter<>(priceInput));
+        qtdField.setTextFormatter(new TextFormatter<>(numInput));
+        minValField.setTextFormatter(new TextFormatter<>(numInput));
 
         loadSuppliers();
     }
@@ -105,12 +122,16 @@ public class AddStockItemForm {
                 "{\"productName\":\"%s\",\"productType\":\"%s\",\"measurementUnit\":\"NAO_DEFINIDO\"," +
                 "\"unitValue\":%s,\"description\":\"\",\"supplierId\":%d,\"stockId\":1}",
                 nameField.getText().trim(),
-                nameField.getText().trim(),
+                typeField.getText().trim(),
                 priceField.getText().trim(),
                 supplierId
             );
 
             ApiClient.post("/api/products", body);
+
+            if (onSaveSuccess != null) {
+                onSaveSuccess.run();
+            }
 
             ((Stage) btnClose.getScene().getWindow()).close();
         } catch (Exception e) {

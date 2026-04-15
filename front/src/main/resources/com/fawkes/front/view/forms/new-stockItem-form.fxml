@@ -16,17 +16,32 @@
     <children>
         <VBox layoutY="14.0" prefHeight="295.0" prefWidth="562.0" spacing="15.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <AnchorPane prefHeight="78.0" prefWidth="562.0">
-                    <children>
+            <HBox prefHeight="86.0" prefWidth="562.0">
+               <children>
+                  <AnchorPane prefHeight="86.0" prefWidth="295.0">
+                     <children>
                         <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Nome*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
                         <TextField fx:id="nameField" layoutY="39.0" promptText="Digite o nome" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
-                            <styleClass>
-                                <String fx:value="input__text" />
-                                <String fx:value="input__text--form" />
-                            </styleClass>
+                           <styleClass>
+                              <String fx:value="input__text" />
+                              <String fx:value="input__text--form" />
+                           </styleClass>
                         </TextField>
-                    </children>
-                </AnchorPane>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="100.0" prefWidth="294.0">
+                     <children>
+                        <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Tipo:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <TextField fx:id="typeField" layoutX="11.0" layoutY="39.0" promptText="Digite o tipo " AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                           <styleClass>
+                              <String fx:value="input__text" />
+                              <String fx:value="input__text--form" />
+                           </styleClass>
+                        </TextField>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </HBox>
                 <HBox prefHeight="86.0" prefWidth="562.0">
                     <children>
                         <AnchorPane prefHeight="100.0" prefWidth="294.0">
