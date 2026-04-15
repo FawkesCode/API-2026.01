@@ -4,16 +4,22 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fawkes.front.models.Employee;
 import com.fawkes.front.service.ApiClient;
+import com.fawkes.front.utils.ModalManager;
 import com.fawkes.front.utils.RBACUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class EmployeePageController {
 
@@ -128,52 +134,13 @@ public class EmployeePageController {
     }
 
     @FXML
-    public void handleOpenAddDialog() {
-        fieldUsername.clear();
-        fieldEmail.clear();
-        fieldPassword.clear();
-        fieldGroup.getSelectionModel().clearSelection();
-        fieldDept.clear();
-        addErrorLabel.setText("");
-        
-        fieldGroup.setItems(FXCollections.observableArrayList(GRUPOS));
-        
-        addDialog.setVisible(true);
-        addDialog.setManaged(true);
-    }
-
-    @FXML
-    public void handleCloseAddDialog() {
-        addDialog.setVisible(false);
-        addDialog.setManaged(false);
-    }
-
-    @FXML
-    public void handleConfirmAdd() {
-        String username = fieldUsername.getText().trim();
-        String email    = fieldEmail.getText().trim();
-        String password = fieldPassword.getText().trim();
-        String group    = fieldGroup.getSelectionModel().getSelectedItem();
-        String dept     = fieldDept.getText().trim();
-
-        if (username.isEmpty() || email.isEmpty() || password.isEmpty()
-                || group == null || dept.isEmpty()) {
-            addErrorLabel.setText("Preencha todos os campos.");
-            return;
-        }
-
-        try {
-            String body = String.format(
-                    "{\"userName\":\"%s\",\"userMail\":\"%s\",\"password\":\"%s\"," +
-                            "\"isActive\":true,\"role\":\"%s\",\"departamentName\":\"%s\"}",
-                    username, email, password, group, dept);
-
-            ApiClient.post("/api/users", body);
-            handleCloseAddDialog();
-            loadEmployees();
-        } catch (Exception e) {
-            addErrorLabel.setText("Erro: " + e.getMessage());
-        }
+    public void handleOpenAddDialog() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/fawkes/front/view/forms/new-employee-form.fxml"));
+        Parent formulario = loader.load();
+        AddEmployeeForm controller = loader.getController();
+        controller.setOnSaveSuccess(this::loadEmployees);
+        Stage curStage = ((Stage) addDialog.getScene().getWindow());
+        ModalManager.openModal(curStage, formulario, "Cadastrar Funcionário");
     }
 
     private void handleDelete(Long id) {
