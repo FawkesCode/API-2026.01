@@ -41,7 +41,7 @@ public class EmployeePageController {
     @FXML private Button    newEmployee;
 
     // Dialog de cadastro
-    @FXML private VBox          addDialog;
+    //@FXML private VBox          addDialog;
     @FXML private TextField     fieldUsername;
     @FXML private TextField     fieldEmail;
     @FXML private PasswordField fieldPassword;
@@ -139,7 +139,7 @@ public class EmployeePageController {
         Parent formulario = loader.load();
         AddEmployeeForm controller = loader.getController();
         controller.setOnSaveSuccess(this::loadEmployees);
-        Stage curStage = ((Stage) addDialog.getScene().getWindow());
+        Stage curStage = ((Stage) newEmployee.getScene().getWindow());
         ModalManager.openModal(curStage, formulario, "Cadastrar Funcionário");
     }
 
