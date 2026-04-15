@@ -44,7 +44,7 @@
             </HBox>
                 <HBox prefHeight="86.0" prefWidth="562.0">
                     <children>
-                        <AnchorPane prefHeight="100.0" prefWidth="294.0">
+                        <AnchorPane prefHeight="86.0" prefWidth="178.0">
                             <children>
                                 <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Valor*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
                         <TextField fx:id="priceField" layoutX="11.0" layoutY="39.0" promptText="R$" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
@@ -55,19 +55,25 @@
                         </TextField>
                             </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="100.0" prefWidth="294.0">
+                        <AnchorPane prefHeight="86.0" prefWidth="190.0">
                             <children>
-                                <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Fornecedor*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-                                <ComboBox fx:id="suppilerField" layoutY="39.0" prefWidth="150.0" promptText="Selecionar" styleClass="input__text" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Unidade Medida*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                                <ComboBox fx:id="unityField" layoutY="39.0" prefWidth="150.0" promptText="Selecionar" styleClass="input__text" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                             </children>
                         </AnchorPane>
+                  <AnchorPane prefHeight="86.0" prefWidth="190.0">
+                     <children>
+                        <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Fornecedor*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <ComboBox fx:id="suppilerField" layoutY="39.0" prefWidth="150.0" promptText="Selecionar" styleClass="input__text" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                     </children>
+                  </AnchorPane>
                     </children>
                 </HBox>
                 <HBox prefHeight="86.0" prefWidth="562.0">
                     <children>
-                        <AnchorPane prefHeight="100.0" prefWidth="294.0">
+                        <AnchorPane prefHeight="86.0" prefWidth="182.0">
                             <children>
-                                <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Qtd Inicial*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                                <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Qtd Inicial:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
                                 <TextField fx:id="qtdField" layoutY="39.0" promptText="Digite a quantidade Inicial" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
                                     <styleClass>
                                         <String fx:value="input__text" />
@@ -76,10 +82,21 @@
                                 </TextField>
                             </children>
                         </AnchorPane>
-                  <AnchorPane prefHeight="100.0" prefWidth="294.0">
+                  <AnchorPane prefHeight="86.0" prefWidth="201.0">
                      <children>
-                        <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Valor mínimo*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Qtd Mínima:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
                         <TextField fx:id="minValField" layoutY="39.0" promptText="Digite o valor mínimo" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                           <styleClass>
+                              <String fx:value="input__text" />
+                              <String fx:value="input__text--form" />
+                           </styleClass>
+                        </TextField>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="86.0" prefWidth="201.0">
+                     <children>
+                        <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Qtd Máxima:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <TextField fx:id="maxValField" layoutY="39.0" promptText="Digite o valor máximo" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
                            <styleClass>
                               <String fx:value="input__text" />
                               <String fx:value="input__text--form" />
@@ -107,6 +124,6 @@
                 <JFXButton fx:id="btnClose" onAction="#closeModal" styleClass="btn--cancel" text="Cancelar" />
             </children>
         </HBox>
-      <Label fx:id="errorLabel" layoutX="14.0" layoutY="287.0" prefHeight="18.0" prefWidth="542.0" styleClass="input__label--error" />
+      <Label fx:id="errorLabel" layoutX="14.0" layoutY="287.0" prefHeight="54.0" prefWidth="542.0" styleClass="input__label--error" wrapText="true" />
     </children>
 </AnchorPane>

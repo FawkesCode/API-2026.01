@@ -2,22 +2,23 @@ package com.fawkes.front.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fawkes.front.service.ApiClient;
+import com.fawkes.front.utils.StringUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javafx.util.StringConverter;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
@@ -31,10 +32,13 @@ public class AddStockItemForm {
     @FXML private TextField priceField;
     @FXML private TextField qtdField;
     @FXML private TextField minValField;
+    @FXML private TextField maxValField;
     @FXML private ImageView productView;
     @FXML private ComboBox<String> suppilerField;
+    @FXML private ComboBox<String> unityField;
 
     private final Map<String, Long> supplierNameToId = new LinkedHashMap<>();
+    private static final List<String> UNITIES = Arrays.asList("METROS", "CAIXAS", "LITROS", "KILOGRAMAS", "OUTROS", "NAO_DEFINIDO");
     private Runnable onSaveSuccess;
 
     public void setOnSaveSuccess(Runnable onSaveSuccess) {
@@ -67,8 +71,33 @@ public class AddStockItemForm {
         priceField.setTextFormatter(new TextFormatter<>(priceInput));
         qtdField.setTextFormatter(new TextFormatter<>(numInput));
         minValField.setTextFormatter(new TextFormatter<>(numInput));
+        maxValField.setTextFormatter(new TextFormatter<>(numInput));
 
+        // SUPPLIERS COMBO BOX CONTENT
         loadSuppliers();
+
+        //UNITY COMBO BOX CONTENT
+        unityField.getItems().addAll(UNITIES);
+
+        unityField.setConverter(new StringConverter<String>() {
+            @Override
+            public String toString(String unity) {
+                return StringUtils.measureTranslation(unity);
+            }
+
+            @Override
+            public String fromString(String s) {
+                return null;
+            }
+        });
+
+        unityField.setCellFactory(v -> new ListCell<String>() {
+            @Override
+            protected void  updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : StringUtils.measureTranslation(item));
+            }
+        });
     }
 
     private void loadSuppliers() {
@@ -109,7 +138,7 @@ public class AddStockItemForm {
 
     @FXML
     private void handleOnSubmit(ActionEvent event) {
-        if (nameField.getText().isEmpty() || priceField.getText().isEmpty() || qtdField.getText().isEmpty() || minValField.getText().isEmpty() || suppilerField.getSelectionModel().getSelectedItem() == null) {
+        if (nameField.getText().isEmpty() || priceField.getText().isEmpty() || suppilerField.getSelectionModel().getSelectedItem() == null || unityField.getSelectionModel().getSelectedItem() == null) {
             errorLabel.setText("Verfique se todos os campos obrigatórios foram preenchidos.");
             return;
         }
@@ -119,10 +148,11 @@ public class AddStockItemForm {
             Long supplierId = supplierNameToId.get(selectedSupplier);
 
             String body = String.format(
-                "{\"productName\":\"%s\",\"productType\":\"%s\",\"measurementUnit\":\"NAO_DEFINIDO\"," +
+                "{\"productName\":\"%s\",\"productType\":\"%s\",\"measurementUnit\":\"%s\"," +
                 "\"unitValue\":%s,\"description\":\"\",\"supplierId\":%d,\"stockId\":1}",
                 nameField.getText().trim(),
                 typeField.getText().trim(),
+                unityField.getSelectionModel().getSelectedItem(),
                 priceField.getText().trim(),
                 supplierId
             );

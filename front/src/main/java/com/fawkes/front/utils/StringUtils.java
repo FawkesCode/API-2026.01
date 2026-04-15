@@ -20,4 +20,16 @@ public class StringUtils {
             default -> payment;
         };
     }
+
+    public static String measureTranslation(String measure) {
+        return switch (measure) {
+            case "METROS" -> "Metros";
+            case "CAIXAS" -> "Caixas";
+            case "LITROS" -> "Litros";
+            case "KILOGRAMAS" -> "Kilogramas";
+            case "OUTROS" -> "Outros";
+            case "NAO_DEFINIDO" -> "Não Definido";
+            default -> measure;
+        };
+    }
 }
