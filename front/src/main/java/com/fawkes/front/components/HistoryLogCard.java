@@ -19,10 +19,10 @@ public class HistoryLogCard extends AnchorPane {
     public HistoryLogCard() {
         FXMLLoader fxmlLoader = new FXMLLoader(
                 getClass().getResource("/com/fawkes/front/view/components/HistoryLogCard.fxml"));
-        String css = Objects.requireNonNull(
-                        getClass().getResource("/com/fawkes/front/styles/components/history.css"))
-                .toExternalForm();
-        this.getStylesheets().add(css);
+        // String css = Objects.requireNonNull(
+                        // getClass().getResource("/com/fawkes/front/styles/components/history.scss"))
+                // .toExternalForm();
+        //this.getStylesheets().add(css);
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
         try {

@@ -1,5 +1,6 @@
 package com.fawkes.front.controller;
 
+import com.fawkes.front.service.UserInfoManager;
 import com.fawkes.front.utils.NavigationManager;
 import com.fawkes.front.utils.RBACUtil;
 import javafx.animation.Interpolator;
@@ -33,25 +34,48 @@ import static javafx.geometry.Pos.CENTER;
 import static javafx.geometry.Pos.CENTER_RIGHT;
 
 public class LayoutController {
-    @FXML private AnchorPane sidebarContainer;
-    @FXML private ImageView logoContainer;
-    @FXML private Pane userPane;
-    @FXML private StackPane contentWrapper;
-    @FXML private Label pageName;
-    @FXML private Label pageDescription;
-    @FXML private ScrollPane contentScrollPane;
-    @FXML private VBox mainContent;
-    @FXML private ImageView btnIcon;
-    @FXML private StackPane menuBtnContainer;
-    @FXML private Separator sidebarSeparator;
-    @FXML private Separator sidebarSeparator1;
-    @FXML private Separator sidebarSeparator2;
-    @FXML private Button btnDashboard;
-    @FXML private Button btnHistory;
-    @FXML private Button btnEmployees;
-    @FXML private Button btnSuppliers;
-    @FXML private Button btnStock;
-    @FXML private ImageView iconDashboard;
+    @FXML
+    private AnchorPane sidebarContainer;
+    @FXML
+    private ImageView logoContainer;
+    @FXML
+    private Pane userPane;
+    @FXML
+    private StackPane contentWrapper;
+    @FXML
+    private Label pageName;
+    @FXML
+    private Label pageDescription;
+    @FXML
+    private ScrollPane contentScrollPane;
+    @FXML
+    private VBox mainContent;
+    @FXML
+    private ImageView btnIcon;
+    @FXML
+    private StackPane menuBtnContainer;
+    @FXML
+    private Separator sidebarSeparator;
+    @FXML
+    private Separator sidebarSeparator1;
+    @FXML
+    private Separator sidebarSeparator2;
+    @FXML
+    private Button btnDashboard;
+    @FXML
+    private Button btnHistory;
+    @FXML
+    private Button btnEmployees;
+    @FXML
+    private Button btnSuppliers;
+    @FXML
+    private Button btnStock;
+    @FXML
+    private ImageView iconDashboard;
+    @FXML
+    private Label sidebarUserName;
+    @FXML
+    private Label sidebarUserRole;
 
 
     private boolean isSidebarOpen = true;
@@ -62,23 +86,35 @@ public class LayoutController {
 
     NavigationManager nm = new NavigationManager();
 
+    private String roleTranslation(String role) {
+        return switch (role) {
+            case "DIRECTOR" -> "Diretor";
+            case "OPERATIONAL" -> "Operacional";
+            case "MANAGER" -> "Gerente";
+            default -> role;
+        };
+    }
+
     @FXML
     public void initialize() {
-        // Apply RBAC restrictions based on user role
-        applyRBACRestrictions();
+        // Logged User Configurations
+        UserInfoManager loggedUser = UserInfoManager.getInstance();
+        sidebarUserName.setText(roleTranslation(loggedUser.getUserName()));
+        sidebarUserRole.setText(roleTranslation(loggedUser.getUserRole()));
 
-        nm.navigateToPage(contentWrapper, "view/dashboard-page.fxml", "Dashboard", "Onde você e outros gerentes podem visualizar a situação das compras de forma rápida e simplificada.");
-
+        // Current Page Configurations
         pageName.textProperty().bind(nm.getCurrentPage());
         pageDescription.textProperty().bind(nm.getCurrentPageDescription());
 
+        // Sidebar Configurations
         btnIcon.setImage(iconClose);
-
         mainContent.minHeightProperty().bind(contentScrollPane.heightProperty());
         sidebarSeparator.maxWidthProperty().bind(sidebarContainer.widthProperty());
         sidebarSeparator1.maxWidthProperty().bind(sidebarContainer.widthProperty());
         sidebarSeparator2.maxWidthProperty().bind(sidebarContainer.widthProperty());
-        updateActiveButton(btnDashboard);
+
+        // Apply RBAC restrictions based on user role
+        applyRBACRestrictions();
     }
 
     private void applyRBACRestrictions() {
@@ -86,12 +122,24 @@ public class LayoutController {
         if (RBACUtil.isOperational()) {
             // Hide tabs for operational users
             btnDashboard.setVisible(false);
+            btnDashboard.setManaged(false);
+
             btnHistory.setVisible(false);
+            btnHistory.setManaged(false);
+
             btnEmployees.setVisible(false);
+            btnEmployees.setManaged(false);
+
             btnSuppliers.setVisible(false);
+            btnSuppliers.setManaged(false);
 
             // Navigate to Stock by default for operational users
             handleStockButton();
+        } else if (RBACUtil.isManager()) {
+            handleDashboardButton();
+        } else {
+            // Maybe it will be needed to take off some buttons from here as well, depending on what exactly appears for the director
+            handleDashboardButton();
         }
     }
 

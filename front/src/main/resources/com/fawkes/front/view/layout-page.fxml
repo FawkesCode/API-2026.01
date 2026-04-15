@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.controller.LayoutController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.controller.LayoutController">
 
    <center>
       <ScrollPane fx:id="contentScrollPane" fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: #F7F7F7;" vbarPolicy="AS_NEEDED" BorderPane.alignment="CENTER">
@@ -25,8 +25,7 @@
 
                         <AnchorPane id="header" prefHeight="100.0">
                            <children>
-                               <Label fx:id="pageName" layoutY="14.0" text="Página Tal"
-                                      AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="14.0" />
+                               <Label fx:id="pageName" layoutY="14.0" text="Página Tal" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="14.0" />
                               <Label fx:id="pageDescription" layoutY="50.0" text="Descrição sobre o que o usuário vai encontrar nessa página." AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="50.0" />
                            </children>
                         </AnchorPane>
@@ -52,7 +51,7 @@
                <children>
                   <AnchorPane layoutX="-62.0" layoutY="79.0" maxWidth="250.0" minWidth="250.0" prefHeight="640.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="80.0">
                      <children>
-                        <VBox layoutY="25.0" prefHeight="218.0" prefWidth="230.0" spacing="3.0" style="-fx-padding: 0 10px 0 10px;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                        <VBox fx:id="btnsWrapper" layoutY="25.0" prefHeight="218.0" prefWidth="230.0" spacing="3.0" style="-fx-padding: 0 10px 0 10px;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                            <children>
                               <Button fx:id="btnDashboard" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#handleDashboardButton" prefHeight="39.0" prefWidth="250.0" styleClass="sidebar__button" text="Dashboard">
                                  <graphic>
@@ -106,12 +105,12 @@
                               <VBox fx:id="userPane" alignment="CENTER" prefHeight="63.0" prefWidth="230.0">
                                  <children>
                                     <Separator fx:id="sidebarSeparator1" opacity="0.57" prefHeight="18.0" prefWidth="245.0" style="-fx-padding: 0 0 15px 0;" />
-                                    <Label id="userType" text="Administrador">
+                                    <Label id="userType" fx:id="sidebarUserRole" text="Administrador">
                                        <font>
                                           <Font name="System Italic" size="12.0" />
                                        </font>
                                     </Label>
-                                    <Label text="Nome do Usuário">
+                                    <Label fx:id="sidebarUserName" text="Nome do Usuário">
                                        <font>
                                           <Font name="System Bold" size="14.0" />
                                        </font>

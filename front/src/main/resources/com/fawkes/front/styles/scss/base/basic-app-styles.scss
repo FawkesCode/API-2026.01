@@ -1,0 +1,210 @@
+.label {
+  -fx-text-fill: $surface-800;
+  -fx-font-family: $montserrat;
+}
+
+.sidebar__button {
+  -fx-text-overrun: clip;
+  -fx-background-color: transparent;
+  -fx-font-size: 14px;
+  -fx-padding: 5px;
+  -fx-font-weight: 700;
+  -fx-graphic-text-gap: 13px;
+  -fx-text-fill: $surface-600;
+
+  &:hover {
+    -fx-translate-x: 5px;
+    -fx-background-color: #e7ecef;
+  }
+
+  &--closed:hover {
+    -fx-translate-x: 0px;
+    -fx-translate-y: -3px;
+  }
+
+  &--active {
+    -fx-text-fill: $primary-dark;
+  }
+}
+
+#sidebarContainer {
+  -fx-background-color: $surface-0;
+  -fx-font-family: $montserrat;
+}
+
+#userName,
+#userType {
+  -fx-font-family: $montserrat;
+}
+
+#userType {
+  -fx-font-weight: 900;
+  -fx-text-fill: $primary-dark;
+}
+
+#btnToggle {
+  -fx-background-color: #e7ecef;
+  -fx-background-radius: 50%;
+
+  &:hover {
+    -fx-background-color: #f1f5f8;
+  }
+}
+
+#page {
+  &Name {
+    -fx-font-family: $montserrat;
+    -fx-text-fill: $surface-900;
+    -fx-font-size: 28px;
+    -fx-font-weight: 700;
+    -fx-text-fill: $surface-900;
+  }
+
+  &Description {
+    -fx-font-size: 13px;
+    -fx-text-fill: $surface-700;
+  }
+
+  &Content {
+    -fx-padding: 0 0 0 20px;
+  }
+}
+
+.button {
+  -fx-cursor: hand;
+}
+
+#header {
+  -fx-padding: 20px;
+  -fx-background-radius: 10px;
+}
+
+.scroll-bar {
+  -fx-opacity: 1;
+
+  & .thumb {
+    -fx-opacity: 0.5;
+    -fx-background-color: #464c50;
+  }
+
+  &:vertical {
+    -fx-min-width: 10px;
+    -fx-pref-width: 10px;
+    -fx-max-width: 10px;
+    -fx-padding: 1;
+
+    -fx-background-color: #ffffff;
+  }
+
+  &:horizontal {
+    -fx-pref-height: 0.3em;
+  }
+}
+
+/* BUTTON STYLES  */
+.btn {
+  &--primary,
+  &--secondary {
+    -fx-background-color: $primary-dark;
+    -fx-text-fill: $surface-0;
+    -fx-font-weight: 700;
+    -fx-padding: 6px;
+    -fx-background-radius: 5px;
+  }
+
+  &--secondary {
+    -fx-background-color: $primary-light-2;
+  }
+
+  &--refresh {
+    -fx-text-fill: $surface-500;
+    -fx-background-color: transparent;
+
+    &:hover {
+      -fx-underline: true;
+      -fx-text-fill: $primary-dark;
+    }
+  }
+}
+
+/* REUSABLE PAGE STYLES */
+
+.label {
+  &-status {
+    -fx-text-fill: $surface-700;
+    -fx-font-weight: 700;
+
+    &--active {
+      -fx-text-fill: $primary-light;
+    }
+
+    &--inactive {
+      -fx-text-fill: $surface-900;
+    }
+  }
+}
+
+.input__text {
+  &--search {
+    -fx-border-color: $surface-100;
+
+    &:focused {
+      -fx-border-color: $primary-dark;
+    }
+  }
+}
+
+/* LOGIN STYLES */
+
+#login {
+  &__container {
+    -fx-background-color: $surface-0;
+  }
+
+  &__password-toggle {
+      -fx-background-color: transparent;
+      -fx-cursor: hand;
+  }
+
+  &__title {
+    -fx-font-size: 34px;
+    -fx-text-fill: $primary-dark;
+    -fx-font-family: $montserrat;
+    -fx-font-weight: 900;
+  }
+
+  &__instructions {
+    -fx-text-fill: $surface-400;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-font-family: $poppins;
+  }
+
+  &__button {
+    -fx-background-color: $primary-light-2;
+    -fx-background-radius: 5px;
+    -fx-padding: 12px 38px;
+    -fx-text-fill: $surface-0;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+  }
+
+  &__error {
+    -fx-text-fill: $error-color;
+  }
+
+
+}
+
+.input__label--login {
+  -fx-font-size: 16px;
+  -fx-text-fill: $surface-600;
+  -fx-font-family: $montserrat;
+  -fx-font-weight: 900;
+}
+
+.input__text--login {
+  -fx-background-color: transparent;
+  -fx-font-size: 15px !important;
+  -fx-padding: 12px 10px !important;
+}

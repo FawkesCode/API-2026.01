@@ -13,6 +13,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
+import static com.fawkes.front.MainApplication.GLOBAL_CSS;
+
 public class NavigationManager {
 
     private final StringProperty currentPage = new SimpleStringProperty("Nenhuma");
@@ -20,7 +22,7 @@ public class NavigationManager {
 
     private void applyCommonResources(Stage stage, Scene scene) {
         stage.setTitle("NEWE - We Logic");
-        scene.getStylesheets().add(getClass().getResource("/com/fawkes/front/styles/style.css").toExternalForm());
+        scene.getStylesheets().add(GLOBAL_CSS);
 
         if (stage.getIcons().isEmpty()) {
             Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/fawkes/front/img/logo-icon.png")));

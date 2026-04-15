@@ -16,6 +16,8 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 import java.util.Objects;
 
+import static com.fawkes.front.MainApplication.GLOBAL_CSS;
+
 public class ModalManager {
 
     public static void openModal(Stage curStage, Parent specificContent, String title) {
@@ -55,7 +57,7 @@ public class ModalManager {
             backdrop.prefWidthProperty().bind(curStage.widthProperty());
             backdrop.prefHeightProperty().bind(curStage.heightProperty());
 
-            scene.getStylesheets().add(Objects.requireNonNull(ModalManager.class.getResource("/com/fawkes/front/styles/components/modal.css")).toExternalForm());
+            scene.getStylesheets().add(GLOBAL_CSS);
 
             overlayStage.setScene(scene);
             overlayStage.showAndWait();

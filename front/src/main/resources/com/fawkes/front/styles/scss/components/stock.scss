@@ -1,0 +1,22 @@
+.stockItem {
+  -fx-background-color: $surface-0;
+}
+
+.stock-item {
+  &__name {
+    -fx-font-size: 15px;
+    -fx-text-fill: $surface-800;
+    -fx-font-family: $montserrat;
+    -fx-font-weight: 900;
+  }
+
+  &__qtd {
+    -fx-text-fill: $surface-700;
+    -fx-font-weight: 700;
+  }
+
+  &__number {
+    -fx-font-weight: 700;
+    -fx-text-fill: $surface-300;
+  }
+}

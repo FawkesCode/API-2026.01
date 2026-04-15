@@ -17,3 +17,6 @@ Thumbs.db
 # Temporários
 *.log
 *.tmp
+
+#arquivos npm
+node_modules

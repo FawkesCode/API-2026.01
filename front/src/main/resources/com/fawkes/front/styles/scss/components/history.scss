@@ -1,0 +1,28 @@
+.log {
+  -fx-background-color: $surface-0;
+  -fx-padding: 10px;
+
+  &__type {
+    -fx-font-weight: 700;
+    -fx-text-fill: $surface-400;
+    -fx-font-size: 14px;
+  }
+
+  &__owner,
+  &__date {
+    -fx-font-family: $montserrat;
+    -fx-font-size: 24px;
+    -fx-text-fill: $surface-800;
+    -fx-font-weight: 900;
+  }
+
+  &__date {
+    -fx-font-size: 18px;
+  }
+
+  &__description {
+    -fx-font-family: $sofia;
+    -fx-text-fill: $surface-300;
+    -fx-font-size: 14px;
+  }
+}

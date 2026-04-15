@@ -11,6 +11,8 @@ import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.util.Objects;
 
+import static com.fawkes.front.MainApplication.GLOBAL_CSS;
+
 public class EmployeeCard extends AnchorPane {
 
     @FXML private Label status;
@@ -25,10 +27,10 @@ public class EmployeeCard extends AnchorPane {
         FXMLLoader fxmlLoader = new FXMLLoader(
                 getClass().getResource("/com/fawkes/front/view/components/EmployeeCard.fxml"));
 
-        String css = Objects.requireNonNull(
-                        getClass().getResource("/com/fawkes/front/styles/components/employees.css"))
-                .toExternalForm();
-        this.getStylesheets().add(css);
+        //String css = Objects.requireNonNull(
+                        //getClass().getResource("/com/fawkes/front/styles/components/employees.scss"))
+                //.toExternalForm();
+        //this.getStylesheets().add(GLOBAL_CSS);
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 

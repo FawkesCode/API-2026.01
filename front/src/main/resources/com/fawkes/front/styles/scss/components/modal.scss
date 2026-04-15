@@ -1,0 +1,78 @@
+.modal {
+  -fx-background-color: #ffffff;
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 5);
+
+  &__title {
+    -fx-font-size: 18px;
+    -fx-font-family: $sofia !important;
+    -fx-text-fill: #37404c;
+
+  }
+
+  &__message {
+    -fx-text-fill: #bcc3cd;
+  }
+
+  &__close {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+  }
+}
+
+.input {
+  &__text--form {
+    -fx-padding: 10px 6px;
+  }
+
+  &__label {
+    -fx-font-size: 14px;
+    -fx-font-family: $montserrat;
+    -fx-text-fill: $surface-800;
+    -fx-font-weight: 900;
+
+    &--error {
+      -fx-text-fill: $error-color;
+    }
+    &--desc {
+      -fx-text-fill: $surface-400;
+      -fx-font-size: 14px;
+    }
+  }
+}
+
+.btn {
+  &--upload {
+    -fx-underline: true;
+    -fx-background-color: transparent;
+    -fx-text-fill: $primary-light;
+    -fx-cursor: hand;
+
+    &:hover {
+      -fx-text-fill: $primary-dark;
+    }
+  }
+
+  &--submit,
+  &--cancel {
+    -fx-background-color: $surface-1000;
+    -fx-background-radius: 5px;
+    -fx-text-fill: $surface-50;
+    -fx-padding: 5px 18px;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-cursor: hand;
+  }
+
+  &--cancel {
+    -fx-background-color: transparent;
+    -fx-border-color: $surface-300;
+    -fx-border-style: solid;
+    -fx-border-radius: 5px;
+    -fx-text-fill: $surface-300;
+  }
+}
+
+#input__password-toggle {
+  -fx-background-color: transparent;
+  -fx-cursor: hand;
+}

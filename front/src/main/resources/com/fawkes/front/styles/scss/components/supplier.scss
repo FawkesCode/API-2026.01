@@ -1,0 +1,17 @@
+.supplier {
+  -fx-padding: 15px;
+  -fx-background-color: $surface-0;
+
+  &__name {
+    -fx-font-family: $montserrat;
+    -fx-font-size: 24px;
+    -fx-text-fill: $surface-800;
+    -fx-font-weight: 900;
+  }
+
+  &__signed {
+    -fx-font-family: $sofia;
+    -fx-text-fill: $surface-300;
+    -fx-font-size: 14px;
+  }
+}
