@@ -2,13 +2,20 @@ package com.fawkes.front.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fawkes.front.service.ApiClient;
+import com.fawkes.front.utils.ModalManager;
 import com.fawkes.front.utils.RBACUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.Objects;
 
 public class SupplierPageController {
 
@@ -65,11 +72,6 @@ public class SupplierPageController {
             }
         });
 
-        // Preenche o ComboBox com as opções do enum do back
-        comboPagamento.setItems(FXCollections.observableArrayList(
-                "PIX", "CREDITO", "DEBITO", "BOLETO"));
-        comboPagamento.getSelectionModel().selectFirst();
-
         loadSuppliers();
     }
 
@@ -114,42 +116,13 @@ public class SupplierPageController {
     }
 
     @FXML
-    public void handleOpenAddDialog() {
-        fieldNome.clear();
-        fieldCnpj.clear();
-        comboPagamento.getSelectionModel().selectFirst();
-        addErrorLabel.setText("");
-        addDialog.setVisible(true);
-        addDialog.setManaged(true);
-    }
-
-    @FXML
-    public void handleCloseAddDialog() {
-        addDialog.setVisible(false);
-        addDialog.setManaged(false);
-    }
-
-    @FXML
-    public void handleConfirmAdd() {
-        String nome      = fieldNome.getText().trim();
-        String cnpj      = fieldCnpj.getText().trim();
-        String pagamento = comboPagamento.getValue();
-
-        if (nome.isEmpty() || cnpj.isEmpty()) {
-            addErrorLabel.setText("Preencha nome e CNPJ.");
-            return;
-        }
-
-        try {
-            String body = String.format(
-                    "{\"nomeFornecedor\":\"%s\",\"cnpjFornecedor\":\"%s\",\"meioPagamento\":\"%s\"}",
-                    nome, cnpj, pagamento);
-            ApiClient.post("/api/suppliers", body);
-            handleCloseAddDialog();
-            loadSuppliers();
-        } catch (Exception e) {
-            addErrorLabel.setText("Erro: " + e.getMessage());
-        }
+    public void handleOpenAddDialog() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/fawkes/front/view/forms/new-supplier-form.fxml"));
+        Parent formulario = loader.load();
+        AddSupplierForm controller = loader.getController();
+        controller.setOnSaveSuccess(this::loadSuppliers);
+        Stage curStage = ((Stage) btnNewSupplier.getScene().getWindow());
+        ModalManager.openModal(curStage, formulario, "Cadastrar Fornecedor", 600, 400, "ModalFrameSM.fxml", true);
     }
 
     private void handleDelete(Long id) {

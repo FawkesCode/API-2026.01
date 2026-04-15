@@ -10,4 +10,14 @@ public class StringUtils {
             default -> role;
         };
     }
+
+    public static String paymentTranslation(String payment) {
+        return switch (payment) {
+            case "PIX" -> "Pix";
+            case "CREDITO" -> "Crédito";
+            case "DEBITO" -> "Débito";
+            case "BOLETO" -> "Boleto";
+            default -> payment;
+        };
+    }
 }

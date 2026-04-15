@@ -67,7 +67,7 @@
 
    <Label fx:id="statusLabel" text="" />
 
-   <VBox fx:id="addDialog" managed="false" maxWidth="400" spacing="12" style="-fx-background-color: white; -fx-border-color: #DADEE3; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);" visible="false">
+   <!-- <VBox fx:id="addDialog" managed="false" maxWidth="400" spacing="12" style="-fx-background-color: white; -fx-border-color: #DADEE3; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);" visible="false">
       <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Novo Fornecedor" />
       <Label text="Nome:" />
       <TextField fx:id="fieldNome" promptText="Nome do fornecedor" />
@@ -80,6 +80,6 @@
          <Button onAction="#handleCloseAddDialog" text="Cancelar" />
          <Button onAction="#handleConfirmAdd" styleClass="btn-primary" text="Cadastrar" />
       </HBox>
-   </VBox>
+   </VBox> -->
 
 </VBox>
