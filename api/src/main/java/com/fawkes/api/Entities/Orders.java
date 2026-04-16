@@ -33,7 +33,7 @@ public enum Status {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "departamentId", nullable = false)
-    private Departments departamento;
+    private Department departamento;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orderNoteId")
