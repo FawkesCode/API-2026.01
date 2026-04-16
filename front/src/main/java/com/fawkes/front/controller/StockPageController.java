@@ -1,6 +1,8 @@
 package com.fawkes.front.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fawkes.front.models.Employee;
+import com.fawkes.front.models.StockItem;
 import com.fawkes.front.service.ApiClient;
 import com.fawkes.front.utils.ModalManager;
 import com.fawkes.front.utils.RBACUtil;
@@ -16,9 +18,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 
 public class StockPageController {
 
@@ -30,7 +30,6 @@ public class StockPageController {
     @FXML private TableColumn<JsonNode, String> colCurrent;
     @FXML private TableColumn<JsonNode, String> colMin;
     @FXML private TableColumn<JsonNode, String> colMax;
-    @FXML private Label statusLabel;
     @FXML private TextField searchField;
     @FXML private Button btnInput;
     @FXML private Button btnOutput;
@@ -47,34 +46,38 @@ public class StockPageController {
     @FXML private TextField outputQuantity;
     @FXML private Label     outputErrorLabel;
 
+    @FXML private VBox stockContainer;
+
     private ObservableList<JsonNode> allItems = FXCollections.observableArrayList();
     private HashMap<String, Long> productMap = new HashMap<>();
     private static final Long DEFAULT_STOCK_ID = 1L; // Estoque padrão da empresa
 
     private static final NumberFormat CURRENCY_FMT =
             NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+    private List<StockItem> allStockItens = new ArrayList<>();
+    private Label statusLabel = new Label();
 
     @FXML
     public void initialize() {
         // Apply RBAC restrictions based on user role
         applyRBACRestrictions();
 
-        colName.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().path("productName").asText("-")));
-        colType.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().path("productType").asText("-")));
-        colUnit.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().path("measurementUnit").asText("-")));
-        colValue.setCellValueFactory(d -> {
-            double v = d.getValue().path("unitValue").asDouble(0);
-            return new SimpleStringProperty(CURRENCY_FMT.format(v));
-        });
-        colCurrent.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().path("currentStockQuantity").asText("-")));
-        colMin.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().path("minStockQuantity").asText("-")));
-        colMax.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().path("maxStockQuantity").asText("-")));
+//        colName.setCellValueFactory(d ->
+//                new SimpleStringProperty(d.getValue().path("productName").asText("-")));
+//        colType.setCellValueFactory(d ->
+//                new SimpleStringProperty(d.getValue().path("productType").asText("-")));
+//        colUnit.setCellValueFactory(d ->
+//                new SimpleStringProperty(d.getValue().path("measurementUnit").asText("-")));
+//        colValue.setCellValueFactory(d -> {
+//            double v = d.getValue().path("unitValue").asDouble(0);
+//            return new SimpleStringProperty(CURRENCY_FMT.format(v));
+//        });
+//        colCurrent.setCellValueFactory(d ->
+//                new SimpleStringProperty(d.getValue().path("currentStockQuantity").asText("-")));
+//        colMin.setCellValueFactory(d ->
+//                new SimpleStringProperty(d.getValue().path("minStockQuantity").asText("-")));
+//        colMax.setCellValueFactory(d ->
+//                new SimpleStringProperty(d.getValue().path("maxStockQuantity").asText("-")));
 
         /*stockTable.setRowFactory(tv -> new TableRow<>() {
             @Override
@@ -103,36 +106,79 @@ public class StockPageController {
 
     @FXML
     public void loadStock() {
-        statusLabel.setText("Carregando...");
+        stockContainer.getChildren().clear();
+
         try {
-            JsonNode data = ApiClient.listStock();
-            allItems.clear();
-            for (JsonNode item : data) {
-                allItems.add(item);
+            JsonNode data = ApiClient.get("/api/stock");
+
+            if (!data.isArray() || data.isEmpty()) {
+                setErrorMessage("Nenhum produto cadastrado.");
+                return;
             }
-            stockTable.setItems(allItems);
-            statusLabel.setText("Estoque carregado. " + allItems.size() + " item(ns).");
+
+            allStockItens.clear();
+            for (JsonNode node: data) {
+                allStockItens.add(StockItem.fromJson(node));
+            }
+
+//            renderStockGroup();
+
         } catch (Exception e) {
-            statusLabel.setText("Erro ao carregar estoque: " + e.getMessage());
+            setErrorMessage("Erro ao carregar estoque: " + e.getMessage());
         }
+
     }
 
     @FXML
-    public void handleSearch() {
-        String query = searchField.getText().trim().toLowerCase();
-        if (query.isEmpty()) {
-            stockTable.setItems(allItems);
-            return;
-        }
-        ObservableList<JsonNode> filtered = FXCollections.observableArrayList();
-        for (JsonNode item : allItems) {
-            if (item.path("productName").asText("").toLowerCase().contains(query) ||
-                    item.path("productType").asText("").toLowerCase().contains(query)) {
-                filtered.add(item);
-            }
-        }
-        stockTable.setItems(filtered);
+    public void renderStockGroup(List<StockItem> products) {
+        stockContainer.getChildren().clear();
+
+        java.util.Map<String, java.util.List<Employee>> byGroup = new java.util.LinkedHashMap<>();
+
+//        for (StockItem pro : products) {
+//            byGroup.computeIfAbsent(pro.get(), k -> new ArrayList<>()).add(emp);
+//        }
+
     }
+
+    private void setErrorMessage (String message) {
+        stockContainer.getChildren().clear();
+        statusLabel.setText(message);
+        stockContainer.getChildren().add(statusLabel);
+    }
+
+//    @FXML
+//    public void loadStock() {
+//        statusLabel.setText("Carregando...");
+//        try {
+//            JsonNode data = ApiClient.listStock();
+//            allItems.clear();
+//            for (JsonNode item : data) {
+//                allItems.add(item);
+//            }
+//            stockTable.setItems(allItems);
+//            statusLabel.setText("Estoque carregado. " + allItems.size() + " item(ns).");
+//        } catch (Exception e) {
+//            statusLabel.setText("Erro ao carregar estoque: " + e.getMessage());
+//        }
+//    }
+
+//    @FXML
+//    public void handleSearch() {
+//        String query = searchField.getText().trim().toLowerCase();
+//        if (query.isEmpty()) {
+//            stockTable.setItems(allItems);
+//            return;
+//        }
+//        ObservableList<JsonNode> filtered = FXCollections.observableArrayList();
+//        for (JsonNode item : allItems) {
+//            if (item.path("productName").asText("").toLowerCase().contains(query) ||
+//                    item.path("productType").asText("").toLowerCase().contains(query)) {
+//                filtered.add(item);
+//            }
+//        }
+//        stockTable.setItems(filtered);
+//    }
 
     @FXML
     public void handleOpenInputDialog() throws IOException {
