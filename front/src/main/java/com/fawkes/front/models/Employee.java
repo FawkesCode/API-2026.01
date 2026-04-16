@@ -43,8 +43,8 @@ public class Employee {
         boolean active = node.path("isActive").asBoolean(true);
         String status = active ? "Ativo" : "Inativo";
 
-        String department = node.path("departments").path("departmentName").asText("-");
-        String position = node.path("group").path("groupName").asText("-");
+        String department = node.path("departamentName").asText("-");
+        String position = node.path("groupName").asText("-");
 
         String rawDate = node.path("creationDate").asText("");
         String signed = formatDate(rawDate);
@@ -91,4 +91,9 @@ public class Employee {
 
     public Image getPicture() { return picture; }
     public void setPicture(Image picture) { this.picture = picture; }
+
+    @Override
+    public String toString() {
+        return "Employee [nome=" + name + ", id=" + id + ", setor=" + department + ", posição=" + position + "]";
+    }
 }

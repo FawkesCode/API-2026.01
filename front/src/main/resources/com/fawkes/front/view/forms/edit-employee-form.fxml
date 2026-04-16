@@ -17,6 +17,27 @@
     <children>
         <VBox layoutY="14.0" prefHeight="295.0" prefWidth="562.0" spacing="15.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
+                <HBox prefHeight="86.0" prefWidth="562.0">
+                    <children>
+                        <AnchorPane prefHeight="100.0" prefWidth="294.0">
+                            <children>
+                                <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Grupo de Usuário:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                                <ComboBox fx:id="userGroupField" layoutY="39.0" prefWidth="150.0" promptText="Selecionar" styleClass="input__text" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                            </children>
+                        </AnchorPane>
+                  <AnchorPane prefHeight="100.0" prefWidth="294.0">
+                     <children>
+                        <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Departamento:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <TextField fx:id="departmentField" layoutX="10.4" layoutY="39.0" promptText="Digite o departamento" AnchorPane.leftAnchor="10.4" AnchorPane.rightAnchor="10.399999999999977">
+                           <styleClass>
+                              <String fx:value="input__text" />
+                              <String fx:value="input__text--form" />
+                           </styleClass>
+                        </TextField>
+                     </children>
+                  </AnchorPane>
+                    </children>
+                </HBox>
                 <AnchorPane prefHeight="78.0" prefWidth="562.0">
                     <children>
                         <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Email:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
@@ -32,24 +53,8 @@
                     <children>
                         <AnchorPane prefHeight="100.0" prefWidth="294.0">
                             <children>
-                                <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Grupo de Usuário:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-                                <ComboBox fx:id="userGroupField" layoutY="39.0" prefWidth="150.0" promptText="Selecionar" styleClass="input__text" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-                            </children>
-                        </AnchorPane>
-                  <AnchorPane prefHeight="100.0" prefWidth="294.0">
-                     <children>
-                        <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Departamento:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-                        <ComboBox fx:id="departmentField" layoutY="39.0" prefWidth="150.0" promptText="Selecionar" styleClass="input__text" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-                     </children>
-                  </AnchorPane>
-                    </children>
-                </HBox>
-                <HBox prefHeight="86.0" prefWidth="562.0">
-                    <children>
-                        <AnchorPane prefHeight="100.0" prefWidth="294.0">
-                            <children>
-                                <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Cargo:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-                                <TextField fx:id="positionField" layoutY="39.0" promptText="Digite o cargo" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                                <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Nome:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                                <TextField fx:id="nameField" layoutY="39.0" promptText="Digite o nome" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
                                     <styleClass>
                                         <String fx:value="input__text" />
                                         <String fx:value="input__text--form" />

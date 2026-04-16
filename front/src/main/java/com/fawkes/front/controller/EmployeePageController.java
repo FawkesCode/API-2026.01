@@ -2,21 +2,26 @@ package com.fawkes.front.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fawkes.front.components.EmployeeCard;
 import com.fawkes.front.models.Employee;
 import com.fawkes.front.service.ApiClient;
 import com.fawkes.front.utils.ModalManager;
 import com.fawkes.front.utils.RBACUtil;
+import com.fawkes.front.utils.StringUtils;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -39,6 +44,8 @@ public class EmployeePageController {
     @FXML private TextField searchField;
     @FXML private Label     statusLabel;
     @FXML private Button    newEmployee;
+    @FXML private Label activeUsersLabel;
+    @FXML private Label inactiveUsersLabel;
 
     // Dialog de cadastro
     //@FXML private VBox          addDialog;
@@ -49,45 +56,16 @@ public class EmployeePageController {
     @FXML private TextField     fieldDept;
     @FXML private Label         addErrorLabel;
 
+    @FXML private VBox groupsContainer;
+
     private final ObservableList<JsonNode> allRows = FXCollections.observableArrayList();
     private final ObjectMapper mapper = new ObjectMapper();
+    private List<Employee> allEmployees = new ArrayList<>();
 
     @FXML
     public void initialize() {
         // Apply RBAC restrictions based on user role
         applyRBACRestrictions();
-
-        colId.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().path("id").asText("-")));
-        colNome.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().path("userName").asText("-")));
-        colEmail.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().path("userMail").asText("-")));
-        colAtivo.setCellValueFactory(d -> {
-            boolean active = d.getValue().path("isActive").asBoolean(true);
-            return new SimpleStringProperty(active ? "Ativo" : "Inativo");
-        });
-        colGrupo.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().path("groupName").asText("-")));
-        colDepto.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().path("departamentName").asText("-")));
-
-        // Coluna de ações: botão Excluir
-        colAcoes.setCellFactory(col -> new TableCell<>() {
-            private final Button btnDelete = new Button("Excluir");
-            {
-                btnDelete.setStyle("-fx-text-fill: #FF4A50; -fx-cursor: hand;");
-                btnDelete.setOnAction(e -> {
-                    JsonNode row = getTableView().getItems().get(getIndex());
-                    handleDelete(row.path("id").asLong());
-                });
-            }
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                setGraphic(empty ? null : btnDelete);
-            }
-        });
 
         loadEmployees();
     }
@@ -102,35 +80,129 @@ public class EmployeePageController {
 
     @FXML
     public void loadEmployees() {
-        statusLabel.setText("Carregando...");
-        allRows.clear();
+        groupsContainer.getChildren().clear();
+        List<Employee> activeUsers = new ArrayList<>();
+        List<Employee> inactiveUsers = new ArrayList<>();
+
         try {
             JsonNode data = ApiClient.get("/api/users");
-            for (JsonNode node : data) allRows.add(node);
-            employeeTable.setItems(allRows);
-            statusLabel.setText(allRows.size() + " funcionário(s) carregado(s).");
+
+            if (data != null) {
+                System.out.println("===== DADOS DA API =====");
+                System.out.println(data.toPrettyString());
+                System.out.println("========================");
+            }
+
+            if (!data.isArray() || data.isEmpty()) {
+                statusLabel.setText("Nenhum funcionário encontrado.");
+                return;
+            }
+
+            allEmployees.clear();
+            for (JsonNode node : data) {
+                allEmployees.add(Employee.fromJson(node));
+            }
+
+            for (JsonNode node: data) {
+                Employee emp = Employee.fromJson(node);
+                String status = emp.getStatus().toLowerCase();
+
+                if (status.equals("ativo")) {
+                    activeUsers.add(emp);
+                } else {
+                    inactiveUsers.add(emp);
+                }
+            }
+
+            int qtdActiveUsers = activeUsers.toArray().length;
+            int qtdInactiveUsers = inactiveUsers.toArray().length;
+
+            renderEmployeesGroup(allEmployees);
+
+            statusLabel.setText("");
+            activeUsersLabel.setText(qtdActiveUsers + " Ativos");
+            inactiveUsersLabel.setText(qtdInactiveUsers + " Inativos");
+
         } catch (Exception e) {
-            statusLabel.setText("Erro ao carregar: " + e.getMessage());
+            statusLabel.setText("Erro ao carregar funcionários: " + e.getMessage());
         }
     }
 
     @FXML
-    public void handleSearch() {
-        String q = searchField.getText().trim().toLowerCase();
-        if (q.isEmpty()) {
-            employeeTable.setItems(allRows);
+    private void renderEmployeesGroup(List<Employee> employees) {
+        groupsContainer.getChildren().clear();
+
+        if (employees.isEmpty()) {
+            statusLabel.setText("Nenhum resultado encontrado.");
             return;
         }
-        ObservableList<JsonNode> filtered = FXCollections.observableArrayList();
-        for (JsonNode row : allRows) {
-            if (row.path("userName").asText("").toLowerCase().contains(q)
-                    || row.path("userMail").asText("").toLowerCase().contains(q)
-                    || row.path("groupName").asText("").toLowerCase().contains(q)
-                    || row.path("departamentName").asText("").toLowerCase().contains(q)) {
-                filtered.add(row);
-            }
+
+        java.util.Map<String, java.util.List<Employee>> byGroup = new java.util.LinkedHashMap<>();
+
+        for (Employee emp : employees) {
+            String group = emp.getPosition();
+            byGroup.computeIfAbsent(emp.getPosition(), k -> new ArrayList<>()).add(emp);
         }
-        employeeTable.setItems(filtered);
+
+        // Renderiza um bloco por grupo
+        for (java.util.Map.Entry<String, java.util.List<Employee>> entry : byGroup.entrySet()) {
+            VBox groupInfo = new VBox();
+            Label groupLabel = new Label("Usuários com acesso de " + StringUtils.roleTranslation(entry.getKey().toUpperCase()).toLowerCase());
+            groupLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #37404C; "
+                    + "-fx-padding: 16px 0px 8px 0px;");
+            Label groupDesc = new Label(StringUtils.roleDescTranslation(entry.getKey().toUpperCase()));
+            groupDesc.setStyle("-fx-font-family: 'Poppins Regular'; -fx-text-fill: #556376;");
+
+            groupInfo.getChildren().addAll(groupLabel, groupDesc);
+
+            FlowPane flow = new FlowPane();
+            flow.setHgap(16);
+            flow.setVgap(16);
+            if (entry.getValue().size() < 3) {
+                flow.setAlignment(Pos.CENTER_LEFT);
+            } else {
+                flow.setAlignment(Pos.CENTER);
+            }
+            flow.setStyle("-fx-background-color: #ffffff; -fx-padding: 16px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-border-color: #DADEE3; -fx-border-style: solid;");
+
+
+            for (Employee emp : entry.getValue()) {
+                EmployeeCard card = new EmployeeCard();
+                card.setData(emp);
+
+                card.setOnEditAction(this::openEditEmployee);
+
+                flow.getChildren().add(card);
+            }
+
+            groupsContainer.getChildren().addAll(groupInfo, flow);
+        }
+    }
+
+    private void openEditEmployee(Employee emp) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/fawkes/front/view/forms/edit-employee-form.fxml"));
+            Parent formulario = loader.load();
+            EditEmployeeForm controller = loader.getController();
+            controller.setOnSaveSuccess(this::loadEmployees);
+            controller.setEmployeeData(emp);
+            Stage curStage = ((Stage) groupsContainer.getScene().getWindow());
+            ModalManager.openModal(curStage, formulario, "Editar Funcionário: " + emp.getName());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void handleSearch() {
+        String query = searchField.getText().trim().toLowerCase();
+        if (query.isEmpty()) {
+            renderEmployeesGroup(allEmployees);
+            return;
+        }
+
+        List<Employee> filtered = allEmployees.stream().filter(emp -> emp.getName().toLowerCase().contains(query) || emp.getEmail().toLowerCase().contains(query) || emp.getPosition().toLowerCase().contains(query)).toList();
+
+        renderEmployeesGroup(filtered);
     }
 
     @FXML

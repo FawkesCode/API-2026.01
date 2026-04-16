@@ -11,6 +11,16 @@ public class StringUtils {
         };
     }
 
+    public static String roleDescTranslation(String role) {
+        return switch (role) {
+            case "DIRECTOR" -> "Os diretores tem acesso total ao sistema, podendo gerenciar outros usuários, entradas e saídas de estoque e aprovações de pedidos.";
+            case "OPERATIONAL" -> "Os operacionais tem acesso restrito ao sistema, podendo apenas visualizar o estoque e realizar novos pedidos.";
+            case "MANAGER" -> "Os gerentes tem quase acesso total ao sistema, se diferenciando dos diretores apenas por não poderem aprovar novos pedidos.";
+
+            default -> role;
+        };
+    }
+
     public static String paymentTranslation(String payment) {
         return switch (payment) {
             case "PIX" -> "Pix";
