@@ -1,6 +1,6 @@
 package com.fawkes.api.Services;
 
-import com.fawkes.api.Entities.Departments;
+import com.fawkes.api.Entities.Department;
 import com.fawkes.api.Entities.Group;
 import com.fawkes.api.Entities.Roles;
 import com.fawkes.api.Entities.Users;
@@ -59,7 +59,7 @@ public class UserService {
         Group group = groupRepository.findById(Long.valueOf(groupID))
                 .orElseThrow(() -> new RuntimeException("Grupo não encontrado"));
 
-        Departments dept = departmentRepository.findById(Long.valueOf(departamentID))
+        Department dept = departmentRepository.findById(Long.valueOf(departamentID))
                 .orElseThrow(() -> new RuntimeException("Departamento não encontrado"));
 
         Users user = new Users();
@@ -91,7 +91,7 @@ public class UserService {
         Group group = groupRepository.findByRole(role)
                 .orElseThrow(() -> new RuntimeException("Grupo não encontrado para a role: " + role));
 
-        Departments dept = new Departments();
+        Department dept = new Department();
         dept.setDepartamentName(departamentName);
         dept.setText("Departamento " + departamentName);
         dept = departmentRepository.save(dept);
@@ -118,7 +118,7 @@ public class UserService {
         Group group = groupRepository.findByRole(role)
                 .orElseThrow(() -> new RuntimeException("Grupo não encontrado para a role: " + role));
 
-        Departments defaultDept = departmentRepository.findAll().stream().findFirst()
+        Department defaultDept = departmentRepository.findAll().stream().findFirst()
                 .orElseThrow(() -> new RuntimeException("Nenhum departamento encontrado"));
 
         Users user = new Users();

@@ -59,7 +59,7 @@ public class Users {
 
     @ManyToOne
     @JoinColumn(name="departamentID",nullable=false)
-    private Departments departments;
+    private Department departments;
 
 
     public void setRoles(Set<Roles> role) {

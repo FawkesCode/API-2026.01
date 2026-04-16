@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import org.springframework.stereotype.Service;
 
-import com.fawkes.api.Entities.Departments;
+import com.fawkes.api.Entities.Department;
 import com.fawkes.api.Entities.Ticket;
 import com.fawkes.api.Entities.Users;
 import com.fawkes.api.Repositories.DepartmentRepository;
@@ -41,7 +41,7 @@ public class TicketCreateService {
         Integer departmentID, 
         BigDecimal value){
         
-        Departments dept = departmentRepository.findById(Long.valueOf(departmentID))
+        Department dept = departmentRepository.findById(Long.valueOf(departmentID))
         .orElseThrow(() -> new RuntimeException("Departamento não encontrado."));
 
         Users userIdNumber = userRepository.findByIdAndIsActiveTrue(Long.valueOf(userID))
