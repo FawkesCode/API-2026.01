@@ -1,5 +1,6 @@
 package com.fawkes.front.components;
 
+import com.fawkes.front.models.Employee;
 import com.fawkes.front.models.Supplier;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +9,7 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class SupplierCard extends AnchorPane {
 
@@ -16,13 +18,16 @@ public class SupplierCard extends AnchorPane {
     // Sem fx:id: .suppiler__name (typo no FXML), .supplier__signed
     @FXML private Label status;
 
+    private Supplier supplier;
+    private Consumer<Supplier> onEditAction;
+
+    public void setOnEditAction(Consumer<Supplier> action) {
+        this.onEditAction = action;
+    }
+
     public SupplierCard() {
         FXMLLoader fxmlLoader = new FXMLLoader(
                 getClass().getResource("/com/fawkes/front/view/components/SupplierCard.fxml"));
-        //String css = Objects.requireNonNull(
-                        //getClass().getResource("/com/fawkes/front/styles/components/supplier.scss"))
-                //.toExternalForm();
-        //this.getStylesheets().add(css);
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
         try {
@@ -37,19 +42,26 @@ public class SupplierCard extends AnchorPane {
         // então exibimos o meio de pagamento aqui como identificador rápido)
         if (status != null) {
             status.setText("● " + supplier.getPaymentMethod());
-            status.setStyle("-fx-text-fill: #1565C0;");
         }
 
         // Label do nome (styleClass "suppiler__name" — typo original do FXML mantido)
         Label nameLabel = (Label) this.lookup(".suppiler__name");
         if (nameLabel != null) {
-            nameLabel.setText(supplier.getName().toUpperCase());
+            nameLabel.setText(supplier.getName());
         }
 
         // Label de rodapé — exibe o CNPJ
         Label signedLabel = (Label) this.lookup(".supplier__signed");
         if (signedLabel != null) {
             signedLabel.setText("CNPJ: " + supplier.getCnpj());
+        }
+        this.supplier = supplier;
+    }
+
+    @FXML
+    public void openEditModal(){
+        if (onEditAction != null) {
+            onEditAction.accept(this.supplier);
         }
     }
 }

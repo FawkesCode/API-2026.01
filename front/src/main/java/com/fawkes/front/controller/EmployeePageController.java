@@ -42,7 +42,6 @@ public class EmployeePageController {
 
     // Barra superior
     @FXML private TextField searchField;
-    @FXML private Label     statusLabel;
     @FXML private Button    newEmployee;
     @FXML private Label activeUsersLabel;
     @FXML private Label inactiveUsersLabel;
@@ -61,6 +60,7 @@ public class EmployeePageController {
     private final ObservableList<JsonNode> allRows = FXCollections.observableArrayList();
     private final ObjectMapper mapper = new ObjectMapper();
     private List<Employee> allEmployees = new ArrayList<>();
+    private Label statusLabel = new Label();
 
     @FXML
     public void initialize() {
@@ -78,6 +78,12 @@ public class EmployeePageController {
         }
     }
 
+    private void setErrorMessage(String message) {
+        groupsContainer.getChildren().clear();
+        statusLabel.setText(message);
+        groupsContainer.getChildren().add(statusLabel);
+    }
+
     @FXML
     public void loadEmployees() {
         groupsContainer.getChildren().clear();
@@ -87,14 +93,8 @@ public class EmployeePageController {
         try {
             JsonNode data = ApiClient.get("/api/users");
 
-            if (data != null) {
-                System.out.println("===== DADOS DA API =====");
-                System.out.println(data.toPrettyString());
-                System.out.println("========================");
-            }
-
             if (!data.isArray() || data.isEmpty()) {
-                statusLabel.setText("Nenhum funcionário encontrado.");
+                setErrorMessage("Nenhum funcionário cadastrado.");
                 return;
             }
 
@@ -119,23 +119,17 @@ public class EmployeePageController {
 
             renderEmployeesGroup(allEmployees);
 
-            statusLabel.setText("");
             activeUsersLabel.setText(qtdActiveUsers + " Ativos");
             inactiveUsersLabel.setText(qtdInactiveUsers + " Inativos");
 
         } catch (Exception e) {
-            statusLabel.setText("Erro ao carregar funcionários: " + e.getMessage());
+            setErrorMessage("Erro ao carregar funcionários: " + e.getMessage());
         }
     }
 
     @FXML
     private void renderEmployeesGroup(List<Employee> employees) {
         groupsContainer.getChildren().clear();
-
-        if (employees.isEmpty()) {
-            statusLabel.setText("Nenhum resultado encontrado.");
-            return;
-        }
 
         java.util.Map<String, java.util.List<Employee>> byGroup = new java.util.LinkedHashMap<>();
 
@@ -187,7 +181,7 @@ public class EmployeePageController {
             controller.setOnSaveSuccess(this::loadEmployees);
             controller.setEmployeeData(emp);
             Stage curStage = ((Stage) groupsContainer.getScene().getWindow());
-            ModalManager.openModal(curStage, formulario, "Editar Funcionário: " + emp.getName());
+            ModalManager.openModal(curStage, formulario, "Editar Funcionário: " + emp.getName(), false);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -200,9 +194,13 @@ public class EmployeePageController {
             return;
         }
 
-        List<Employee> filtered = allEmployees.stream().filter(emp -> emp.getName().toLowerCase().contains(query) || emp.getEmail().toLowerCase().contains(query) || emp.getPosition().toLowerCase().contains(query)).toList();
+        List<Employee> filtered = allEmployees.stream().filter(emp -> emp.getName().toLowerCase().contains(query) || emp.getEmail().toLowerCase().contains(query) || StringUtils.roleTranslation(emp.getPosition()).toLowerCase().contains(query)).toList();
 
         renderEmployeesGroup(filtered);
+
+        if (filtered.isEmpty()) {
+            setErrorMessage("Nenhum funcionário encontrado.");
+        }
     }
 
     @FXML

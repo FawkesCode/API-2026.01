@@ -9,13 +9,13 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="364.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.controller.AddSupplierForm">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="364.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
     <children>
       <VBox layoutX="57.0" layoutY="47.0" prefHeight="218.0" prefWidth="486.0" spacing="15.0">
          <children>
             <AnchorPane prefHeight="78.0" prefWidth="562.0">
                <children>
-                  <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="CNPJ*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                  <Label fx:id="cnpjLabel" layoutX="31.0" layoutY="14.0" styleClass="input__label" text="CNPJ*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
                   <TextField fx:id="cnpjField" layoutY="39.0" promptText="Digite o CNPJ" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
                      <styleClass>
                         <String fx:value="input__text" />
@@ -28,7 +28,7 @@
                <children>
                   <AnchorPane prefHeight="100.0" prefWidth="294.0">
                      <children>
-                        <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Nome*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <Label fx:id="nameLabel" layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Nome*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
                         <TextField fx:id="nameField" layoutX="11.0" layoutY="39.0" promptText="Digite o nome" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
                            <styleClass>
                               <String fx:value="input__text" />
@@ -39,7 +39,7 @@
                   </AnchorPane>
                   <AnchorPane prefHeight="100.0" prefWidth="294.0">
                      <children>
-                        <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Método de Pag.*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <Label fx:id="methodLabel" layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Método de Pag.*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
                         <ComboBox fx:id="paymentField" layoutY="39.0" prefWidth="150.0" promptText="Selecionar" styleClass="input__text" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                      </children>
                   </AnchorPane>
@@ -49,7 +49,7 @@
       </VBox>
       <HBox alignment="CENTER_RIGHT" layoutX="296.0" layoutY="275.0" prefHeight="54.0" prefWidth="246.0" spacing="15.0">
          <children>
-            <JFXButton onAction="#handleOnSubmit" styleClass="btn--submit" text="Cadastrar" />
+            <JFXButton fx:id="submmitForm" onAction="#handleOnSubmit" styleClass="btn--submit" text="Cadastrar" />
             <JFXButton fx:id="btnClose" onAction="#closeModal" styleClass="btn--cancel" text="Cancelar" />
          </children>
       </HBox>
