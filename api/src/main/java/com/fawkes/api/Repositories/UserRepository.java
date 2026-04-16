@@ -13,6 +13,7 @@ import com.fawkes.api.Entities.Users;
 public interface UserRepository extends JpaRepository<Users, Long> {
     boolean existsByUserMail(String userMail);
     boolean existsByUserName(String userName);
+    Optional<Users> findByIdAndIsActiveTrue(Long id);
     Optional<Users> findByUserMail(String userMail);
 
     @Query("SELECT u FROM Users u LEFT JOIN FETCH u.group LEFT JOIN FETCH u.departments")

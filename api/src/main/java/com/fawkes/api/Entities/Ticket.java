@@ -3,6 +3,7 @@ package com.fawkes.api.Entities;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import com.fawkes.api.Entities.TicketEnum;
 import lombok.*;
 import java.lang.*;
 
@@ -11,10 +12,7 @@ import java.lang.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "TBorders")
-public class Orders {
-public enum Status {
-        pendente, processando, concluido, cancelado
-    }
+public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -44,9 +42,7 @@ public enum Status {
     private LocalDateTime dataPedido;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status",
-            columnDefinition = "ENUM('pendente','processando','concluido','cancelado') DEFAULT 'pendente'")
-    private Status status = Status.pendente;
+    private TicketEnum status = TicketEnum.pendente;
 
     @Column(name = "value", nullable = false, precision = 10, scale = 2)
     private BigDecimal valor;
