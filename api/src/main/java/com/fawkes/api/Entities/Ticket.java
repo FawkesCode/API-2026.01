@@ -35,7 +35,7 @@ public class Ticket {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orderNoteId")
-    private OrderNotes notaFiscal;
+    private OrderNote notaFiscal;
 
     @Column(name = "orderDate",
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
