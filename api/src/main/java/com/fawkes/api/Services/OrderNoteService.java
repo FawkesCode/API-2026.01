@@ -7,6 +7,7 @@ package com.fawkes.api.Services;
 import com.fawkes.api.Repositories.OrderNoteRepository;
 import jakarta.transaction.Transactional;
 import com.fawkes.api.Entities.OrderNote;
+import java.time.LocalDate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -35,11 +36,16 @@ public class OrderNoteService {
   
     @Transactional
     public OrderNote insertOrderNote(String numberNote,
-            String serie){
+            String serie, LocalDate dataNota){
+        LocalDate now = LocalDate.now();
+ 
         if ((findExistentNote(numberNote)==true)||(findExistentSerie(serie)==true)){
             throw new RuntimeException("Esta nota já existe! insira um valor diferente ou modifique a atual!");
-            
         }
+        if (dataNota.isBefore(now)||(dataNota.isAfter(now))){
+            throw new RuntimeException("A data da nota é inválida");
+        }
+        
       
         
             OrderNote orderNote = new OrderNote();
