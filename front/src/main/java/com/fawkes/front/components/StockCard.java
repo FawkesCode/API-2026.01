@@ -1,22 +1,30 @@
 package com.fawkes.front.components;
 
+import com.fawkes.front.models.Employee;
 import com.fawkes.front.models.StockItem;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class StockCard extends AnchorPane {
 
-    // O StockCard.fxml não tem nenhum fx:id declarado.
-    // Os labels são acessados via lookup por styleClass:
-    //   .stock-item__name    → nome do produto
-    //   .stock-item__number  → quantidade atual
-    // O card foi projetado de forma simples (só nome + qtd visível).
+    @FXML private ImageView productView;
+
+    private StockItem product;
+    private Consumer<StockItem> onEditAction;
+
+    public void setOnEditAction(Consumer<StockItem> action) {
+        this.onEditAction = action;
+    }
 
     private static final NumberFormat CURRENCY =
             NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
@@ -46,9 +54,31 @@ public class StockCard extends AnchorPane {
 
         // Destaca borda vermelha quando estoque está no mínimo ou abaixo
         if (item.isLow()) {
-            this.setStyle("-fx-border-color: #FF4A50; -fx-border-width: 2px; -fx-border-radius: 8px;");
+            this.getStyleClass().add("stock-item--low");
         } else {
-            this.setStyle("");
+            this.getStyleClass().remove("stock-item--low");
+        }
+
+        if (item.getPicture() != null) {
+            this.productView.setImage(item.getPicture());
+        } else {
+            try {
+                Image placeholder = new Image(
+                        Objects.requireNonNull(
+                                getClass().getResourceAsStream(
+                                        "/com/fawkes/front/img/placeholder-product.png")));
+                this.productView.setImage(placeholder);
+            } catch (Exception ignored) {
+                // sem placeholder, deixa vazio
+            }
+        }
+        this.product = item;
+    }
+
+    @FXML
+    public void openViewModal(){
+        if (onEditAction != null) {
+            onEditAction.accept(this.product);
         }
     }
 }

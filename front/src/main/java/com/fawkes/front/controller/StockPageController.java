@@ -1,18 +1,25 @@
 package com.fawkes.front.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fawkes.front.components.StockCard;
+import com.fawkes.front.components.SupplierCard;
 import com.fawkes.front.models.Employee;
 import com.fawkes.front.models.StockItem;
 import com.fawkes.front.service.ApiClient;
 import com.fawkes.front.utils.ModalManager;
 import com.fawkes.front.utils.RBACUtil;
+import com.fawkes.front.utils.StringUtils;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -62,37 +69,6 @@ public class StockPageController {
         // Apply RBAC restrictions based on user role
         applyRBACRestrictions();
 
-//        colName.setCellValueFactory(d ->
-//                new SimpleStringProperty(d.getValue().path("productName").asText("-")));
-//        colType.setCellValueFactory(d ->
-//                new SimpleStringProperty(d.getValue().path("productType").asText("-")));
-//        colUnit.setCellValueFactory(d ->
-//                new SimpleStringProperty(d.getValue().path("measurementUnit").asText("-")));
-//        colValue.setCellValueFactory(d -> {
-//            double v = d.getValue().path("unitValue").asDouble(0);
-//            return new SimpleStringProperty(CURRENCY_FMT.format(v));
-//        });
-//        colCurrent.setCellValueFactory(d ->
-//                new SimpleStringProperty(d.getValue().path("currentStockQuantity").asText("-")));
-//        colMin.setCellValueFactory(d ->
-//                new SimpleStringProperty(d.getValue().path("minStockQuantity").asText("-")));
-//        colMax.setCellValueFactory(d ->
-//                new SimpleStringProperty(d.getValue().path("maxStockQuantity").asText("-")));
-
-        /*stockTable.setRowFactory(tv -> new TableRow<>() {
-            @Override
-            protected void updateItem(JsonNode item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setStyle("");
-                } else {
-                    int current = item.path("currentStockQuantity").asInt(Integer.MAX_VALUE);
-                    int min     = item.path("minStockQuantity").asInt(0);
-                    setStyle(current <= min ? "-fx-background-color: #fff0f0;" : "");
-                }
-            }
-        });*/
-
         loadStock();
     }
 
@@ -108,11 +84,22 @@ public class StockPageController {
     public void loadStock() {
         stockContainer.getChildren().clear();
 
-        try {
-            JsonNode data = ApiClient.get("/api/stock");
+        Label loading = new Label("Carregando estoque...");
+        stockContainer.getChildren().add(loading);
+
+        Task<JsonNode> task = new Task<>() {
+            @Override
+            protected JsonNode call() throws Exception {
+                return ApiClient.get("/api/stock");
+            }
+        };
+
+        task.setOnSucceeded(e -> Platform.runLater(() -> {
+            stockContainer.getChildren().clear();
+            JsonNode data = task.getValue();
 
             if (!data.isArray() || data.isEmpty()) {
-                setErrorMessage("Nenhum produto cadastrado.");
+                setErrorMessage("Nenhum produto cadastrado no estoque.");
                 return;
             }
 
@@ -121,11 +108,17 @@ public class StockPageController {
                 allStockItens.add(StockItem.fromJson(node));
             }
 
-//            renderStockGroup();
+            renderStockGroup(allStockItens);
+        }));
 
-        } catch (Exception e) {
-            setErrorMessage("Erro ao carregar estoque: " + e.getMessage());
-        }
+        task.setOnFailed(e -> Platform.runLater(() -> {
+            stockContainer.getChildren().clear();
+            setErrorMessage("Erro ao carregar histórico: " + task.getException().getMessage());
+        }));
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
 
     }
 
@@ -133,12 +126,27 @@ public class StockPageController {
     public void renderStockGroup(List<StockItem> products) {
         stockContainer.getChildren().clear();
 
-        java.util.Map<String, java.util.List<Employee>> byGroup = new java.util.LinkedHashMap<>();
+        FlowPane flow = new FlowPane();
+        flow.setHgap(16);
+        flow.setVgap(16);
+        flow.setAlignment(Pos.TOP_LEFT);
 
-//        for (StockItem pro : products) {
-//            byGroup.computeIfAbsent(pro.get(), k -> new ArrayList<>()).add(emp);
-//        }
+        List<StockItem> sortedProducts = products.stream().sorted((p1, p2)-> {
+            if(p1.getCurrentStockQuantity() == 0 && p2.getCurrentStockQuantity() > 0) return 1;
+            if(p1.getCurrentStockQuantity() > 0 && p2.getCurrentStockQuantity() == 0) return -1;
+            return 0;
+        }).toList();
 
+        for (StockItem product: sortedProducts) {
+            StockCard card = new StockCard();
+            card.setData(product);
+            card.setOnEditAction(this::openViewProduct);
+
+            flow.getChildren().add(card);
+
+        }
+
+        stockContainer.getChildren().add(flow);
     }
 
     private void setErrorMessage (String message) {
@@ -147,38 +155,37 @@ public class StockPageController {
         stockContainer.getChildren().add(statusLabel);
     }
 
-//    @FXML
-//    public void loadStock() {
-//        statusLabel.setText("Carregando...");
-//        try {
-//            JsonNode data = ApiClient.listStock();
-//            allItems.clear();
-//            for (JsonNode item : data) {
-//                allItems.add(item);
-//            }
-//            stockTable.setItems(allItems);
-//            statusLabel.setText("Estoque carregado. " + allItems.size() + " item(ns).");
-//        } catch (Exception e) {
-//            statusLabel.setText("Erro ao carregar estoque: " + e.getMessage());
-//        }
-//    }
+    @FXML
+    public void handleSearch() {
+        String query = searchField.getText().trim().toLowerCase();
 
-//    @FXML
-//    public void handleSearch() {
-//        String query = searchField.getText().trim().toLowerCase();
-//        if (query.isEmpty()) {
-//            stockTable.setItems(allItems);
-//            return;
-//        }
-//        ObservableList<JsonNode> filtered = FXCollections.observableArrayList();
-//        for (JsonNode item : allItems) {
-//            if (item.path("productName").asText("").toLowerCase().contains(query) ||
-//                    item.path("productType").asText("").toLowerCase().contains(query)) {
-//                filtered.add(item);
-//            }
-//        }
-//        stockTable.setItems(filtered);
-//    }
+        if (query.isEmpty()) {
+            renderStockGroup(allStockItens);
+            return;
+        }
+
+        List<StockItem> filtered = allStockItens.stream().filter(pro -> pro.getProductName().toLowerCase().contains(query)).toList();
+
+        renderStockGroup(filtered);
+
+        if (filtered.isEmpty()) {
+            setErrorMessage("Nenhum produto encontrado.");
+        }
+    }
+
+    private void openViewProduct(StockItem pro) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/fawkes/front/view/forms/see-stockItem-form.fxml"));
+            ViewProductForm controller = new ViewProductForm();
+            loader.setController(controller);
+            Parent formulario = loader.load();
+            controller.setProductData(pro);
+            Stage curStage = ((Stage) stockContainer.getScene().getWindow());
+            ModalManager.openModal(curStage, formulario, "Informações sobre o produto " + pro.getProductName(), 600, 400, "ModalFrameSM.fxml", false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     public void handleOpenInputDialog() throws IOException {

@@ -5,9 +5,9 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="216.0" prefWidth="215.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#openViewModal" prefHeight="216.0" prefWidth="215.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ImageView fitHeight="119.0" fitWidth="186.0" layoutX="15.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true" styleClass="stock-item__picture" />
+      <ImageView fx:id="productView" fitHeight="119.0" fitWidth="186.0" layoutX="15.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true" styleClass="stock-item__picture" />
       <Label alignment="CENTER" layoutX="1.0" layoutY="10.0" prefHeight="18.0" prefWidth="184.0" styleClass="stock-item__name" text="-- Nome do Produto --" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
       <AnchorPane layoutY="84.0" prefHeight="37.0" prefWidth="205.0" style="-fx-padding: 6 10;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
