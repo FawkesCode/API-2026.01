@@ -4,8 +4,6 @@
 
   &__name {
     -fx-font-family: $montserrat;
-    -fx-font-size: 24px;
-    -fx-text-fill: $surface-800;
     -fx-font-weight: 900;
   }
 
@@ -14,4 +12,9 @@
     -fx-text-fill: $surface-300;
     -fx-font-size: 14px;
   }
+}
+
+#supplier__name {
+    -fx-text-fill: $surface-800;
+    -fx-font-size: 21 !important;
 }

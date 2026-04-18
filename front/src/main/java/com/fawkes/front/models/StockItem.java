@@ -1,6 +1,8 @@
 package com.fawkes.front.models;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import javafx.scene.image.Image;
+
 import java.math.BigDecimal;
 
 /*
@@ -18,13 +20,14 @@ public class StockItem {
     private Integer currentStockQuantity;
     private Integer minStockQuantity;
     private Integer maxStockQuantity;
+    private Image picture;
 
     public StockItem() {}
 
     public StockItem(Long productId, String productName, String productType,
                      String measurementUnit, BigDecimal unitValue,
                      Integer currentStockQuantity, Integer minStockQuantity,
-                     Integer maxStockQuantity) {
+                     Integer maxStockQuantity, Image picture) {
         this.productId = productId;
         this.productName = productName;
         this.productType = productType;
@@ -33,6 +36,7 @@ public class StockItem {
         this.currentStockQuantity = currentStockQuantity;
         this.minStockQuantity = minStockQuantity;
         this.maxStockQuantity = maxStockQuantity;
+        this.picture = picture;
     }
 
     public static StockItem fromJson(JsonNode node) {
@@ -45,7 +49,7 @@ public class StockItem {
         Integer min = node.path("minStockQuantity").asInt(0);
         Integer max = node.path("maxStockQuantity").asInt(0);
         return new StockItem(productId, productName, productType,
-                measurementUnit, unitValue, current, min, max);
+                measurementUnit, unitValue, current, min, max, null);
     }
 
     /** Retorna true se o estoque atual está em ou abaixo do mínimo */
@@ -77,4 +81,7 @@ public class StockItem {
 
     public Integer getMaxStockQuantity() { return maxStockQuantity; }
     public void setMaxStockQuantity(Integer maxStockQuantity) { this.maxStockQuantity = maxStockQuantity; }
+
+    public Image getPicture() { return picture; }
+    public void setPicture(Image picture) { this.picture = picture; }
 }

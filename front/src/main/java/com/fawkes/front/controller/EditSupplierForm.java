@@ -1,31 +1,39 @@
 package com.fawkes.front.controller;
 
+import com.fawkes.front.models.Supplier;
 import com.fawkes.front.service.ApiClient;
 import com.fawkes.front.utils.StringUtils;
 import com.jfoenix.controls.JFXButton;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.UnaryOperator;
 
-public class AddSupplierForm {
-    @FXML private JFXButton btnClose;
+public class EditSupplierForm {
+    @FXML
+    private JFXButton btnClose;
     @FXML private Label errorLabel;
 
     // FORM INPUTS
     @FXML private TextField cnpjField;
     @FXML private TextField nameField;
     @FXML private ComboBox<String> paymentField;
+    @FXML private JFXButton submmitForm;
+    @FXML private Label cnpjLabel;
+    @FXML private Label nameLabel;
+    @FXML private Label methodLabel;
 
     private List<String> PAYMENTS = Arrays.asList("PIX", "CREDITO", "DEBITO", "BOLETO");
 
     private Runnable onSaveSuccess;
+    private Supplier supplier;
 
     public void setOnSaveSuccess(Runnable onSaveSuccess) {
         this.onSaveSuccess = onSaveSuccess;
@@ -80,6 +88,18 @@ public class AddSupplierForm {
             }
         });
 
+        submmitForm.setText("Salvar alterações");
+        cnpjLabel.setText("CNPJ:");
+        nameLabel.setText("Nome:");
+        methodLabel.setText("Método de Pag.:");
+
+    }
+
+    public void setSupplierData(Supplier sup) {
+        this.supplier = sup;
+        cnpjField.setText(sup.getCnpj());
+        nameField.setText(sup.getName());
+        paymentField.getSelectionModel().select(sup.getPaymentMethod());
     }
 
     @FXML
@@ -104,10 +124,6 @@ public class AddSupplierForm {
         String pagamento = paymentField.getValue();
 
         try {
-            String body = String.format(
-                    "{\"nomeFornecedor\":\"%s\",\"cnpjFornecedor\":\"%s\",\"meioPagamento\":\"%s\"}",
-                    nome, cnpj, pagamento);
-            ApiClient.post("/api/suppliers", body);
 
             if (onSaveSuccess != null) {
                 onSaveSuccess.run();

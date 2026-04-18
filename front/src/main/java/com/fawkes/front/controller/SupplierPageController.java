@@ -1,14 +1,34 @@
 package com.fawkes.front.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fawkes.front.components.SupplierCard;
+import com.fawkes.front.models.Employee;
+import com.fawkes.front.models.StockItem;
+import com.fawkes.front.models.Supplier;
 import com.fawkes.front.service.ApiClient;
+import com.fawkes.front.utils.ModalManager;
 import com.fawkes.front.utils.RBACUtil;
+import com.fawkes.front.utils.StringUtils;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class SupplierPageController {
 
@@ -22,8 +42,8 @@ public class SupplierPageController {
 
     // Barra superior
     @FXML private TextField searchField;
-    @FXML private Label     statusLabel;
     @FXML private Button    btnNewSupplier;
+    @FXML private VBox suppliersContainer;
 
     // Dialog de cadastro
     @FXML private VBox      addDialog;
@@ -33,42 +53,17 @@ public class SupplierPageController {
     @FXML private Label     addErrorLabel;
 
     private final ObservableList<JsonNode> allRows = FXCollections.observableArrayList();
+    private List<Supplier> allSuppliers = new ArrayList<>();
+    private Label statusLabel = new Label();
 
     @FXML
     public void initialize() {
         // Apply RBAC restrictions based on user role
         applyRBACRestrictions();
 
-        colId.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().path("id").asText("-")));
-        colNome.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().path("nomeFornecedor").asText("-")));
-        colCnpj.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().path("cnpjFornecedor").asText("-")));
-        colPagamento.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().path("meioPagamento").asText("-")));
-
-        // Coluna de ações: botão Excluir
-        colAcoes.setCellFactory(col -> new TableCell<>() {
-            private final Button btnDelete = new Button("Excluir");
-            {
-                btnDelete.setStyle("-fx-text-fill: #FF4A50; -fx-cursor: hand;");
-                btnDelete.setOnAction(e -> {
-                    JsonNode row = getTableView().getItems().get(getIndex());
-                    handleDelete(row.path("id").asLong());
-                });
-            }
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                setGraphic(empty ? null : btnDelete);
-            }
-        });
-
-        // Preenche o ComboBox com as opções do enum do back
-        comboPagamento.setItems(FXCollections.observableArrayList(
-                "PIX", "CREDITO", "DEBITO", "BOLETO"));
-        comboPagamento.getSelectionModel().selectFirst();
+        suppliersContainer.setMinWidth(0);
+        suppliersContainer.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        suppliersContainer.setMaxWidth(Double.MAX_VALUE);
 
         loadSuppliers();
     }
@@ -81,75 +76,129 @@ public class SupplierPageController {
         }
     }
 
+    private void setErrorMessage(String message) {
+        suppliersContainer.getChildren().clear();
+        statusLabel.setText(message);
+        suppliersContainer.getChildren().add(statusLabel);
+    }
+
     @FXML
     public void loadSuppliers() {
-        statusLabel.setText("Carregando...");
-        allRows.clear();
-        try {
-            JsonNode data = ApiClient.get("/api/suppliers");
-            for (JsonNode node : data) allRows.add(node);
-            supplierTable.setItems(allRows);
-            statusLabel.setText(allRows.size() + " fornecedor(es) carregado(s).");
-        } catch (Exception e) {
-            statusLabel.setText("Erro ao carregar: " + e.getMessage());
-        }
-    }
+        suppliersContainer.getChildren().clear();
 
-    @FXML
-    public void handleSearch() {
-        String q = searchField.getText().trim().toLowerCase();
-        if (q.isEmpty()) {
-            supplierTable.setItems(allRows);
-            return;
-        }
-        ObservableList<JsonNode> filtered = FXCollections.observableArrayList();
-        for (JsonNode row : allRows) {
-            if (row.path("nomeFornecedor").asText("").toLowerCase().contains(q)
-                    || row.path("cnpjFornecedor").asText("").toLowerCase().contains(q)
-                    || row.path("meioPagamento").asText("").toLowerCase().contains(q)) {
-                filtered.add(row);
+        Label loading = new Label("Carregando fornecedores...");
+        suppliersContainer.getChildren().add(loading);
+
+        Task<JsonNode> task = new Task<>() {
+            @Override
+            protected JsonNode call() throws Exception {
+                return ApiClient.get("/api/suppliers");
             }
+        };
+
+        task.setOnSucceeded(e -> Platform.runLater(() -> {
+            suppliersContainer.getChildren().clear();
+            JsonNode data = task.getValue();
+
+            if (!data.isArray() || data.isEmpty()) {
+                setErrorMessage("Nenhum produto cadastrado no estoque.");
+                return;
+            }
+
+            allSuppliers.clear();
+            for (JsonNode node: data) {
+                allSuppliers.add(Supplier.fromJson(node));
+            }
+
+            renderSuppliersGroup(allSuppliers);
+        }));
+
+        task.setOnFailed(e -> Platform.runLater(() -> {
+            suppliersContainer.getChildren().clear();
+            setErrorMessage("Erro ao carregar fornecedores: " + task.getException().getMessage());
+        }));
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    @FXML
+    private void renderSuppliersGroup(List<Supplier> suppliers) {
+        suppliersContainer.getChildren().clear();
+
+        java.util.Map<String, java.util.List<Supplier>> byGroup = new java.util.LinkedHashMap<>();
+
+        for (Supplier sup: suppliers) {
+            byGroup.computeIfAbsent(sup.getPaymentMethod(), k -> new ArrayList<>()).add(sup);
         }
-        supplierTable.setItems(filtered);
+
+        for (java.util.Map.Entry<String, java.util.List<Supplier>> entry : byGroup.entrySet()) {
+            Label groupLabel = new Label("Fornecedores que aceitam pagamento por " + StringUtils.paymentTranslation(entry.getKey().toUpperCase()).toLowerCase());
+            groupLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #37404C; "
+                    + "-fx-padding: 16px 0px 8px 0px;");
+
+            FlowPane flow = new FlowPane();
+            flow.setHgap(16);
+            flow.setVgap(16);
+            flow.setAlignment(Pos.CENTER);
+
+            for (Supplier sup: entry.getValue()) {
+                SupplierCard card = new SupplierCard();
+                card.setData(sup);
+                card.prefWidthProperty().bind(suppliersContainer.widthProperty());
+                card.setOnEditAction(this::openEditSupplier);
+
+                flow.getChildren().add(card);
+            }
+
+            suppliersContainer.getChildren().addAll(groupLabel, flow);
+        }
     }
 
-    @FXML
-    public void handleOpenAddDialog() {
-        fieldNome.clear();
-        fieldCnpj.clear();
-        comboPagamento.getSelectionModel().selectFirst();
-        addErrorLabel.setText("");
-        addDialog.setVisible(true);
-        addDialog.setManaged(true);
+    private void openEditSupplier(Supplier sup) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/fawkes/front/view/forms/new-supplier-form.fxml"));
+            EditSupplierForm controller = new EditSupplierForm();
+            loader.setController(controller);
+            Parent formulario = loader.load();
+
+            controller.setOnSaveSuccess(this::loadSuppliers);
+            controller.setSupplierData(sup);
+            Stage curStage = ((Stage) suppliersContainer.getScene().getWindow());
+            ModalManager.openModal(curStage, formulario, "Editar Fornecedor: " + sup.getName(), 600, 400, "ModalFrameSM.fxml", false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    @FXML
-    public void handleCloseAddDialog() {
-        addDialog.setVisible(false);
-        addDialog.setManaged(false);
-    }
 
-    @FXML
-    public void handleConfirmAdd() {
-        String nome      = fieldNome.getText().trim();
-        String cnpj      = fieldCnpj.getText().trim();
-        String pagamento = comboPagamento.getValue();
-
-        if (nome.isEmpty() || cnpj.isEmpty()) {
-            addErrorLabel.setText("Preencha nome e CNPJ.");
+    public void handleSearch() {
+        String query = searchField.getText().trim().toLowerCase();
+        if (query.isEmpty()) {
+            renderSuppliersGroup(allSuppliers);
             return;
         }
 
-        try {
-            String body = String.format(
-                    "{\"nomeFornecedor\":\"%s\",\"cnpjFornecedor\":\"%s\",\"meioPagamento\":\"%s\"}",
-                    nome, cnpj, pagamento);
-            ApiClient.post("/api/suppliers", body);
-            handleCloseAddDialog();
-            loadSuppliers();
-        } catch (Exception e) {
-            addErrorLabel.setText("Erro: " + e.getMessage());
+        List<Supplier> filtered = allSuppliers.stream().filter(sup -> sup.getName().toLowerCase().contains(query) || sup.getCnpj().toLowerCase().contains(query) || sup.getPaymentMethod().toLowerCase().contains(query)).toList();
+
+        renderSuppliersGroup(filtered);
+
+        if (filtered.isEmpty()) {
+            setErrorMessage("Nenhum fornecedor encontrado.");
         }
+    }
+
+    @FXML
+    public void handleOpenAddDialog() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/fawkes/front/view/forms/new-supplier-form.fxml"));
+        AddSupplierForm controller = new AddSupplierForm();
+        loader.setController(controller);
+        Parent formulario = loader.load();
+
+        controller.setOnSaveSuccess(this::loadSuppliers);
+        Stage curStage = ((Stage) btnNewSupplier.getScene().getWindow());
+        ModalManager.openModal(curStage, formulario, "Cadastrar Fornecedor", 600, 400, "ModalFrameSM.fxml", true);
     }
 
     private void handleDelete(Long id) {

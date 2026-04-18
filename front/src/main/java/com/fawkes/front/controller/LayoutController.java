@@ -3,6 +3,7 @@ package com.fawkes.front.controller;
 import com.fawkes.front.service.UserInfoManager;
 import com.fawkes.front.utils.NavigationManager;
 import com.fawkes.front.utils.RBACUtil;
+import com.fawkes.front.utils.StringUtils;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -86,21 +87,14 @@ public class LayoutController {
 
     NavigationManager nm = new NavigationManager();
 
-    private String roleTranslation(String role) {
-        return switch (role) {
-            case "DIRECTOR" -> "Diretor";
-            case "OPERATIONAL" -> "Operacional";
-            case "MANAGER" -> "Gerente";
-            default -> role;
-        };
-    }
+
 
     @FXML
     public void initialize() {
         // Logged User Configurations
         UserInfoManager loggedUser = UserInfoManager.getInstance();
-        sidebarUserName.setText(roleTranslation(loggedUser.getUserName()));
-        sidebarUserRole.setText(roleTranslation(loggedUser.getUserRole()));
+        sidebarUserName.setText(StringUtils.roleTranslation(loggedUser.getUserName()));
+        sidebarUserRole.setText(StringUtils.roleTranslation(loggedUser.getUserRole()));
 
         // Current Page Configurations
         pageName.textProperty().bind(nm.getCurrentPage());

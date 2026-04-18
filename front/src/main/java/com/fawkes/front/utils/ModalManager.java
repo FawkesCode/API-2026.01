@@ -24,6 +24,10 @@ public class ModalManager {
         openModal(curStage, specificContent, title, 800.0, 400.0, "ModalFrame.fxml", true);
     }
 
+    public static void openModal(Stage curStage, Parent specificContent, String title, Boolean hasIntructions) {
+        openModal(curStage, specificContent, title, 800.0, 400.0, "ModalFrame.fxml", hasIntructions);
+    }
+
     public static void openModal(Stage curStage, Parent specificContent, String title, double width, double height, String modalFXML, boolean hasInstructions) {
         Stage overlayStage = new Stage();
 

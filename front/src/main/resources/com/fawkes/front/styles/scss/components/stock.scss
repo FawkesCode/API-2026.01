@@ -19,4 +19,15 @@
     -fx-font-weight: 700;
     -fx-text-fill: $surface-300;
   }
+
+  &--low {
+
+    & .stock-item {
+        &__name, &__qtd, &__number {
+            -fx-text-fill: $surface-300;
+        }
+    }
+
+  }
+
 }

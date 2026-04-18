@@ -7,7 +7,10 @@ import com.fawkes.front.service.ApiClient;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 public class HistoryPageController {
 
@@ -15,18 +18,19 @@ public class HistoryPageController {
 
     @FXML
     public void initialize() {
+        historyContainer.setMinWidth(0);
+        historyContainer.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        historyContainer.setMaxWidth(Double.MAX_VALUE);
+
         loadHistory();
     }
 
     public void loadHistory() {
         historyContainer.getChildren().clear();
 
-        // Feedback imediato enquanto carrega
         Label loading = new Label("Carregando atividades...");
-        loading.setStyle("-fx-text-fill: #9a9ea5; -fx-font-size: 13px; -fx-padding: 8 0;");
         historyContainer.getChildren().add(loading);
 
-        // Chamada HTTP em thread separada — não trava a UI
         Task<JsonNode> task = new Task<>() {
             @Override
             protected JsonNode call() throws Exception {
@@ -37,9 +41,15 @@ public class HistoryPageController {
         task.setOnSucceeded(e -> Platform.runLater(() -> {
             historyContainer.getChildren().clear();
             JsonNode data = task.getValue();
+            FlowPane flow = new FlowPane();
+            flow.setHgap(16);
+            flow.setVgap(16);
+            flow.setAlignment(Pos.CENTER);
+
+            System.out.println(task.getValue().toPrettyString());
 
             if (!data.isArray() || data.isEmpty()) {
-                addMessage("Nenhuma atividade registrada ainda.");
+                setErrorMessage("Nenhuma atividade registrada ainda.");
                 return;
             }
 
@@ -52,13 +62,16 @@ public class HistoryPageController {
                 HistoryLog log = HistoryLog.fromJson(node, movType);
                 HistoryLogCard card = new HistoryLogCard();
                 card.setData(log);
-                historyContainer.getChildren().add(card);
+                card.prefWidthProperty().bind(historyContainer.widthProperty());
+                flow.getChildren().add(card);
             }
+
+            historyContainer.getChildren().add(flow);
         }));
 
         task.setOnFailed(e -> Platform.runLater(() -> {
             historyContainer.getChildren().clear();
-            addMessage("Erro ao carregar histórico: " + task.getException().getMessage());
+            setErrorMessage("Erro ao carregar histórico: " + task.getException().getMessage());
         }));
 
         Thread thread = new Thread(task);
@@ -66,10 +79,10 @@ public class HistoryPageController {
         thread.start();
     }
 
-    private void addMessage(String msg) {
-        Label label = new Label(msg);
-        label.setStyle("-fx-text-fill: #9a9ea5; -fx-font-size: 13px; -fx-padding: 8 0;");
-        label.setWrapText(true);
-        historyContainer.getChildren().add(label);
+    private void setErrorMessage(String message) {
+        historyContainer.getChildren().clear();
+        Label statusLabel = new Label(message);
+        statusLabel.setWrapText(true);
+        historyContainer.getChildren().add(statusLabel);
     }
 }

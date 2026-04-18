@@ -19,10 +19,6 @@ public class HistoryLogCard extends AnchorPane {
     public HistoryLogCard() {
         FXMLLoader fxmlLoader = new FXMLLoader(
                 getClass().getResource("/com/fawkes/front/view/components/HistoryLogCard.fxml"));
-        // String css = Objects.requireNonNull(
-                        // getClass().getResource("/com/fawkes/front/styles/components/history.scss"))
-                // .toExternalForm();
-        //this.getStylesheets().add(css);
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
         try {
@@ -45,8 +41,8 @@ public class HistoryLogCard extends AnchorPane {
         if (typeLabel != null) {
             typeLabel.setText(isInput ? "Entrada - Estoque" : "Saída - Estoque");
             typeLabel.setStyle(isInput
-                    ? "-fx-text-fill: #2e7d32;"
-                    : "-fx-text-fill: #FF4A50;");
+                    ? "-fx-text-fill: #4FE481;"
+                    : "-fx-text-fill: #E14B50;");
         }
 
         Label ownerLabel = (Label) this.lookup(".log__owner");

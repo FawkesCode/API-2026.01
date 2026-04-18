@@ -14,9 +14,9 @@
                 <Label prefHeight="18.0" prefWidth="473.0" styleClass="log__description" text="Descrição do que foi alterado" />
             </children>
         </VBox>
-      <VBox alignment="CENTER" layoutX="614.0" layoutY="-47.0" prefHeight="107.0" prefWidth="141.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="CENTER" layoutX="614.0" layoutY="-47.0" prefHeight="107.0" prefWidth="287.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-                <Label fx:id="status" styleClass="log__date" text="24/05/2026" />
+                <Label fx:id="status" prefHeight="18.0" prefWidth="224.0" styleClass="log__date" text="24/05/2026" />
          </children>
       </VBox>
     </children>

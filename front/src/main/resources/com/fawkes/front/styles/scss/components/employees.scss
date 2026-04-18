@@ -8,6 +8,8 @@
   -fx-font-weight: 700;
 }
 
+
+
 .employee__department,
 .employee__signed {
   -fx-font-family: $sofia;
@@ -34,6 +36,7 @@
 .employee__email {
   -fx-text-fill: $surface-700;
   -fx-font-size: 14px;
+  -fx-font-family: $poppins;
 }
 
 .employee__edit {
@@ -42,4 +45,12 @@
   -fx-border-style: solid;
   -fx-border-color: $surface-200;
   -fx-border-radius: 5px;
+}
+
+.employee--inactive {
+    & .employee {
+        &__status, &__department, &__name, &__email {
+            -fx-background-color: $surface-300;
+        }
+    }
 }
