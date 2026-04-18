@@ -23,27 +23,22 @@ public class OrderNoteService {
     this.orderNoteRepository = orderNoteRepository;
     }
     
-    public boolean findExistentNote(String numberNote){
-     boolean ExistentOrderNote = orderNoteRepository.findByNumberNote(numberNote);
+    public boolean findExistentNote(String numberNote,String serie){
+     boolean ExistentOrderNote = orderNoteRepository.existsByNumberNoteAndSerie(numberNote,serie);
      return ExistentOrderNote;
              }
-     public boolean findExistentSerie(String serie){
-     boolean ExistentSerie = orderNoteRepository.findBySerie(serie);
-     return ExistentSerie;
-     }
-             
-            
-  
+     
+   
     @Transactional
     public OrderNote insertOrderNote(String numberNote,
             String serie, LocalDate dataNota){
         LocalDate now = LocalDate.now();
  
-        if ((findExistentNote(numberNote)==true)||(findExistentSerie(serie)==true)){
+        if ((findExistentNote(numberNote,serie)== true)){
             throw new RuntimeException("Esta nota já existe! insira um valor diferente ou modifique a atual!");
         }
-        if (dataNota.isBefore(now)||(dataNota.isAfter(now))){
-            throw new RuntimeException("A data da nota é inválida");
+        if ((dataNota.isAfter(now))){
+            throw new RuntimeException("A data da nota é inválida");    
         }
         
       

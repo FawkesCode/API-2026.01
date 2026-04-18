@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderNoteRepository extends JpaRepository<OrderNote, Long> {
 
- boolean findByNumberNote(String numberNote);
- boolean findBySerie(String serie);
+ boolean existsByNumberNoteAndSerie(String numberNote,String serie);
+ 
  
 }
