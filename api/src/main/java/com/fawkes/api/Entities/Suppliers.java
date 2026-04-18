@@ -1,7 +1,9 @@
 package com.fawkes.api.Entities;
+import com.fawkes.api.Helpers.PaymentConverter;
 import jakarta.persistence.*;
 import lombok.*;
 import java.lang.*;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -10,9 +12,6 @@ import java.lang.*;
 @Table(name = "TBsupplier") 
 public class Suppliers {
 
-    public enum MeioPagamento {
-        PIX, CREDITO, DEBITO, BOLETO
-    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,8 +22,8 @@ public class Suppliers {
     @Column(name = "cnpj_fornecedor", unique = true, length = 20)
     private String cnpjFornecedor;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "meio_pagamento", columnDefinition = "ENUM('PIX','CREDITO','DEBITO','BOLETO') DEFAULT 'PIX'")
-    private MeioPagamento meioPagamento = MeioPagamento.PIX;
+    @Convert(converter = PaymentConverter.class)
+    @Column(columnDefinition = "SET('PIX', 'CREDITO', 'BOLETO', 'DEBITO')")
+    private Set<PaymentMethod> meioPagamento;
 
 }
