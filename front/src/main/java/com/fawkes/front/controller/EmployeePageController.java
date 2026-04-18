@@ -4,13 +4,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fawkes.front.components.EmployeeCard;
 import com.fawkes.front.models.Employee;
+import com.fawkes.front.models.StockItem;
 import com.fawkes.front.service.ApiClient;
 import com.fawkes.front.utils.ModalManager;
 import com.fawkes.front.utils.RBACUtil;
 import com.fawkes.front.utils.StringUtils;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -90,8 +93,19 @@ public class EmployeePageController {
         List<Employee> activeUsers = new ArrayList<>();
         List<Employee> inactiveUsers = new ArrayList<>();
 
-        try {
-            JsonNode data = ApiClient.get("/api/users");
+        Label loading = new Label("Carregando funcionários...");
+        groupsContainer.getChildren().add(loading);
+
+        Task<JsonNode> task = new Task<>() {
+            @Override
+            protected JsonNode call() throws Exception {
+                return ApiClient.get("/api/users");
+            }
+        };
+
+        task.setOnSucceeded(e -> Platform.runLater(() -> {
+            groupsContainer.getChildren().clear();
+            JsonNode data = task.getValue();
 
             if (!data.isArray() || data.isEmpty()) {
                 setErrorMessage("Nenhum funcionário cadastrado.");
@@ -99,7 +113,7 @@ public class EmployeePageController {
             }
 
             allEmployees.clear();
-            for (JsonNode node : data) {
+            for (JsonNode node: data) {
                 allEmployees.add(Employee.fromJson(node));
             }
 
@@ -121,10 +135,16 @@ public class EmployeePageController {
 
             activeUsersLabel.setText(qtdActiveUsers + " Ativos");
             inactiveUsersLabel.setText(qtdInactiveUsers + " Inativos");
+        }));
 
-        } catch (Exception e) {
-            setErrorMessage("Erro ao carregar funcionários: " + e.getMessage());
-        }
+        task.setOnFailed(e -> Platform.runLater(() -> {
+            groupsContainer.getChildren().clear();
+            setErrorMessage("Erro ao carregar funcionários: " + task.getException().getMessage());
+        }));
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     @FXML

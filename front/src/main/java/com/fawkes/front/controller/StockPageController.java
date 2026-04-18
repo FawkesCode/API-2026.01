@@ -113,7 +113,7 @@ public class StockPageController {
 
         task.setOnFailed(e -> Platform.runLater(() -> {
             stockContainer.getChildren().clear();
-            setErrorMessage("Erro ao carregar histórico: " + task.getException().getMessage());
+            setErrorMessage("Erro ao carregar estoque: " + task.getException().getMessage());
         }));
 
         Thread thread = new Thread(task);

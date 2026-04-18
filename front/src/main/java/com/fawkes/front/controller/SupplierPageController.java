@@ -3,14 +3,17 @@ package com.fawkes.front.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fawkes.front.components.SupplierCard;
 import com.fawkes.front.models.Employee;
+import com.fawkes.front.models.StockItem;
 import com.fawkes.front.models.Supplier;
 import com.fawkes.front.service.ApiClient;
 import com.fawkes.front.utils.ModalManager;
 import com.fawkes.front.utils.RBACUtil;
 import com.fawkes.front.utils.StringUtils;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -83,24 +86,41 @@ public class SupplierPageController {
     public void loadSuppliers() {
         suppliersContainer.getChildren().clear();
 
-        try {
-            JsonNode data = ApiClient.get("/api/suppliers");
+        Label loading = new Label("Carregando fornecedores...");
+        suppliersContainer.getChildren().add(loading);
+
+        Task<JsonNode> task = new Task<>() {
+            @Override
+            protected JsonNode call() throws Exception {
+                return ApiClient.get("/api/suppliers");
+            }
+        };
+
+        task.setOnSucceeded(e -> Platform.runLater(() -> {
+            suppliersContainer.getChildren().clear();
+            JsonNode data = task.getValue();
 
             if (!data.isArray() || data.isEmpty()) {
-                setErrorMessage("Nenhum fornecedor cadastrado.");
+                setErrorMessage("Nenhum produto cadastrado no estoque.");
                 return;
             }
 
             allSuppliers.clear();
-            for (JsonNode node : data) {
+            for (JsonNode node: data) {
                 allSuppliers.add(Supplier.fromJson(node));
             }
 
             renderSuppliersGroup(allSuppliers);
+        }));
 
-        } catch (Exception e) {
-            setErrorMessage("Erro ao carregar fornecedores: " + e.getMessage());
-        }
+        task.setOnFailed(e -> Platform.runLater(() -> {
+            suppliersContainer.getChildren().clear();
+            setErrorMessage("Erro ao carregar fornecedores: " + task.getException().getMessage());
+        }));
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     @FXML
