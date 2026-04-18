@@ -36,8 +36,8 @@ public enum Status {
     private Department departamento;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "orderNoteId")
-    private OrderNote notaFiscal;
+    @JoinColumn(name = "orderNoteId", nullable = true)
+    private OrderNote orderNote;
 
     @Column(name = "orderDate",
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
