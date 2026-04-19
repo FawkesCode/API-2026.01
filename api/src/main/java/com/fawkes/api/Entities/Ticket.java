@@ -3,6 +3,7 @@ package com.fawkes.api.Entities;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import com.fawkes.api.Entities.TicketEnum;
 import lombok.*;
 import java.lang.*;
 
@@ -11,17 +12,14 @@ import java.lang.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "TBorders")
-public class Orders {
-public enum Status {
-        pendente, processando, concluido, cancelado
-    }
+public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id_fk", nullable = false)
-    private Users user;
+    @JoinColumn(name = "userId", nullable = false)
+    private Users usuario;
 
     @Column(name = "created_at", updatable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -32,30 +30,28 @@ public enum Status {
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "department_id_fk", nullable = false)
-    private Department department;
+    @JoinColumn(name = "departamentId", nullable = false)
+    private Department departamento;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_note_id_fk")
-    private OrderNote invoice;
+    @JoinColumn(name = "orderNoteId")
+    private OrderNote notaFiscal;
 
-    @Column(name = "order_date",
+    @Column(name = "orderDate",
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime orderDate;
+    private LocalDateTime dataPedido;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status",
-            columnDefinition = "ENUM('pendente','processando','concluido','cancelado') DEFAULT 'pendente'")
-    private Status status = Status.pendente;
+    private TicketEnum status = TicketEnum.pendente;
 
-    @Column(name = "total_value", nullable = false, precision = 10, scale = 2)
-    private BigDecimal totalValue;
+    @Column(name = "value", nullable = false, precision = 10, scale = 2)
+    private BigDecimal valor;
 
     @PrePersist
     protected void onCreate() {
         LocalDateTime now = LocalDateTime.now();
         if (createdAt == null) createdAt = now;
-        if (orderDate == null) orderDate = now;
+        if (dataPedido == null) dataPedido = now;
         if (updatedAt == null) updatedAt = now;
     }
 

@@ -29,16 +29,10 @@ public class Users {
     @Enumerated (EnumType.STRING)
     @Column(name = "role")
     private Set<Roles> roles = new HashSet<>();
-
-
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream().map(r -> new SimpleGrantedAuthority(r.name()))
                     .toList();
     }
-
-
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -65,7 +59,7 @@ public class Users {
 
     @ManyToOne
     @JoinColumn(name="departamentID",nullable=false)
-    private Departments departments;
+    private Department departments;
 
 
     public void setRoles(Set<Roles> role) {

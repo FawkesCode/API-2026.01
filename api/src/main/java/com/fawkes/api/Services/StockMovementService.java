@@ -64,7 +64,7 @@ public class StockMovementService {
     }
 
     @Transactional
-    public ProductOutputs registerOutput(Long stockId, Long productId, Integer quantity, Orders order) {
+    public ProductOutputs registerOutput(Long stockId, Long productId, Integer quantity, Ticket order) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantidade de saída deve ser maior que zero.");
         }

@@ -10,7 +10,7 @@ import java.lang.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "TBorderNote")
-public class OrderNotes {
+public class OrderNote {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

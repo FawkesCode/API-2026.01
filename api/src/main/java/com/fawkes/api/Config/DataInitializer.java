@@ -53,8 +53,8 @@ public class DataInitializer {
 
 
             // ==================== DEPARTAMENTO ====================
-            Departments logisticaDept = departmentRepository.findById(1L).orElseGet(() -> {
-                Departments d = new Departments();
+            Department logisticaDept = departmentRepository.findById(1L).orElseGet(() -> {
+                Department d = new Department();
                 d.setDepartamentName("Logística");
                 d.setText("Departamento de Logística");
                 return departmentRepository.save(d);
