@@ -20,8 +20,8 @@ public enum Status {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = false)
-    private Users usuario;
+    @JoinColumn(name = "user_id_fk", nullable = false)
+    private Users user;
 
     @Column(name = "created_at", updatable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -32,30 +32,30 @@ public enum Status {
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "departamentId", nullable = false)
-    private Departments departamento;
+    @JoinColumn(name = "department_id_fk", nullable = false)
+    private Departments department;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "orderNoteId")
-    private OrderNotes notaFiscal;
+    @JoinColumn(name = "order_note_id_fk")
+    private OrderNotes invoice;
 
-    @Column(name = "orderDate",
+    @Column(name = "order_date",
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime dataPedido;
+    private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status",
             columnDefinition = "ENUM('pendente','processando','concluido','cancelado') DEFAULT 'pendente'")
     private Status status = Status.pendente;
 
-    @Column(name = "value", nullable = false, precision = 10, scale = 2)
-    private BigDecimal valor;
+    @Column(name = "total_value", nullable = false, precision = 10, scale = 2)
+    private BigDecimal totalValue;
 
     @PrePersist
     protected void onCreate() {
         LocalDateTime now = LocalDateTime.now();
         if (createdAt == null) createdAt = now;
-        if (dataPedido == null) dataPedido = now;
+        if (orderDate == null) orderDate = now;
         if (updatedAt == null) updatedAt = now;
     }
 

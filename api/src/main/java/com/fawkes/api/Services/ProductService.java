@@ -16,7 +16,6 @@ public class ProductService {
     private final ProductsRepository productsRepository;
     private final SupplierRepository supplierRepository;
     private final StockRepository stockRepository;
-    private final ProductStockRepository productStockRepository;
 
     public List<Products> listAll() {
         return productsRepository.findAll();
@@ -46,16 +45,7 @@ public class ProductService {
         product.setSuppliers(supplier);
         product.setStock(stock);
 
-        Products saved = productsRepository.save(product);
-
-        ProductStock productStock = new ProductStock();
-        productStock.setProduct(saved);
-        productStock.setCurrentStockQuantity(request.getUnitValue().intValue());
-        productStock.setMinStockQuantity(0);
-        productStock.setMaxStockQuantity(Integer.MAX_VALUE);
-        productStockRepository.save(productStock);
-
-        return saved;
+        return productsRepository.save(product);
     }
 
     public void delete(Long id) {

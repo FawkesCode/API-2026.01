@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Configuration
 public class DataInitializer {
@@ -63,9 +64,10 @@ public class DataInitializer {
             Suppliers fornecedorTeste = supplierRepository.findById(1L)
                     .orElseGet(() -> {
                         Suppliers s = new Suppliers();
-                        s.setNomeFornecedor("Fornecedor Teste");
-                        s.setCnpjFornecedor("12.345.678/0001-99");
-                        s.setMeioPagamento(Suppliers.MeioPagamento.PIX);
+                        s.setSupplierName("Fornecedor Teste");
+                        s.setCnpj("12.345.678/0001-99");
+                        s.setPaymentMethods(Set.of(PaymentMethod.PIX));
+                        s.setIsActive(Boolean.TRUE);
                         return supplierRepository.save(s);
                     });
 

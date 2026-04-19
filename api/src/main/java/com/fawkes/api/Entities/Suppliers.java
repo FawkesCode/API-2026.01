@@ -16,14 +16,17 @@ public class Suppliers {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nome_fornecedor", length = 255)
-    private String nomeFornecedor;
+    @Column(name = "supplier_name", length = 255)
+    private String supplierName;
 
-    @Column(name = "cnpj_fornecedor", unique = true, length = 20)
-    private String cnpjFornecedor;
+    @Column(name = "cnpj", unique = true, length = 20)
+    private String cnpj;
 
     @Convert(converter = PaymentConverter.class)
     @Column(columnDefinition = "SET('PIX', 'CREDITO', 'BOLETO', 'DEBITO')")
-    private Set<PaymentMethod> meioPagamento;
+    private Set<PaymentMethod> paymentMethods;
+
+    @Column(name = "isActive")
+    private Boolean isActive;
 
 }

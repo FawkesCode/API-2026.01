@@ -18,7 +18,7 @@ import java.util.List;
 @Slf4j
 public class StockMovementService {
 
-    private final ProductStockRepository productStockRepository;
+    private final CompanyStockRepository companyStockRepository;
     private final ProductInputsRepository productInputsRepository;
     private final ProductOutputsRepository productOutputsRepository;
     private final ProductsRepository productsRepository;
@@ -36,13 +36,24 @@ public class StockMovementService {
         Products product = productsRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + productId));
 
-        ProductStock productStock = productStockRepository.findByProductId(productId)
-                .orElseThrow(() -> new RuntimeException("Saldo do produto não encontrado: " + productId));
+        CompanyStock companyStock = companyStockRepository.findByStockIdAndProductId(stockId, productId)
+                .orElse(null);
 
-        int novoSaldo = calcularSaldoEntrada(productStock, quantity);
+        int novoSaldo;
+        if (companyStock != null) {
+            novoSaldo = calcularSaldoEntrada(companyStock, quantity);
+            companyStock.setCurrentQuantity(novoSaldo);
+            companyStock.setLastInputDate(java.time.LocalDateTime.now());
+        } else {
+            novoSaldo = quantity;
+            companyStock = new CompanyStock();
+            companyStock.setStock(stock);
+            companyStock.setProduct(product);
+            companyStock.setCurrentQuantity(novoSaldo);
+            companyStock.setLastInputDate(java.time.LocalDateTime.now());
+        }
 
-        productStock.setCurrentStockQuantity(novoSaldo);
-        productStockRepository.save(productStock);
+        companyStockRepository.save(companyStock);
 
         ProductInputs input = new ProductInputs();
         input.setStock(stock);
@@ -64,13 +75,14 @@ public class StockMovementService {
         Products product = productsRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + productId));
 
-        ProductStock productStock = productStockRepository.findByProductId(productId)
+        CompanyStock companyStock = companyStockRepository.findByStockIdAndProductId(stockId, productId)
                 .orElseThrow(() -> new RuntimeException("Saldo do produto não encontrado: " + productId));
 
-        int novoSaldo = calcularSaldoSaida(productStock, quantity);
+        int novoSaldo = calcularSaldoSaida(companyStock, quantity);
 
-        productStock.setCurrentStockQuantity(novoSaldo);
-        productStockRepository.save(productStock);
+        companyStock.setCurrentQuantity(novoSaldo);
+        companyStock.setLastOutputDate(java.time.LocalDateTime.now());
+        companyStockRepository.save(companyStock);
 
         ProductOutputs output = new ProductOutputs();
         output.setStock(stock);
@@ -81,8 +93,6 @@ public class StockMovementService {
         return productOutputsRepository.<ProductOutputs>save(output);
     }
 
-    // --- Métodos adicionados para a tela de Atividade Recente ---
-
     public List<ProductInputs> listAllInputs() {
         return productInputsRepository.findAll();
     }
@@ -91,28 +101,26 @@ public class StockMovementService {
         return productOutputsRepository.findAll();
     }
 
-    // --- Métodos privados de cálculo ---
-
-    private int calcularSaldoEntrada(ProductStock productStock, int quantity) {
-        int novoSaldo = productStock.getCurrentStockQuantity() + quantity;
-        if (novoSaldo > productStock.getMaxStockQuantity()) {
+    private int calcularSaldoEntrada(CompanyStock companyStock, int quantity) {
+        int novoSaldo = companyStock.getCurrentQuantity() + quantity;
+        if (companyStock.getMaxStockQuantity() != null && novoSaldo > companyStock.getMaxStockQuantity()) {
             throw new IllegalStateException(
                     "Entrada excede o estoque máximo do produto. Máximo: "
-                            + productStock.getMaxStockQuantity()
-                            + ", Saldo atual: " + productStock.getCurrentStockQuantity()
+                            + companyStock.getMaxStockQuantity()
+                            + ", Saldo atual: " + companyStock.getCurrentQuantity()
                             + ", Tentativa de entrada: " + quantity
             );
         }
         return novoSaldo;
     }
 
-    private int calcularSaldoSaida(ProductStock productStock, int quantity) {
-        int novoSaldo = productStock.getCurrentStockQuantity() - quantity;
-        if (novoSaldo < productStock.getMinStockQuantity()) {
+    private int calcularSaldoSaida(CompanyStock companyStock, int quantity) {
+        int novoSaldo = companyStock.getCurrentQuantity() - quantity;
+        if (companyStock.getMinStockQuantity() != null && novoSaldo < companyStock.getMinStockQuantity()) {
             throw new IllegalStateException(
                     "Saída deixaria o estoque abaixo do mínimo do produto. Mínimo: "
-                            + productStock.getMinStockQuantity()
-                            + ", Saldo atual: " + productStock.getCurrentStockQuantity()
+                            + companyStock.getMinStockQuantity()
+                            + ", Saldo atual: " + companyStock.getCurrentQuantity()
                             + ", Tentativa de saída: " + quantity
             );
         }
@@ -125,12 +133,10 @@ public class StockMovementService {
             log.info("Iniciando listActivity()");
             List<ActivityDTO> activities = new ArrayList<>();
 
-            // findAllWithProduct() usa LEFT JOIN FETCH — carrega product junto,
-            // evitando N+1 queries (uma query para tudo, não uma por registro).
             log.info("Buscando ProductInputs com LEFT JOIN FETCH");
             List<ProductInputs> inputs = productInputsRepository.findAllWithProduct();
             log.info("Encontrados {} ProductInputs", inputs.size());
-            
+
             inputs.forEach(i -> {
                 try {
                     ActivityDTO dto = ActivityDTO.fromInput(i);
@@ -145,7 +151,7 @@ public class StockMovementService {
             log.info("Buscando ProductOutputs com LEFT JOIN FETCH");
             List<ProductOutputs> outputs = productOutputsRepository.findAllWithProduct();
             log.info("Encontrados {} ProductOutputs", outputs.size());
-            
+
             outputs.forEach(o -> {
                 try {
                     ActivityDTO dto = ActivityDTO.fromOutput(o);
@@ -165,7 +171,4 @@ public class StockMovementService {
             throw e;
         }
     }
-
-
-
 }
