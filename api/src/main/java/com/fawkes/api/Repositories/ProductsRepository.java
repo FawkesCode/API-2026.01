@@ -14,7 +14,7 @@ public interface ProductsRepository extends JpaRepository<Products, Long> {
         SELECT new com.fawkes.api.DTOs.CheaperProductDTO(
             p.productName,
             p.productType,
-            p.suppliers.nomeFornecedor,
+            p.suppliers.supplierName,
             p.unitValue,
             ps.currentStockQuantity
         )
