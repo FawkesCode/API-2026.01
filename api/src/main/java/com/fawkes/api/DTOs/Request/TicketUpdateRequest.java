@@ -16,6 +16,7 @@ import lombok.Data;
 
 public class TicketUpdateRequest {
     
+    
     @NotNull(message = "O status não pode ser nulo!")
     private TicketEnum status;
     
