@@ -4,6 +4,8 @@
  */
 package com.fawkes.api.DTOs.Request;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import lombok.Data;
 
@@ -13,7 +15,12 @@ import lombok.Data;
  */
 @Data
 public class OrderNoteRequest {
-    private String numbeNote;
+    @NotBlank(message = "O número da nota não pode estar em branco!")
+    private String numberNote;
+    
+    @NotBlank(message = "A série não pode estar em branco!")
     private String serie;
+    
+    @NotNull(message = "A data da nota fiscal não pode ser nula!")
     private LocalDate orderNoteDate;
 }

@@ -35,8 +35,8 @@ public class TicketCreateService {
     this.orderNoteRepository = orderNoteRepository;
                                                             }
     @Transactional
-    public Ticket createOrder(Integer userID, 
-        Integer departmentID, 
+    public Ticket createOrder(Long userID, 
+        Long departmentID, 
         BigDecimal value){
         
         Department dept = departmentRepository.findById(Long.valueOf(departmentID))
@@ -45,7 +45,7 @@ public class TicketCreateService {
         Users userIdNumber = userRepository.findByIdAndIsActiveTrue(Long.valueOf(userID))
         .orElseThrow(() -> new RuntimeException("Usuário não encontrado ou não está ativo."));
 
-        if(value.compareTo(BigDecimal.ZERO)==1){
+        if(value.compareTo(BigDecimal.ZERO)<=0){
             throw new RuntimeException("O valor é nulo ou negativo");
         }
         
@@ -61,6 +61,7 @@ public class TicketCreateService {
     
         @Transactional
         public Ticket updateTicketStatus(Ticket ticket, TicketEnum status){
+            
         Ticket ticketToChange = ticketRepository.findById(ticket.getId())
                 .orElseThrow(() -> new RuntimeException("Ticket não encotrado."));
         
