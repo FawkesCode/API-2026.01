@@ -39,6 +39,10 @@ public enum Status {
     @JoinColumn(name = "order_note_id_fk")
     private OrderNote invoice;
 
+<<<<<<< HEAD
+=======
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+>>>>>>> 0aead16 (Fix: Refatoração para conexão com o aplicativo)
     private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)

@@ -65,7 +65,7 @@ public class DataInitializer {
                     .orElseGet(() -> {
                         Suppliers s = new Suppliers();
                         s.setSupplierName("Fornecedor Teste");
-                        s.setCnpj("12.345.678/0001-99");
+                        s.setCnpj("12.345.678/0001-55");
                         s.setPaymentMethods(Set.of(PaymentMethod.PIX));
                         s.setIsActive(Boolean.TRUE);
                         return supplierRepository.save(s);
@@ -109,13 +109,13 @@ public class DataInitializer {
                 Users user = new Users();
                 user.setUserName("admin");
                 user.setUserMail("teste@gmail.com");
-                user.setPassword(passwordEncoder.encode("niggasForever"));
+                user.setPassword(passwordEncoder.encode("teste123"));
                 user.setIsActive(true);
                 user.setGroup(adminGroup);
                 user.setDepartments(logisticaDept);
                 user.setCreationDate(LocalDateTime.now());
                 userRepository.save(user);
-                System.out.println("✅ Usuário de teste criado → teste@gmail.com / niggasForever");
+                System.out.println("✅ Usuário de teste criado → teste@gmail.com / teste123");
             }
 
             System.out.println("✅ Seed de dados concluído com sucesso!");

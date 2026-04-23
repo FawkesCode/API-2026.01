@@ -11,7 +11,7 @@ import java.lang.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "TBorders")
+@Table(name = "TBtickets")
 public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
