@@ -23,10 +23,11 @@ public class UserLoginService {
         
     }
     public String loginUser(String email, String password) {
+     
         Users user = userService.findByEmail(email)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
+        .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
         
-         Users userIsActive = userRepository.findByUserMailAndIsActiveTrue(email)
+          Users userIsActive = userRepository.findByUserMailAndIsActiveTrue(email)
         .orElseThrow(() -> new RuntimeException("Usuário não está ativo."));
          
         if (!passwordEncoder.matches(password, user.getPassword())) {
