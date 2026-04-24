@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import org.springframework.stereotype.Service;
 
 import com.fawkes.api.Entities.Department;
-import com.fawkes.api.Entities.Users;
 import com.fawkes.api.Repositories.DepartmentRepository;
 import com.fawkes.api.Repositories.UserRepository;
 import com.fawkes.api.Repositories.OrderNoteRepository;
@@ -41,10 +40,7 @@ public class TicketCreateService {
         
         Department dept = departmentRepository.findById(Long.valueOf(departmentID))
         .orElseThrow(() -> new RuntimeException("Departamento não encontrado."));
-
-        Users userIdNumber = userRepository.findByIdAndIsActiveTrue(Long.valueOf(userID))
-        .orElseThrow(() -> new RuntimeException("Usuário não encontrado ou não está ativo."));
-
+        
         if(value.compareTo(BigDecimal.ZERO)<=0){
             throw new RuntimeException("O valor é nulo ou negativo");
         }
