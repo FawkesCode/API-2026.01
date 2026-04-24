@@ -13,12 +13,18 @@ import java.util.List;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserService userService;
+   
+    
     public UserDetailsServiceImpl(UserService userService) {
         this.userService = userService;
     }
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Users user = userService.findByEmail(email)  // ← nome correto agora
+        
+         
+         
+        
+        Users user = userService.findByEmail(email) 
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email));
 
         String role = "ROLE_" + user.getGroup().getRole();
