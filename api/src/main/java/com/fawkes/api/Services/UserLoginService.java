@@ -27,8 +27,9 @@ public class UserLoginService {
         Users user = userService.findByEmail(email)
         .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
         
-          Users userIsActive = userRepository.findByUserMailAndIsActiveTrue(email)
-        .orElseThrow(() -> new RuntimeException("Usuário não está ativo."));
+         if (!user.getIsActive()) {
+             throw new RuntimeException("O usuário não está ativo!");
+        }
          
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new RecursoNaoEncontradoException("Senha inválida");
