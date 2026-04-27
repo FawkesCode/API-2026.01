@@ -1,6 +1,6 @@
 package com.fawkes.api;
 
-import com.fawkes.api.config.DotenvConfig;
+import com.fawkes.api.Config.DotenvConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
