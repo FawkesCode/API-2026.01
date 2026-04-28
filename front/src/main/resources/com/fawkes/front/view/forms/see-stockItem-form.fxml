@@ -1,26 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="364.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-      <VBox alignment="CENTER" layoutX="294.0" layoutY="37.0" prefHeight="202.0" prefWidth="277.0" spacing="15.0">
+      <VBox alignment="CENTER" layoutX="330.0" layoutY="37.0" prefHeight="214.0" prefWidth="243.0" spacing="15.0">
          <children>
             <HBox prefHeight="26.0" prefWidth="270.0" spacing="5.0">
                <children>
                   <Label styleClass="input__label" text="Nome:" />
                   <Label fx:id="nameLabel" styleClass="input__label--desc" text="Descrição" />
-               </children>
-            </HBox>
-            <HBox prefHeight="26.0" prefWidth="270.0" spacing="5.0">
-               <children>
-                  <Label prefHeight="18.0" prefWidth="78.0" styleClass="input__label" text="Fornecedor:" />
-                  <Label fx:id="supplierLabel" prefHeight="18.0" prefWidth="165.0" styleClass="input__label--desc" text="Descrição" />
                </children>
             </HBox>
             <HBox prefHeight="26.0" prefWidth="270.0" spacing="5.0">
@@ -43,19 +35,14 @@
             </HBox>
          </children>
       </VBox>
-      <ImageView fx:id="picture" fitHeight="127.0" fitWidth="357.0" layoutX="66.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../img/placeholder-product.png" />
-         </image>
-      </ImageView>
-      <Label layoutX="247.0" layoutY="278.0" styleClass="input__label" text="--- Notal Fiscal ---" />
-      <HBox alignment="CENTER" layoutX="74.0" layoutY="304.0" prefHeight="26.0" prefWidth="471.0" spacing="5.0">
+      <Label layoutX="252.0" layoutY="278.0" styleClass="input__label" text="--- Notal Fiscal ---" />
+      <HBox alignment="CENTER" layoutX="51.0" layoutY="306.0" prefHeight="26.0" prefWidth="471.0" spacing="5.0">
          <children>
             <Label styleClass="input__label" text="Número da nota:" />
             <Label fx:id="fiscalNumberLabel" prefHeight="18.0" prefWidth="338.0" styleClass="input__label--desc" text="Número" />
          </children>
       </HBox>
-      <VBox layoutX="66.0" layoutY="174.0" prefHeight="83.0" prefWidth="203.0" spacing="15.0">
+      <VBox alignment="CENTER" layoutX="64.0" layoutY="37.0" prefHeight="214.0" prefWidth="252.0" spacing="10.0">
          <children>
             <HBox prefHeight="26.0" prefWidth="193.0" spacing="5.0">
                <children>
@@ -65,7 +52,7 @@
             </HBox>
             <HBox prefHeight="26.0" prefWidth="193.0" spacing="5.0">
                <children>
-                  <Label prefHeight="18.0" prefWidth="107.0" styleClass="input__label" text="Uni. de Medida:" />
+                  <Label prefHeight="18.0" prefWidth="114.0" styleClass="input__label" text="Uni. de Medida:" />
                   <Label fx:id="measUnitLabel" styleClass="input__label--desc" text="Descrição" />
                </children>
             </HBox>
@@ -73,6 +60,12 @@
                <children>
                   <Label styleClass="input__label" text="Preço:" />
                   <Label fx:id="priceLabel" styleClass="input__label--desc" text="Descrição" />
+               </children>
+            </HBox>
+            <HBox prefHeight="26.0" prefWidth="270.0" spacing="5.0">
+               <children>
+                  <Label prefHeight="18.0" prefWidth="105.0" styleClass="input__label" text="Fornecedor:" />
+                  <Label fx:id="supplierLabel" prefHeight="18.0" prefWidth="165.0" styleClass="input__label--desc" text="Descrição" />
                </children>
             </HBox>
          </children>

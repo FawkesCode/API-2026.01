@@ -1,5 +1,6 @@
 package com.fawkes.front.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fawkes.front.service.ApiClient;
 import com.fawkes.front.utils.StringUtils;
 import com.jfoenix.controls.JFXButton;
@@ -102,12 +103,15 @@ public class AddSupplierForm {
         String nome      = nameField.getText().trim();
         String cnpj      = cnpjField.getText().trim();
         String pagamento = paymentField.getValue();
+        System.out.println(pagamento);
 
         try {
             String body = String.format(
-                    "{\"nomeFornecedor\":\"%s\",\"cnpjFornecedor\":\"%s\",\"meioPagamento\":\"%s\"}",
+                    "{\"supplierName\":\"%s\",\"cnpj\":\"%s\",\"paymentMethods\":[\"%s\"]}",
                     nome, cnpj, pagamento);
-            ApiClient.post("/api/suppliers", body);
+            JsonNode response = ApiClient.post("/api/suppliers", body);
+            System.out.println("RETORNO DO BACKEND: " + response.toPrettyString());
+
 
             if (onSaveSuccess != null) {
                 onSaveSuccess.run();

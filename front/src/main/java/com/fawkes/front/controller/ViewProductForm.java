@@ -19,7 +19,6 @@ import java.util.Objects;
 import static java.lang.Double.parseDouble;
 
 public class ViewProductForm {
-    @FXML private ImageView picture;
     @FXML private Label nameLabel;
     @FXML private Label supplierLabel;
     @FXML private Label curQtdLabel;
@@ -42,24 +41,10 @@ public class ViewProductForm {
         curQtdLabel.setText(pro.getCurrentStockQuantity().toString());
         minQtdLabel.setText(pro.getMinStockQuantity().toString());
         maxQtdLabel.setText(pro.getMaxStockQuantity().toString());
-        double price =  parseDouble(pro.getUnitValue().toString()) ;
-        priceLabel.setText(new SimpleStringProperty(CURRENCY_FMT.format(price)).toString());
+        //double price =  parseDouble(pro.getUnitValue().toString()) ;
+        priceLabel.setText(CURRENCY_FMT.format(pro.getUnitValue()));
         measUnitLabel.setText(StringUtils.measureTranslation(pro.getMeasurementUnit()));
         typeLabel.setText(pro.getProductType());
-
-        if (pro.getPicture() != null) {
-            this.picture.setImage(pro.getPicture());
-        } else {
-            try {
-                Image placeholder = new Image(
-                        Objects.requireNonNull(
-                                getClass().getResourceAsStream(
-                                        "/com/fawkes/front/img/placeholder-product.png")));
-                this.picture.setImage(placeholder);
-            } catch (Exception ignored) {
-            }
-        }
-
     }
 
 

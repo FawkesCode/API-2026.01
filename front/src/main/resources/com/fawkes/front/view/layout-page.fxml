@@ -30,7 +30,7 @@
                            </children>
                         </AnchorPane>
 
-                        <StackPane fx:id="contentWrapper" alignment="TOP_CENTER" style="-fx-background-color: #F7F7F7; -fx-padding: 10px 0px 0px 0px;" VBox.vgrow="ALWAYS">
+                        <StackPane id="container" fx:id="contentWrapper" alignment="TOP_CENTER" style="-fx-background-color: #F7F7F7; -fx-padding: 10px 0px 0px 0px;" VBox.vgrow="ALWAYS">
                            <children>
                               <Label text="O conteúdo da página aparecerá aqui..." textFill="#9a9ea5" />
                            </children>

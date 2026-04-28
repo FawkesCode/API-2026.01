@@ -41,7 +41,8 @@ public class SupplierCard extends AnchorPane {
         // fx:id disponível: status (ativo/inativo — fornecedores não têm isActive no back ainda,
         // então exibimos o meio de pagamento aqui como identificador rápido)
         if (status != null) {
-            status.setText("● " + supplier.getPaymentMethod());
+            status.setText("● " + supplier.getActive());
+            System.out.println("PAGAMENTO" + supplier.getActive());
         }
 
         // Label do nome (styleClass "suppiler__name" — typo original do FXML mantido)

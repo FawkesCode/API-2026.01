@@ -85,7 +85,7 @@ public class LayoutController {
 
     private final Map<Button, String> navBtnLabels = new HashMap<>();
 
-    NavigationManager nm = new NavigationManager();
+    NavigationManager nm = NavigationManager.getInstance();
 
 
 

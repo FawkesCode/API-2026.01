@@ -53,6 +53,6 @@
             <JFXButton fx:id="btnClose" onAction="#closeModal" styleClass="btn--cancel" text="Cancelar" />
          </children>
       </HBox>
-      <Label fx:id="errorLabel" layoutX="71.0" layoutY="241.0" prefHeight="18.0" prefWidth="430.0" styleClass="input__label--error" />
+      <Label fx:id="errorLabel" layoutX="71.0" layoutY="241.0" prefHeight="46.0" prefWidth="466.0" styleClass="input__label--error" wrapText="true" />
     </children>
 </AnchorPane>

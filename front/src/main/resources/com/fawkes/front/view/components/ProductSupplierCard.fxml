@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import java.lang.String?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="135.0" prefWidth="215.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="85.0" prefWidth="215.0" style="-fx-padding: 6 10;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label fx:id="productType" styleClass="product__type" text="Tipo do Produto" />
+            <Label fx:id="productName" alignment="TOP_LEFT" prefHeight="23.0" prefWidth="184.0" styleClass="product__name" text="-- Nome do Produto --" wrapText="true" />
+            <Label fx:id="productUnit" styleClass="product__supplier" text="Unidade de Medida" />
+         </children>
+      </VBox>
+      <HBox alignment="CENTER" prefHeight="47.0" prefWidth="215.0" spacing="10.0" style="-fx-padding: 6 10;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <Label fx:id="productPrice" styleClass="product__price" text="R$ 100,00" />
+            <HBox alignment="CENTER" prefHeight="27.0" prefWidth="52.0" spacing="5.0">
+               <children>
+                  <JFXButton fx:id="btnEdit1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#openEditModal" prefHeight="28.0" prefWidth="28.0">
+                     <graphic>
+                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../img/edit-icon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <styleClass>
+                        <String fx:value="product__edit" />
+                        <String fx:value="product__btn" />
+                     </styleClass>
+                  </JFXButton>
+                  <JFXButton fx:id="btnDelete1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleDeleteProduct" prefHeight="28.0" prefWidth="28.0">
+                     <graphic>
+                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../img/bin-icon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <styleClass>
+                        <String fx:value="product__delete" />
+                        <String fx:value="product__btn" />
+                     </styleClass>
+                  </JFXButton>
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+   </children>
+   <styleClass>
+      <String fx:value="container" />
+      <String fx:value="stockItem" />
+   </styleClass>
+</fx:root>
