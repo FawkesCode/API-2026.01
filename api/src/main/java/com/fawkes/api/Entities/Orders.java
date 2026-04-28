@@ -38,15 +38,6 @@ public enum Status {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_note_id_fk")
     private OrderNote invoice;
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
->>>>>>> 0aead16 (Fix: Refatoração para conexão com o aplicativo)
-=======
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
->>>>>>> feat/supplier-cotations
     private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)
