@@ -7,6 +7,7 @@ import com.fawkes.front.models.StockItem;
 import com.fawkes.front.models.Supplier;
 import com.fawkes.front.service.ApiClient;
 import com.fawkes.front.utils.ModalManager;
+import com.fawkes.front.utils.NavigationManager;
 import com.fawkes.front.utils.RBACUtil;
 import com.fawkes.front.utils.StringUtils;
 import javafx.application.Platform;
@@ -19,10 +20,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -44,6 +42,8 @@ public class SupplierPageController {
     @FXML private TextField searchField;
     @FXML private Button    btnNewSupplier;
     @FXML private VBox suppliersContainer;
+    @FXML private Label activeSuppliersLabel;
+    @FXML private Label inactiveSuppliersLabel;
 
     // Dialog de cadastro
     @FXML private VBox      addDialog;
@@ -85,6 +85,8 @@ public class SupplierPageController {
     @FXML
     public void loadSuppliers() {
         suppliersContainer.getChildren().clear();
+        List<Supplier> activeSuppliers = new ArrayList<>();
+        List<Supplier> inactiveSuppliers = new ArrayList<>();
 
         Label loading = new Label("Carregando fornecedores...");
         suppliersContainer.getChildren().add(loading);
@@ -110,7 +112,28 @@ public class SupplierPageController {
                 allSuppliers.add(Supplier.fromJson(node));
             }
 
+            for (JsonNode node: data) {
+                Supplier sup = Supplier.fromJson(node);
+                String status = sup.getActive().toLowerCase();
+
+                if (status.equals("ativo")) {
+                    activeSuppliers.add(sup);
+                } else {
+                    inactiveSuppliers.add(sup);
+                }
+            }
+
+            int qtdActiveUsers = activeSuppliers.toArray().length;
+            int qtdInactiveUsers = inactiveSuppliers.toArray().length;
+
             renderSuppliersGroup(allSuppliers);
+
+            activeSuppliersLabel.setText(qtdActiveUsers + " Ativos");
+            inactiveSuppliersLabel.setText(qtdInactiveUsers + " Inativos");
+
+            for (JsonNode node: data) {
+                System.out.println(node);
+            }
         }));
 
         task.setOnFailed(e -> Platform.runLater(() -> {
@@ -188,6 +211,13 @@ public class SupplierPageController {
             setErrorMessage("Nenhum fornecedor encontrado.");
         }
     }
+
+    public void handleProductsPage() {
+        NavigationManager nm = NavigationManager.getInstance();
+        StackPane container = (StackPane) suppliersContainer.getScene().getRoot().lookup("#container");
+        nm.navigateToPage(container, "view/products-page.fxml", "Fornecedores >> Produtos e Cadastro", "Onde você e os outros gerentes poderão ver e gerenciar os produtos de cada fornecedor.");
+    }
+
 
     @FXML
     public void handleOpenAddDialog() throws IOException {

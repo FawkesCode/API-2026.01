@@ -125,6 +125,15 @@
       -fx-text-fill: $primary-dark;
     }
   }
+
+  &--link {
+    -fx-text-fill: $surface-700;
+    -fx-underline: true;
+
+    &:hover {
+       -fx-text-fill: $primary-light;
+    }
+  }
 }
 
 /* REUSABLE PAGE STYLES */

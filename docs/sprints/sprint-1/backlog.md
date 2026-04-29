@@ -2,10 +2,6 @@
 
 **Período:** 16/03/2026 a 05/04/2026
 
-**Definições da Sprint:**
-- [Definition of Ready](./definition-of-ready.md)
-- [Definition of Done](./definition-of-done.md)
-
 ---
 
 | Capacidade estimada da equipe por Sprint: | 39 Story Points |
@@ -15,10 +11,10 @@
 
 ---
 
-| Rank | Prioridade | User Story | Estimativa | Sprint |
-|:----:|:----------:|------------|:----------:|:------:|
-| 1 | Alta | Como gerente, quero realizar login no sistema com usuário e senha, para que somente pessoas autorizadas acessem as funcionalidades de acordo com seu perfil. | 8 | 1 |
-| 2 | Alta | Como gerente, quero cadastrar, editar e desativar funcionários com seus respectivos perfis de acesso, para controlar as permissões e associar responsabilidades dentro do sistema. | 5 | 1 |
-| 3 | Alta | Como gerente, quero cadastrar, editar e inativar fornecedores com todos os seus atributos, para centralizar informações e agilizar futuras cotações e pedidos. | 5 | 1 |
-| 4 | Alta | Como gerente, quero cadastrar itens no estoque com quantidade inicial, unidade de medida e nível mínimo, para ter uma base de produtos disponível antes de registrar movimentações. | 8 | 1 |
-| 5 | Alta | *(extra)* Como gerente, quero visualizar o histórico completo de alterações realizadas no sistema, para identificar inconsistências e garantir a integridade dos dados ao longo do tempo. | 13 | 1 |
+| Rank | Prioridade | User Story | Estimativa | Sprint | Artefatos |
+|:----:|:----------:|------------|:----------:|:------:|:---------:|
+| 1 | Alta | Como gerente, quero realizar login no sistema com usuário e senha, para que somente pessoas autorizadas acessem as funcionalidades de acordo com seu perfil. | 8 | 1 | [US-1](../dod&dor/us1.md) |
+| 2 | Alta | Como gerente, quero cadastrar, editar e desativar funcionários com seus respectivos perfis de acesso, para controlar as permissões e associar responsabilidades dentro do sistema. | 5 | 1 | [US-2](../dod&dor/us2.md) |
+| 3 | Alta | Como gerente, quero cadastrar, editar e inativar fornecedores com todos os seus atributos, para centralizar informações e agilizar futuras cotações e pedidos. | 5 | 1 | [US-3](../dod&dor/us3.md) |
+| 4 | Alta | Como gerente, quero cadastrar itens no estoque com quantidade inicial, unidade de medida e nível mínimo, para ter uma base de produtos disponível antes de registrar movimentações. | 8 | 1 | [US-4](../dod&dor/us4.md) |
+| 5 | Alta | *(extra)* Como gerente, quero visualizar o histórico completo de alterações realizadas no sistema, para identificar inconsistências e garantir a integridade dos dados ao longo do tempo. | 13 | 1 | [US-5](../dod&dor/us5.md) |

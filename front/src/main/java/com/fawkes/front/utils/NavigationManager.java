@@ -17,8 +17,20 @@ import static com.fawkes.front.MainApplication.GLOBAL_CSS;
 
 public class NavigationManager {
 
+    private static NavigationManager instance;
+
+    public static NavigationManager getInstance() {
+        if (instance == null) {
+            instance = new NavigationManager();
+        }
+        return instance;
+    }
+
     private final StringProperty currentPage = new SimpleStringProperty("Nenhuma");
     private final StringProperty currentPageDescription = new SimpleStringProperty("");
+
+    public StringProperty currentPageProperty() { return currentPage; }
+    public StringProperty currentPageDescriptionProperty() { return currentPageDescription; }
 
     private void applyCommonResources(Stage stage, Scene scene) {
         stage.setTitle("NEWE - We Logic");

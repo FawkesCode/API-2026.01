@@ -21,13 +21,13 @@ public class StockItem {
     private Integer minStockQuantity;
     private Integer maxStockQuantity;
     private Image picture;
-
-    public StockItem() {}
+    private String supplierName;
+    private Integer supplierID;
 
     public StockItem(Long productId, String productName, String productType,
                      String measurementUnit, BigDecimal unitValue,
                      Integer currentStockQuantity, Integer minStockQuantity,
-                     Integer maxStockQuantity, Image picture) {
+                     Integer maxStockQuantity, Image picture, String supplierName, Integer supplierID) {
         this.productId = productId;
         this.productName = productName;
         this.productType = productType;
@@ -37,6 +37,8 @@ public class StockItem {
         this.minStockQuantity = minStockQuantity;
         this.maxStockQuantity = maxStockQuantity;
         this.picture = picture;
+        this.supplierName = supplierName;
+        this.supplierID = supplierID;
     }
 
     public static StockItem fromJson(JsonNode node) {
@@ -48,8 +50,10 @@ public class StockItem {
         Integer current = node.path("currentStockQuantity").asInt(0);
         Integer min = node.path("minStockQuantity").asInt(0);
         Integer max = node.path("maxStockQuantity").asInt(0);
+        String supplierName = node.path("suppliers").path("supplierName").asText("Sem Fornecedor");
+        Integer supplierID = node.path("suppliers").path("id").asInt(0);
         return new StockItem(productId, productName, productType,
-                measurementUnit, unitValue, current, min, max, null);
+                measurementUnit, unitValue, current, min, max, null, supplierName, supplierID);
     }
 
     /** Retorna true se o estoque atual está em ou abaixo do mínimo */
@@ -84,4 +88,20 @@ public class StockItem {
 
     public Image getPicture() { return picture; }
     public void setPicture(Image picture) { this.picture = picture; }
+
+    public String getSupplierName() {
+        return supplierName;
+    }
+
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
+    }
+
+    public Integer getSupplierID() {
+        return supplierID;
+    }
+
+    public void setSupplierID(Integer supplierID) {
+        this.supplierID = supplierID;
+    }
 }

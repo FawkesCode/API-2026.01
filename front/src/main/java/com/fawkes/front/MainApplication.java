@@ -19,6 +19,7 @@ public class MainApplication extends Application {
         Font.loadFont(getClass().getResourceAsStream("/com/fawkes/front/fonts/Poppins-Regular.ttf"), 10);
         Font.loadFont(getClass().getResourceAsStream("/com/fawkes/front/fonts/SofiaSansCondensed-Regular.ttf"), 10);
         Font.loadFont(getClass().getResourceAsStream("/com/fawkes/front/fonts/SofiaSansCondensed-Bold.ttf"), 10);
+        Font.loadFont(getClass().getResourceAsStream("/com/fawkes/front/fonts/Poppins-Italic.ttf"), 10);
 
         GLOBAL_CSS = Objects.requireNonNull(getClass().getResource("styles/bundle.css")).toExternalForm();
         Region warm_upRegion = new Region();
@@ -29,7 +30,7 @@ public class MainApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        new NavigationManager().navigateToLogin(stage);
+        NavigationManager.getInstance().navigateToLogin(stage);
 
     }
 
