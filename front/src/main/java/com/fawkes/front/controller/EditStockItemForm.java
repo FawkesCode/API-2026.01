@@ -1,30 +1,27 @@
 package com.fawkes.front.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fawkes.front.models.Employee;
+import com.fawkes.front.models.StockItem;
 import com.fawkes.front.service.ApiClient;
 import com.fawkes.front.utils.StringUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.util.StringConverter;
 
-import java.io.File;
-import java.net.http.HttpResponse;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
-public class AddStockItemForm {
-    @FXML private JFXButton btnClose;
+public class EditStockItemForm {
+    @FXML
+    private JFXButton btnClose;
+    @FXML private JFXButton btnSubmit;
     @FXML private Label errorLabel;
 
     // FORM INPUTS
@@ -34,6 +31,7 @@ public class AddStockItemForm {
     @FXML private ComboBox<String> suppilerField;
     @FXML private ComboBox<String> unityField;
 
+    private StockItem product;
     private final Map<String, Long> supplierNameToId = new LinkedHashMap<>();
     private static final List<String> UNITIES = Arrays.asList("METROS", "CAIXAS", "LITROS", "KILOGRAMAS", "OUTROS", "NAO_DEFINIDO");
     private Runnable onSaveSuccess;
@@ -42,9 +40,17 @@ public class AddStockItemForm {
         this.onSaveSuccess = onSaveSuccess;
     }
 
+    public void setProductData(StockItem pro) {
+        this.product = pro;
+        nameField.setText(pro.getProductName());
+        typeField.setText(pro.getProductType());
+        priceField.setText(pro.getUnitValue().toString());
+        unityField.getSelectionModel().select(pro.getMeasurementUnit());
+        suppilerField.getSelectionModel().select(pro.getSupplierID());
+    }
+
     @FXML
     public void initialize() {
-
         UnaryOperator<TextFormatter.Change> priceInput = change -> {
             String text = change.getControlNewText();
 
@@ -82,6 +88,9 @@ public class AddStockItemForm {
                 setText(empty ? null : StringUtils.measureTranslation(item));
             }
         });
+
+        btnSubmit.setText("Salvar Alterações");
+
     }
 
     private void loadSuppliers() {
@@ -98,43 +107,21 @@ public class AddStockItemForm {
         }
     }
 
-
     @FXML
     private void closeModal(ActionEvent event) {
+        ((Stage) btnClose.getScene().getWindow()).close();
+    }
+    @FXML
+    private void handleCloseModal() {
         ((Stage) btnClose.getScene().getWindow()).close();
     }
 
     @FXML
     private void handleOnSubmit(ActionEvent event) {
-        if (nameField.getText().isEmpty() || priceField.getText().isEmpty() || suppilerField.getSelectionModel().getSelectedItem() == null) {
+        if (nameField.getText().isEmpty() || priceField.getText().isEmpty() || unityField.getSelectionModel().getSelectedItem() == null || suppilerField.getSelectionModel().getSelectedItem() == null) {
             errorLabel.setText("Verfique se todos os campos obrigatórios foram preenchidos.");
             return;
         }
-
-        try {
-            String selectedSupplier = suppilerField.getSelectionModel().getSelectedItem();
-            Long supplierId = supplierNameToId.get(selectedSupplier);
-
-            String body = String.format(
-                    "{\"productName\":\"%s\",\"productType\":\"%s\",\"measurementUnit\":\"%s\"," +
-                            "\"unitValue\":%s,\"description\":\"\",\"supplierId\":%d,\"stockId\":1}",
-                    nameField.getText().trim(),
-                    typeField.getText().trim(),
-                    unityField.getSelectionModel().getSelectedItem(),
-                    priceField.getText().trim().replace(",", "."),
-                    supplierId
-            );
-
-            JsonNode response = ApiClient.post("/api/products", body);
-            System.out.println("RETORNO DO BACKEND: " + response.toPrettyString());
-
-            if (onSaveSuccess != null) {
-                onSaveSuccess.run();
-            }
-
-            ((Stage) btnClose.getScene().getWindow()).close();
-        } catch (Exception e) {
-            errorLabel.setText("Erro ao cadastrar produto: " + e.getMessage());
-        }
+        errorLabel.setText("");
     }
 }

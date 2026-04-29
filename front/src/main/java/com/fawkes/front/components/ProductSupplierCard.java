@@ -1,6 +1,8 @@
 package com.fawkes.front.components;
 
 import com.fawkes.front.models.StockItem;
+import com.fawkes.front.utils.StringUtils;
+import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -14,27 +16,31 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class StockCard extends AnchorPane {
-
-    @FXML private Label productType;
+public class ProductSupplierCard extends AnchorPane {
+    @FXML private JFXButton btnDelete;
+    @FXML private JFXButton btnEdit;
     @FXML private Label productName;
-    @FXML private Label productSupplier;
-    @FXML private Label productQtd;
     @FXML private Label productPrice;
+    @FXML private Label productType;
+    @FXML private Label productUnit;
+
 
     private StockItem product;
     private Consumer<StockItem> onEditAction;
+    private Consumer<StockItem> onDeleteAction;
 
     public void setOnEditAction(Consumer<StockItem> action) {
         this.onEditAction = action;
     }
+    public void setOnDeleteAction(Consumer<StockItem> action) { this.onDeleteAction = action; }
+
 
     private static final NumberFormat CURRENCY =
             NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 
-    public StockCard() {
+    public ProductSupplierCard() {
         FXMLLoader fxmlLoader = new FXMLLoader(
-                getClass().getResource("/com/fawkes/front/view/components/StockCard.fxml"));
+                getClass().getResource("/com/fawkes/front/view/components/ProductSupplierCard.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
         try {
@@ -47,24 +53,22 @@ public class StockCard extends AnchorPane {
     public void setData(StockItem item) {
         productType.setText(item.getProductType());
         productName.setText(item.getProductName());
-        productSupplier.setText(item.getSupplierName());
         productPrice.setText(CURRENCY.format(item.getUnitValue()));
-        productQtd.setText(item.getCurrentStockQuantity().toString());
-
-
-        if (item.isLow()) {
-            this.getStyleClass().add("stock-item--low");
-        } else {
-            this.getStyleClass().remove("stock-item--low");
-        }
+        productUnit.setText(StringUtils.measureTranslation(item.getMeasurementUnit()));
 
         this.product = item;
     }
 
-    @FXML
-    public void openViewModal(){
+
+    public void openEditModal(){
         if (onEditAction != null) {
             onEditAction.accept(this.product);
+        }
+    }
+
+    public void handleDeleteProduct() {
+        if (onDeleteAction != null) {
+            onDeleteAction.accept(this.product);
         }
     }
 }

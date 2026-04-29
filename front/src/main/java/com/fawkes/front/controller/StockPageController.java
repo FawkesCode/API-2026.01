@@ -1,6 +1,7 @@
 package com.fawkes.front.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fawkes.front.components.ProductShopCard;
 import com.fawkes.front.components.StockCard;
 import com.fawkes.front.components.SupplierCard;
 import com.fawkes.front.models.Employee;
@@ -126,27 +127,41 @@ public class StockPageController {
     public void renderStockGroup(List<StockItem> products) {
         stockContainer.getChildren().clear();
 
-        FlowPane flow = new FlowPane();
-        flow.setHgap(16);
-        flow.setVgap(16);
-        flow.setAlignment(Pos.TOP_LEFT);
+        java.util.Map<Boolean, List<StockItem>> groups = products.stream()
+                .collect(java.util.stream.Collectors.groupingBy(StockItem::isLow));
 
-        List<StockItem> sortedProducts = products.stream().sorted((p1, p2)-> {
-            if(p1.getCurrentStockQuantity() == 0 && p2.getCurrentStockQuantity() > 0) return 1;
-            if(p1.getCurrentStockQuantity() > 0 && p2.getCurrentStockQuantity() == 0) return -1;
-            return 0;
-        }).toList();
+        List<Boolean> order = List.of(true, false);
 
-        for (StockItem product: sortedProducts) {
-            StockCard card = new StockCard();
-            card.setData(product);
-            card.setOnEditAction(this::openViewProduct);
+        for (Boolean isLowGroup : order) {
+            List<StockItem> subList = groups.getOrDefault(isLowGroup, new ArrayList<>());
 
-            flow.getChildren().add(card);
+            if (subList.isEmpty()) continue;
 
+            String title = isLowGroup ? "Itens que precisam de atenção" : "Itens disponíveis em boa quantidade";
+            Label groupLabel = new Label(title);
+            groupLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #37404C; "
+                    + "-fx-padding: 16px 0px 8px 0px;");
+
+            FlowPane flow = new FlowPane();
+            flow.setHgap(16);
+            flow.setVgap(16);
+            flow.setAlignment(Pos.TOP_LEFT);
+
+            List<StockItem> sortedSubList = subList.stream().sorted((p1, p2) -> {
+                if (p1.getCurrentStockQuantity() == 0 && p2.getCurrentStockQuantity() > 0) return 1;
+                if (p1.getCurrentStockQuantity() > 0 && p2.getCurrentStockQuantity() == 0) return -1;
+                return 0;
+            }).toList();
+
+            for (StockItem product : sortedSubList) {
+                StockCard card = new StockCard();
+                card.setData(product);
+                card.setOnEditAction(this::openViewProduct);
+                flow.getChildren().add(card);
+            }
+
+            stockContainer.getChildren().addAll(groupLabel, flow);
         }
-
-        stockContainer.getChildren().add(flow);
     }
 
     private void setErrorMessage (String message) {

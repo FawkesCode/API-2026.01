@@ -33,30 +33,11 @@ public class EmployeePageController {
 
     private static final List<String> GRUPOS = Arrays.asList("DIRECTOR", "MANAGER", "OPERATIONAL");
 
-    // Tabela
-    @FXML private TableView<JsonNode>           employeeTable;
-    @FXML private TableColumn<JsonNode, String> colId;
-    @FXML private TableColumn<JsonNode, String> colNome;
-    @FXML private TableColumn<JsonNode, String> colEmail;
-    @FXML private TableColumn<JsonNode, String> colAtivo;
-    @FXML private TableColumn<JsonNode, String> colGrupo;
-    @FXML private TableColumn<JsonNode, String> colDepto;
-    @FXML private TableColumn<JsonNode, String> colAcoes;
-
     // Barra superior
     @FXML private TextField searchField;
     @FXML private Button    newEmployee;
     @FXML private Label activeUsersLabel;
     @FXML private Label inactiveUsersLabel;
-
-    // Dialog de cadastro
-    //@FXML private VBox          addDialog;
-    @FXML private TextField     fieldUsername;
-    @FXML private TextField     fieldEmail;
-    @FXML private PasswordField fieldPassword;
-    @FXML private ComboBox<String> fieldGroup;
-    @FXML private TextField     fieldDept;
-    @FXML private Label         addErrorLabel;
 
     @FXML private VBox groupsContainer;
 
@@ -158,7 +139,6 @@ public class EmployeePageController {
             byGroup.computeIfAbsent(emp.getPosition(), k -> new ArrayList<>()).add(emp);
         }
 
-        // Renderiza um bloco por grupo
         for (java.util.Map.Entry<String, java.util.List<Employee>> entry : byGroup.entrySet()) {
             VBox groupInfo = new VBox();
             Label groupLabel = new Label("Usuários com acesso de " + StringUtils.roleTranslation(entry.getKey().toUpperCase()).toLowerCase());
