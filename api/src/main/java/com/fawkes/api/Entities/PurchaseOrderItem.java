@@ -1,5 +1,6 @@
 package com.fawkes.api.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import lombok.*;
@@ -17,6 +18,7 @@ public class PurchaseOrderItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "purchase_order_id_fk", nullable = false)
+    @JsonIgnore
     private PurchaseOrder purchaseOrder;
 
     @ManyToOne(fetch = FetchType.LAZY)

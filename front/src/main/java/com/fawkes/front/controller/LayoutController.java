@@ -72,6 +72,8 @@ public class LayoutController {
     @FXML
     private Button btnStock;
     @FXML
+    private Button btnOrders;
+    @FXML
     private ImageView iconDashboard;
     @FXML
     private Label sidebarUserName;
@@ -240,6 +242,11 @@ public class LayoutController {
     public void handleStockButton() {
         nm.navigateToPage(contentWrapper, "view/stock-page.fxml", "Estoque", "Onde você e os outros gerentes poderão ver e gerenciar os produtos estocados pela empresa.");
         updateActiveButton(btnStock);
+    }
+
+    public void handleOrdersButton() {
+        nm.navigateToPage(contentWrapper, "view/orders-page.fxml", "Pedidos", "Onde você e os outros poderão visualizar os pedidos realizados.");
+        updateActiveButton(btnOrders);
     }
 
     public void handleLogout(ActionEvent event) {
