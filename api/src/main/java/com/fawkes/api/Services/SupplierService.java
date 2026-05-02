@@ -17,11 +17,35 @@ public class SupplierService {
         return supplierRepository.findAll();
     }
 
+    public Suppliers findById(Long id) {
+        return supplierRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado"));
+    }
+
     public Suppliers create(Suppliers supplier) {
         return supplierRepository.save(supplier);
     }
 
-    public void delete(Long id) {
-        supplierRepository.deleteById(id);
+    public Suppliers update(Long id, Suppliers updatedData) {
+        Suppliers supplier = findById(id);
+        if (updatedData.getSupplierName() != null) {
+            supplier.setSupplierName(updatedData.getSupplierName());
+        }
+        if (updatedData.getCnpj() != null) {
+            supplier.setCnpj(updatedData.getCnpj());
+        }
+        if (updatedData.getPaymentMethods() != null) {
+            supplier.setPaymentMethods(updatedData.getPaymentMethods());
+        }
+        if (updatedData.getIsActive() != null) {
+            supplier.setIsActive(updatedData.getIsActive());
+        }
+        return supplierRepository.save(supplier);
+    }
+
+    public Suppliers toggleStatus(Long id) {
+        Suppliers supplier = findById(id);
+        supplier.setIsActive(!Boolean.TRUE.equals(supplier.getIsActive()));
+        return supplierRepository.save(supplier);
     }
 }

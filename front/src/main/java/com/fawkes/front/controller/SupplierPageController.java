@@ -171,6 +171,7 @@ public class SupplierPageController {
                 card.setData(sup);
                 card.prefWidthProperty().bind(suppliersContainer.widthProperty());
                 card.setOnEditAction(this::openEditSupplier);
+                card.setOnToggleStatusAction(this::toggleSupplierStatus);
 
                 flow.getChildren().add(card);
             }
@@ -231,17 +232,18 @@ public class SupplierPageController {
         ModalManager.openModal(curStage, formulario, "Cadastrar Fornecedor", 600, 400, "ModalFrameSM.fxml", true);
     }
 
-    private void handleDelete(Long id) {
+    private void toggleSupplierStatus(Supplier sup) {
+        String action = sup.getActive().equals("Ativo") ? "inativar" : "ativar";
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-                "Deseja excluir este fornecedor?", ButtonType.YES, ButtonType.NO);
+                "Deseja " + action + " o fornecedor \"" + sup.getName() + "\"?", ButtonType.YES, ButtonType.NO);
         confirm.setHeaderText(null);
         confirm.showAndWait().ifPresent(bt -> {
             if (bt == ButtonType.YES) {
                 try {
-                    ApiClient.delete("/api/suppliers/" + id);
+                    ApiClient.patch("/api/suppliers/" + sup.getId() + "/status", "{}");
                     loadSuppliers();
                 } catch (Exception e) {
-                    statusLabel.setText("Erro ao excluir: " + e.getMessage());
+                    statusLabel.setText("Erro ao alterar status: " + e.getMessage());
                 }
             }
         });

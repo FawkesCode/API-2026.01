@@ -48,9 +48,11 @@
 }
 
 .employee--inactive {
+    -fx-background-color: $surface-50;
+
     & .employee {
         &__status, &__department, &__name, &__email {
-            -fx-background-color: $surface-300;
+            -fx-background-color: transparent;
         }
     }
 }

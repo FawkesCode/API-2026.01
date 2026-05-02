@@ -1,0 +1,42 @@
+.orders {
+  &__status {
+    -fx-font-size: 11px;
+    -fx-text-fill: $surface-0;
+    -fx-background-color: $surface-300;
+    -fx-padding: 5px 7px;
+    -fx-background-radius: 100px;
+    -fx-border-radius: 100px;
+    -fx-font-weight: 700;
+
+    &--aproved {
+        -fx-background-color: $primary-light;
+    }
+
+    &--declined {
+        -fx-background-color: $surface-900;
+    }
+  }
+  &__solicitor {
+    -fx-font-family: $poppins;
+    -fx-text-fill: $surface-200;
+    -fx-font-size: 11px;
+  }
+  &__department {
+    -fx-font-size: 23px;
+    -fx-text-fill: $surface-800;
+  }
+  &__info {
+    -fx-font-family: $poppins;
+    -fx-text-fill: $surface-700;
+  }
+  &__details {
+    -fx-background-color: transparent;
+    -fx-text-fill: $surface-700;
+    -fx-underline: true;
+    -fx-cursor: hand !important;
+
+    &:hover {
+        -fx-text-fill: $primary-light !important;
+    }
+  }
+}

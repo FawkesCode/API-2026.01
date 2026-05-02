@@ -17,13 +17,22 @@
             <Label styleClass="supplier__signed" text="Cadastrado em 19 de Mar. 2026" />
          </children>
       </VBox>
-      <VBox alignment="CENTER" layoutX="536.0" layoutY="-50.0" prefHeight="150.0" prefWidth="77.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="CENTER" layoutX="536.0" layoutY="-50.0" prefHeight="150.0" prefWidth="77.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Button maxHeight="34.0" maxWidth="34.0" minHeight="34.0" minWidth="34.0" mnemonicParsing="false" onAction="#openEditModal" prefHeight="34.0" prefWidth="34.0" styleClass="btn-edit">
                <graphic>
                   <ImageView fitHeight="23.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../img/edit-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="btnToggleStatus" maxHeight="34.0" maxWidth="34.0" minHeight="34.0" minWidth="34.0" mnemonicParsing="false" onAction="#handleToggleStatus" prefHeight="34.0" prefWidth="34.0" styleClass="btn-toggle-status">
+               <graphic>
+                  <ImageView fx:id="toggleStatusIcon" fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../img/bin-icon.png" />
                      </image>
                   </ImageView>
                </graphic>

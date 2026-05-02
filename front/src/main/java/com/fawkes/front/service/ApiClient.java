@@ -173,6 +173,20 @@ public class ApiClient {
         return mapper.readTree(response.body());
     }
 
+    // ---------------- Generic PATCH ----------------
+    public static JsonNode patch(String path, String jsonBody) throws Exception {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + path))
+                .method("PATCH", HttpRequest.BodyPublishers.ofString(jsonBody))
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .header("Authorization", getBearerAuthHeader())
+                .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertOk(response);
+        return mapper.readTree(response.body());
+    }
+
     // ---------------- Generic DELETE ----------------
     public static void delete(String path) throws Exception {
         HttpRequest request = HttpRequest.newBuilder()

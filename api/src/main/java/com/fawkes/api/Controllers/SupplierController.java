@@ -25,9 +25,13 @@ public class SupplierController {
         return ResponseEntity.ok(supplierService.create(supplier));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        supplierService.delete(id);
-        return ResponseEntity.noContent().build();
+    @PutMapping("/{id}")
+    public ResponseEntity<Suppliers> update(@PathVariable Long id, @RequestBody Suppliers supplier) {
+        return ResponseEntity.ok(supplierService.update(id, supplier));
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Suppliers> toggleStatus(@PathVariable Long id) {
+        return ResponseEntity.ok(supplierService.toggleStatus(id));
     }
 }

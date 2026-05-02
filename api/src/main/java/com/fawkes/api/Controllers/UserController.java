@@ -1,6 +1,7 @@
 package com.fawkes.api.Controllers;
 
 import com.fawkes.api.DTOs.Request.SignUpRequest;
+import com.fawkes.api.DTOs.Request.UserUpdateRequest;
 import com.fawkes.api.DTOs.UserDTO;
 import com.fawkes.api.Entities.Users;
 import com.fawkes.api.Services.UserService;
@@ -39,10 +40,14 @@ public class UserController {
         return ResponseEntity.ok(newUser);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        userService.delete(id);
-        return ResponseEntity.noContent().build();
+    @PutMapping("/{id}")
+    public ResponseEntity<Users> update(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
+        return ResponseEntity.ok(userService.update(id, request));
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Users> toggleStatus(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.toggleStatus(id));
     }
 
     /**
@@ -55,11 +60,11 @@ public class UserController {
         if (authentication == null || authentication.getName() == null) {
             return ResponseEntity.status(401).build();
         }
-        
+
         String userEmail = authentication.getName();
         Users user = userService.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-        
+
         return ResponseEntity.ok(UserDTO.fromEntity(user));
     }
 }

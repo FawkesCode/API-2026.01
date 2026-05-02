@@ -165,6 +165,7 @@ public class EmployeePageController {
                 card.setData(emp);
 
                 card.setOnEditAction(this::openEditEmployee);
+                card.setOnToggleStatusAction(this::toggleEmployeeStatus);
 
                 flow.getChildren().add(card);
             }
@@ -213,17 +214,18 @@ public class EmployeePageController {
         ModalManager.openModal(curStage, formulario, "Cadastrar Funcionário");
     }
 
-    private void handleDelete(Long id) {
+    private void toggleEmployeeStatus(Employee emp) {
+        String action = emp.getStatus().equals("Ativo") ? "inativar" : "ativar";
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-                "Deseja excluir este funcionário?", ButtonType.YES, ButtonType.NO);
+                "Deseja " + action + " o funcionário \"" + emp.getName() + "\"?", ButtonType.YES, ButtonType.NO);
         confirm.setHeaderText(null);
         confirm.showAndWait().ifPresent(bt -> {
             if (bt == ButtonType.YES) {
                 try {
-                    ApiClient.delete("/api/users/" + id);
+                    ApiClient.patch("/api/users/" + emp.getId() + "/status", "{}");
                     loadEmployees();
                 } catch (Exception e) {
-                    statusLabel.setText("Erro ao excluir: " + e.getMessage());
+                    statusLabel.setText("Erro ao alterar status: " + e.getMessage());
                 }
             }
         });

@@ -4,7 +4,10 @@ import com.fawkes.front.models.Employee;
 import com.fawkes.front.models.Supplier;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
@@ -13,16 +16,20 @@ import java.util.function.Consumer;
 
 public class SupplierCard extends AnchorPane {
 
-    // fx:id disponíveis no SupplierCard.fxml:
-    //   fx:id="status" → label "● Ativo"
-    // Sem fx:id: .suppiler__name (typo no FXML), .supplier__signed
     @FXML private Label status;
+    @FXML private Button btnToggleStatus;
+    @FXML private ImageView toggleStatusIcon;
 
     private Supplier supplier;
     private Consumer<Supplier> onEditAction;
+    private Consumer<Supplier> onToggleStatusAction;
 
     public void setOnEditAction(Consumer<Supplier> action) {
         this.onEditAction = action;
+    }
+
+    public void setOnToggleStatusAction(Consumer<Supplier> action) {
+        this.onToggleStatusAction = action;
     }
 
     public SupplierCard() {
@@ -38,24 +45,32 @@ public class SupplierCard extends AnchorPane {
     }
 
     public void setData(Supplier supplier) {
-        // fx:id disponível: status (ativo/inativo — fornecedores não têm isActive no back ainda,
-        // então exibimos o meio de pagamento aqui como identificador rápido)
         if (status != null) {
             status.setText("● " + supplier.getActive());
             System.out.println("PAGAMENTO" + supplier.getActive());
+            if (supplier.getActive().equals("Ativo")) {
+                status.getStyleClass().remove("status-label--inactive");
+            } else {
+                status.getStyleClass().add("status-label--inactive");
+            }
         }
 
-        // Label do nome (styleClass "suppiler__name" — typo original do FXML mantido)
+        if (supplier.getActive().equals("Inativo")) {
+            getStyleClass().add("supplier--inactive");
+        } else {
+            getStyleClass().remove("supplier--inactive");
+        }
+
         Label nameLabel = (Label) this.lookup(".suppiler__name");
         if (nameLabel != null) {
             nameLabel.setText(supplier.getName());
         }
 
-        // Label de rodapé — exibe o CNPJ
         Label signedLabel = (Label) this.lookup(".supplier__signed");
         if (signedLabel != null) {
             signedLabel.setText("CNPJ: " + supplier.getCnpj());
         }
+
         this.supplier = supplier;
     }
 
@@ -63,6 +78,13 @@ public class SupplierCard extends AnchorPane {
     public void openEditModal(){
         if (onEditAction != null) {
             onEditAction.accept(this.supplier);
+        }
+    }
+
+    @FXML
+    public void handleToggleStatus() {
+        if (onToggleStatusAction != null) {
+            onToggleStatusAction.accept(this.supplier);
         }
     }
 }

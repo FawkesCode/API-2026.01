@@ -31,6 +31,9 @@ public class ProductInputs {
     @Column(name = "input_date", nullable = false)
     private LocalDateTime inputDate;
 
+    @Column(name = "responsible", length = 255)
+    private String responsible;
+
     @PrePersist
     protected void onCreate() {
         inputDate = LocalDateTime.now();

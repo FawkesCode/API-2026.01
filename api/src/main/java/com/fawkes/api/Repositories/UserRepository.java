@@ -15,6 +15,7 @@ public interface UserRepository extends JpaRepository<Users, Long> {
     boolean existsByUserName(String userName);
     Optional<Users> findByIdAndIsActiveTrue(Long id);
     Optional<Users> findByUserMail(String userMail);
+    List<Users> findByIsActive(Boolean isActive);
 
     @Query("SELECT u FROM Users u LEFT JOIN FETCH u.group LEFT JOIN FETCH u.departments")
     List<Users> findAllWithGroupAndDepartment();
