@@ -9,10 +9,11 @@ import java.time.LocalDateTime;
 @Slf4j
 public record ActivityDTO(
         Long id,
-        String type,           // "ENTRADA" ou "SAIDA"
+        String type,
         String productName,
         Integer quantity,
-        LocalDateTime date
+        LocalDateTime date,
+        String responsible
 ) {
     public static ActivityDTO fromInput(ProductInputs input) {
         try {
@@ -32,7 +33,8 @@ public record ActivityDTO(
                     "ENTRADA",
                     productName,
                     input.getQuantity(),
-                    input.getInputDate()
+                    input.getInputDate(),
+                    input.getResponsible()
             );
         } catch (Exception e) {
             log.error("Erro ao converter ProductInputs para ActivityDTO", e);
@@ -58,7 +60,8 @@ public record ActivityDTO(
                     "SAIDA",
                     productName,
                     output.getQuantity(),
-                    output.getOutputDate()
+                    output.getOutputDate(),
+                    output.getResponsible()
             );
         } catch (Exception e) {
             log.error("Erro ao converter ProductOutputs para ActivityDTO", e);

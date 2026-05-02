@@ -12,20 +12,29 @@
    <children>
       <VBox layoutX="32.0" prefHeight="52.0" prefWidth="255.0" spacing="5.0" style="-fx-padding: 5px 10px;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <AnchorPane prefHeight="22.0" prefWidth="255.0">
-               <children>
-                  <Label fx:id="status" layoutY="2.0" styleClass="status-label" text="● Ativo" AnchorPane.leftAnchor="0.0" />
-                  <Button fx:id="editEmployee" layoutX="210.4" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#openEditModal" prefHeight="22.0" prefWidth="24.0" styleClass="btn-edit" AnchorPane.rightAnchor="0.0">
-                     <graphic>
-                        <ImageView fitHeight="14.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../img/edit-icon.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-               </children>
-            </AnchorPane>
+<AnchorPane prefHeight="22.0" prefWidth="255.0">
+                <children>
+                   <Label fx:id="status" layoutY="2.0" styleClass="status-label" text="● Ativo" AnchorPane.leftAnchor="0.0" />
+                   <Button fx:id="editEmployee" layoutX="210.4" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#openEditModal" prefHeight="22.0" prefWidth="24.0" styleClass="btn-edit" AnchorPane.rightAnchor="0.0">
+                      <graphic>
+                         <ImageView fitHeight="14.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                               <Image url="@../../img/edit-icon.png" />
+                            </image>
+                         </ImageView>
+                      </graphic>
+                   </Button>
+                   <Button fx:id="btnToggleStatus" layoutX="180.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleToggleStatus" prefHeight="22.0" prefWidth="24.0" styleClass="btn-toggle-status" AnchorPane.rightAnchor="30.0">
+                      <graphic>
+                         <ImageView fx:id="toggleStatusIcon" fitHeight="14.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                               <Image url="@../../img/bin-icon.png" />
+                            </image>
+                         </ImageView>
+                      </graphic>
+                   </Button>
+                </children>
+             </AnchorPane>
             <Label fx:id="department" styleClass="employee__department" text="SETOR | ADMINISTRATIVO" />
          </children>
       </VBox>

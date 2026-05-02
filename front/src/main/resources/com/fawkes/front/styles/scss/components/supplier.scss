@@ -2,6 +2,10 @@
   -fx-padding: 15px;
   -fx-background-color: $surface-0;
 
+  &--inactive {
+    -fx-background-color: $surface-50;
+  }
+
   &__name {
     -fx-font-family: $montserrat;
     -fx-font-weight: 900;

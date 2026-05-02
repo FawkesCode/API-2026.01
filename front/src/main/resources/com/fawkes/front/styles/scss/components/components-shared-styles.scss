@@ -21,6 +21,11 @@
   -fx-font-weight: 700;
 }
 
+.status-label--inactive {
+  -fx-text-fill: $surface-800;
+  -fx-background-color: $surface-200;
+}
+
 .btn-edit {
   -fx-background-color: transparent;
   -fx-background-radius: 10px;

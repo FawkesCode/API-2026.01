@@ -29,6 +29,9 @@ public class ProductOutputs {
     @Column(name = "output_date", nullable = false)
     private LocalDateTime outputDate;
 
+    @Column(name = "responsible", length = 255)
+    private String responsible;
+
     // nullable → ON DELETE SET NULL
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id_fk", nullable = true)

@@ -126,13 +126,28 @@ public class EditEmployeeForm {
     private void handleOnSubmit(ActionEvent event) {
         errorLabel.setText("");
 
-
         String username = nameField.getText().trim();
         String email = emailField.getText().trim();
         String group = userGroupField.getSelectionModel().getSelectedItem();
         String dept = departmentField.getText().trim();
+        boolean isActive = statusField.isSelected();
+
+        if (username.isEmpty() || email.isEmpty() || group == null || dept.isEmpty()) {
+            errorLabel.setText("Verifique se todos os campos obrigatórios foram preenchidos.");
+            return;
+        }
 
         try {
+            String jsonBody = "{"
+                    + "\"userName\":\"" + username + "\","
+                    + "\"userMail\":\"" + email + "\","
+                    + "\"roleName\":\"" + group + "\","
+                    + "\"departmentName\":\"" + dept + "\","
+                    + "\"isActive\":" + isActive
+                    + "}";
+
+            ApiClient.put("/api/users/" + employee.getId(), jsonBody);
+
             System.out.println("Formulário enviado");
             if (onSaveSuccess != null) {
                 onSaveSuccess.run();

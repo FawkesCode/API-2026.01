@@ -48,7 +48,41 @@ public class ProductService {
         return productsRepository.save(product);
     }
 
+    @Transactional
     public void delete(Long id) {
         productsRepository.deleteById(id);
+    }
+
+    @Transactional
+    public Products update(Long id, ProductRequest request) {
+        Products product = productsRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+        if (request.getProductName() != null) {
+            product.setProductName(request.getProductName());
+        }
+        if (request.getProductType() != null) {
+            product.setProductType(request.getProductType());
+        }
+        if (request.getMeasurementUnit() != null) {
+            try {
+                product.setMeasurementUnit(Products.MeasurementUnit.valueOf(request.getMeasurementUnit()));
+            } catch (IllegalArgumentException e) {
+                product.setMeasurementUnit(Products.MeasurementUnit.NAO_DEFINIDO);
+            }
+        }
+        if (request.getUnitValue() != null) {
+            product.setUnitValue(request.getUnitValue());
+        }
+        if (request.getDescription() != null) {
+            product.setDescription(request.getDescription());
+        }
+        if (request.getSupplierId() != null) {
+            Suppliers supplier = supplierRepository.findById(request.getSupplierId())
+                    .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado"));
+            product.setSuppliers(supplier);
+        }
+
+        return productsRepository.save(product);
     }
 }

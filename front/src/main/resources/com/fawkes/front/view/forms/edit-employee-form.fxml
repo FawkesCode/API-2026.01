@@ -85,7 +85,7 @@
         </VBox>
         <HBox alignment="CENTER_RIGHT" layoutX="574.0" layoutY="264.0" prefHeight="54.0" prefWidth="354.0" spacing="15.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0">
             <children>
-                <JFXButton prefHeight="26.0" prefWidth="182.0" styleClass="btn--submit" text="Salvar Alterações" />
+                <JFXButton onAction="#handleOnSubmit" prefHeight="26.0" prefWidth="182.0" styleClass="btn--submit" text="Salvar Alterações" />
                 <JFXButton fx:id="btnClose" onAction="#closeModal" prefHeight="26.0" prefWidth="138.0" styleClass="btn--cancel" text="Cancelar" />
             </children>
         </HBox>

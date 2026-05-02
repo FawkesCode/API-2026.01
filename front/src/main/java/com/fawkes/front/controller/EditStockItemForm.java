@@ -122,6 +122,28 @@ public class EditStockItemForm {
             errorLabel.setText("Verfique se todos os campos obrigatórios foram preenchidos.");
             return;
         }
-        errorLabel.setText("");
+
+        String selectedSupplierName = suppilerField.getSelectionModel().getSelectedItem();
+        Long supplierId = supplierNameToId.get(selectedSupplierName);
+        String unity = unityField.getSelectionModel().getSelectedItem();
+
+        String jsonBody = String.format(
+            "{\"productName\":\"%s\",\"productType\":\"%s\",\"measurementUnit\":\"%s\",\"unitValue\":%s,\"supplierId\":%d}",
+            nameField.getText(),
+            typeField.getText(),
+            unity,
+            priceField.getText(),
+            supplierId
+        );
+
+        try {
+            ApiClient.put("/api/products/" + product.getProductId(), jsonBody);
+            if (onSaveSuccess != null) {
+                onSaveSuccess.run();
+            }
+            ((Stage) btnSubmit.getScene().getWindow()).close();
+        } catch (Exception e) {
+            errorLabel.setText("Erro ao salvar: " + e.getMessage());
+        }
     }
 }

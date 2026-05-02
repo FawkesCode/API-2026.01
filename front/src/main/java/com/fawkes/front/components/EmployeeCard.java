@@ -32,15 +32,19 @@ public class EmployeeCard extends AnchorPane {
     @FXML private Label email;
     @FXML private Label signed;
     @FXML private Button editEmployee;
+    @FXML private Button btnToggleStatus;
 
     private Employee employee;
     private Consumer<Employee> onEditAction;
+    private Consumer<Employee> onToggleStatusAction;
 
     public void setOnEditAction(Consumer<Employee> action) {
         this.onEditAction = action;
     }
 
-
+    public void setOnToggleStatusAction(Consumer<Employee> action) {
+        this.onToggleStatusAction = action;
+    }
 
     public EmployeeCard() {
         FXMLLoader fxmlLoader = new FXMLLoader(
@@ -78,11 +82,13 @@ public class EmployeeCard extends AnchorPane {
         }
 
         this.status.setText("● " + employee.getStatus());
-        // Verde para ativo, vermelho para inativo
+        // Azul para ativo, cinza para inativo
         if ("Ativo".equalsIgnoreCase(employee.getStatus())) {
-            this.container.getStyleClass().remove("employee--inactive");
+            this.getStyleClass().remove("employee--inactive");
+            this.status.getStyleClass().remove("status-label--inactive");
         } else {
-            this.container.getStyleClass().add("employee--inactive");
+            this.getStyleClass().add("employee--inactive");
+            this.status.getStyleClass().add("status-label--inactive");
         }
 
         this.position.setText(StringUtils.roleTranslation(employee.getPosition().toUpperCase()));
@@ -95,6 +101,13 @@ public class EmployeeCard extends AnchorPane {
     public void openEditModal(){
         if (onEditAction != null) {
             onEditAction.accept(this.employee);
+        }
+    }
+
+    @FXML
+    public void handleToggleStatus() {
+        if (onToggleStatusAction != null) {
+            onToggleStatusAction.accept(this.employee);
         }
     }
 }

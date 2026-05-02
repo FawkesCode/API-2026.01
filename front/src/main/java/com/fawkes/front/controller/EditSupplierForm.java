@@ -6,6 +6,7 @@ import com.fawkes.front.utils.StringUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -21,10 +22,10 @@ public class EditSupplierForm {
     private JFXButton btnClose;
     @FXML private Label errorLabel;
 
-    // FORM INPUTS
     @FXML private TextField cnpjField;
     @FXML private TextField nameField;
     @FXML private ComboBox<String> paymentField;
+    @FXML private CheckBox activeCheckBox;
     @FXML private JFXButton submmitForm;
     @FXML private Label cnpjLabel;
     @FXML private Label nameLabel;
@@ -65,7 +66,6 @@ public class EditSupplierForm {
             }
         } );
 
-        // COMBO BOX CONTENT
         paymentField.getItems().addAll(PAYMENTS);
 
         paymentField.setConverter(new StringConverter<String>() {
@@ -88,6 +88,9 @@ public class EditSupplierForm {
             }
         });
 
+        activeCheckBox.setVisible(true);
+        activeCheckBox.setManaged(true);
+
         submmitForm.setText("Salvar alterações");
         cnpjLabel.setText("CNPJ:");
         nameLabel.setText("Nome:");
@@ -100,6 +103,7 @@ public class EditSupplierForm {
         cnpjField.setText(sup.getCnpj());
         nameField.setText(sup.getName());
         paymentField.getSelectionModel().select(sup.getPaymentMethod());
+        activeCheckBox.setSelected(sup.getActive().equals("Ativo"));
     }
 
     @FXML
@@ -122,8 +126,17 @@ public class EditSupplierForm {
         String nome      = nameField.getText().trim();
         String cnpj      = cnpjField.getText().trim();
         String pagamento = paymentField.getValue();
+        boolean ativo    = activeCheckBox.isSelected();
 
         try {
+            String jsonBody = "{"
+                    + "\"supplierName\":\"" + nome + "\","
+                    + "\"cnpj\":\"" + cnpj + "\","
+                    + "\"paymentMethods\":[\"" + pagamento + "\"],"
+                    + "\"isActive\":" + ativo
+                    + "}";
+
+            ApiClient.put("/api/suppliers/" + supplier.getId(), jsonBody);
 
             if (onSaveSuccess != null) {
                 onSaveSuccess.run();

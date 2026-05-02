@@ -4,6 +4,8 @@ import com.fawkes.api.Entities.*;
 import com.fawkes.api.Repositories.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,7 @@ public class StockMovementService {
     private final ProductOutputsRepository productOutputsRepository;
     private final ProductsRepository productsRepository;
     private final StockRepository stockRepository;
+    private final ProductStockRepository productStockRepository;
 
     @Transactional
     public ProductInputs registerInput(Long stockId, Long productId, Integer quantity) {
@@ -44,6 +47,11 @@ public class StockMovementService {
             novoSaldo = calcularSaldoEntrada(companyStock, quantity);
             companyStock.setCurrentQuantity(novoSaldo);
             companyStock.setLastInputDate(java.time.LocalDateTime.now());
+
+            productStockRepository.findByProductId(productId).ifPresent(ps -> {
+                ps.setCurrentStockQuantity(novoSaldo);
+                productStockRepository.save(ps);
+            });
         } else {
             novoSaldo = quantity;
             companyStock = new CompanyStock();
@@ -51,6 +59,15 @@ public class StockMovementService {
             companyStock.setProduct(product);
             companyStock.setCurrentQuantity(novoSaldo);
             companyStock.setLastInputDate(java.time.LocalDateTime.now());
+
+            if (productStockRepository.findByProductId(productId).isEmpty()) {
+                ProductStock ps = new ProductStock();
+                ps.setProduct(product);
+                ps.setCurrentStockQuantity(novoSaldo);
+                ps.setMinStockQuantity(0);
+                ps.setMaxStockQuantity(null);
+                productStockRepository.save(ps);
+            }
         }
 
         companyStockRepository.save(companyStock);
@@ -59,6 +76,7 @@ public class StockMovementService {
         input.setStock(stock);
         input.setProduct(product);
         input.setQuantity(quantity);
+        input.setResponsible(getCurrentUserName());
 
         return productInputsRepository.save(input);
     }
@@ -89,6 +107,7 @@ public class StockMovementService {
         output.setProduct(product);
         output.setQuantity(quantity);
         output.setOrder(order);
+        output.setResponsible(getCurrentUserName());
 
         return productOutputsRepository.<ProductOutputs>save(output);
     }
@@ -170,5 +189,13 @@ public class StockMovementService {
             log.error("Erro em listActivity()", e);
             throw e;
         }
+    }
+
+    private String getCurrentUserName() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
+            return auth.getName();
+        }
+        return "Sistema";
     }
 }
