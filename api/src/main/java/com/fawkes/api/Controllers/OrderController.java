@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -104,6 +105,20 @@ public class OrderController {
     @PostMapping("/{id}/process")
     public ResponseEntity<OrderResponse> processOrder(@PathVariable Long id) {
         return ResponseEntity.ok(orderService.processOrder(id));
+    }
+
+    /** aprovação do pedido */
+    @PreAuthorize("hasRole('DIRECTOR')")
+    @PostMapping("/{id}/approve")
+    public ResponseEntity<OrderResponse> approveOrder(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.approveOrder(id));
+    }
+
+    /** cancelamento do pedido */
+    @PreAuthorize("hasRole('DIRECTOR')")
+    @PostMapping("/{id}/reject")
+    public ResponseEntity<OrderResponse> rejectOrder(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.rejectOrder(id));
     }
 
     /** Atalho: avança o pedido para "concluido" */

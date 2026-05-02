@@ -101,6 +101,22 @@ public class OrderService {
     }
 
     @Transactional
+    public OrderResponse approveOrder(Long id) {
+        Ticket ticket = findTicketOrThrow(id);
+        validateStatusTransition(ticket.getStatus(), TicketEnum.concluido);
+        ticket.setStatus(TicketEnum.concluido);
+        return toResponse(ticketRepository.save(ticket));
+    }
+
+    @Transactional
+    public OrderResponse rejectOrder(Long id) {
+        Ticket ticket = findTicketOrThrow(id);
+        validateStatusTransition(ticket.getStatus(), TicketEnum.cancelado);
+        ticket.setStatus(TicketEnum.cancelado);
+        return toResponse(ticketRepository.save(ticket));
+    }
+
+    @Transactional
     public OrderResponse concludeOrder(Long id) {
         Ticket ticket = findTicketOrThrow(id);
         validateStatusTransition(ticket.getStatus(), TicketEnum.concluido);
