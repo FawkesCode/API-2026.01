@@ -61,7 +61,7 @@ public class DataInitializer {
             });
 
             // ==================== FORNECEDOR ====================
-            Suppliers fornecedorTeste = supplierRepository.findById(1L)
+            Suppliers fornecedorTeste = supplierRepository.findByCnpj("12.345.678/0001-55")
                     .orElseGet(() -> {
                         Suppliers s = new Suppliers();
                         s.setSupplierName("Fornecedor Teste");
@@ -105,18 +105,21 @@ public class DataInitializer {
                     });
 
             // ==================== USUÁRIO DE TESTE ====================
-            if (!userRepository.existsByUserMail("teste@gmail.com") && !userRepository.existsByUserName("admin")) {
-                Users user = new Users();
-                user.setUserName("admin");
-                user.setUserMail("teste@gmail.com");
-                user.setPassword(passwordEncoder.encode("teste123"));
-                user.setIsActive(true);
-                user.setGroup(adminGroup);
-                user.setDepartments(logisticaDept);
+            Users user = userRepository.findByUserMail("teste@gmail.com")
+                    .orElseGet(Users::new);
+
+            user.setUserName("admin");
+            user.setUserMail("teste@gmail.com");
+            user.setPassword(passwordEncoder.encode("teste123"));
+            user.setIsActive(true);
+            user.setGroup(adminGroup);
+            user.setDepartments(logisticaDept);
+
+            if (user.getCreationDate() == null) {
                 user.setCreationDate(LocalDateTime.now());
-                userRepository.save(user);
-                System.out.println("✅ Usuário de teste criado → teste@gmail.com / teste123");
             }
+            userRepository.save(user);
+            System.out.println("✅ Usuário de teste → teste@gmail.com / teste123");
 
             System.out.println("✅ Seed de dados concluído com sucesso!");
         };
