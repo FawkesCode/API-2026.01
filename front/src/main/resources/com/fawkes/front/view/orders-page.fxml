@@ -15,14 +15,14 @@
    <HBox alignment="CENTER_LEFT" spacing="12.0">
       <Label text="Gestão de Pedidos" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
       <Region HBox.hgrow="ALWAYS" />
-      <JFXButton fx:id="btnCreateOrder" styleClass="btn--primary" text="Abrir pedido">
-         <graphic>
+       <JFXButton fx:id="btnCreateOrder" onAction="#handleCreateOrder" styleClass="btn--primary" text="Abrir pedido">
+           <graphic>
             <ImageView fitHeight="16.0" fitWidth="16.0">
                <image>
                   <Image url="@../img/add-icon.png" />
                </image>
             </ImageView>
-         </graphic>
+           </graphic>
       </JFXButton>
    </HBox>
 

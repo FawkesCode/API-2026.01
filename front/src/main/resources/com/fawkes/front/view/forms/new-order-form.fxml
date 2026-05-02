@@ -11,9 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane
-        maxHeight="-Infinity" maxWidth="-Infinity"
-        minHeight="-Infinity" minWidth="-Infinity"
-        prefHeight="420.0" prefWidth="620.0"
+        prefHeight="364.0" prefWidth="800.0"
         xmlns="http://javafx.com/javafx/25"
         xmlns:fx="http://javafx.com/fxml/1"
         fx:controller="com.fawkes.front.controller.NewOrderFormController">
@@ -21,57 +19,51 @@
     <children>
 
         <!-- Linha 1: Fornecedor + Método de Pagamento -->
-        <HBox layoutX="57.0" layoutY="30.0" prefWidth="506.0" spacing="0.0">
+        <HBox layoutX="40.0" layoutY="20.0" prefWidth="720.0" spacing="0.0">
             <children>
-                <!-- Fornecedor -->
-                <AnchorPane prefHeight="86.0" prefWidth="256.0">
+                <AnchorPane prefHeight="80.0" prefWidth="360.0">
                     <children>
                         <Label styleClass="input__label" text="Fornecedor*:"
-                               AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0"/>
+                               AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="8.0"/>
                         <ComboBox fx:id="supplierCombo" promptText="Selecionar"
                                   styleClass="input__text"
                                   AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
-                                  AnchorPane.topAnchor="36.0"/>
+                                  AnchorPane.topAnchor="30.0"/>
                     </children>
                 </AnchorPane>
-
-                <!-- Método de Pagamento -->
-                <AnchorPane prefHeight="86.0" prefWidth="256.0">
+                <AnchorPane prefHeight="80.0" prefWidth="360.0">
                     <children>
                         <Label styleClass="input__label" text="Método de Pagamento*:"
-                               AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0"/>
+                               AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="8.0"/>
                         <ComboBox fx:id="paymentCombo" promptText="Selecionar"
                                   styleClass="input__text"
                                   AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
-                                  AnchorPane.topAnchor="36.0"/>
+                                  AnchorPane.topAnchor="30.0"/>
                     </children>
                 </AnchorPane>
             </children>
         </HBox>
 
         <!-- Linha 2: Produto + Quantidade -->
-        <HBox layoutX="57.0" layoutY="120.0" prefWidth="506.0" spacing="0.0">
+        <HBox layoutX="40.0" layoutY="105.0" prefWidth="720.0" spacing="0.0">
             <children>
-                <!-- Produto -->
-                <AnchorPane prefHeight="86.0" prefWidth="350.0">
+                <AnchorPane prefHeight="80.0" prefWidth="520.0">
                     <children>
                         <Label styleClass="input__label" text="Produto*:"
-                               AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0"/>
+                               AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="8.0"/>
                         <ComboBox fx:id="productCombo" promptText="Selecionar produto"
                                   styleClass="input__text"
                                   AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
-                                  AnchorPane.topAnchor="36.0"/>
+                                  AnchorPane.topAnchor="30.0"/>
                     </children>
                 </AnchorPane>
-
-                <!-- Quantidade -->
-                <AnchorPane prefHeight="86.0" prefWidth="162.0">
+                <AnchorPane prefHeight="80.0" prefWidth="200.0">
                     <children>
                         <Label styleClass="input__label" text="Quantidade*:"
-                               AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0"/>
+                               AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="8.0"/>
                         <TextField fx:id="quantityField" promptText="0"
                                    AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
-                                   AnchorPane.topAnchor="36.0">
+                                   AnchorPane.topAnchor="30.0">
                             <styleClass>
                                 <String fx:value="input__text"/>
                                 <String fx:value="input__text--form"/>
@@ -82,12 +74,12 @@
             </children>
         </HBox>
 
-        <!-- Linha 3: Justificativa / Observação -->
-        <VBox layoutX="57.0" layoutY="210.0" prefWidth="506.0" spacing="6.0">
+        <!-- Linha 3: Justificativa -->
+        <VBox layoutX="50.0" layoutY="190.0" prefWidth="700.0" spacing="6.0">
             <Label styleClass="input__label" text="Justificativa / Observação:"/>
             <TextArea fx:id="descriptionField"
                       promptText="Descreva o motivo da solicitação..."
-                      prefHeight="90.0" wrapText="true">
+                      prefHeight="80.0" wrapText="true">
                 <styleClass>
                     <String fx:value="input__text"/>
                     <String fx:value="input__text--form"/>
@@ -97,14 +89,14 @@
 
         <!-- Erro -->
         <Label fx:id="errorLabel"
-               layoutX="57.0" layoutY="318.0"
-               prefHeight="30.0" prefWidth="480.0"
+               layoutX="50.0" layoutY="288.0"
+               prefHeight="20.0" prefWidth="500.0"
                styleClass="input__label--error" wrapText="true"/>
 
         <!-- Botões -->
         <HBox alignment="CENTER_RIGHT"
-              layoutX="320.0" layoutY="355.0"
-              prefHeight="54.0" prefWidth="300.0"
+              layoutX="430.0" layoutY="316.0"
+              prefWidth="330.0"
               spacing="15.0">
             <children>
                 <JFXButton fx:id="btnSubmit" onAction="#handleOnSubmit"
