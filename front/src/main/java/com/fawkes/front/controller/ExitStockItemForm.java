@@ -21,7 +21,7 @@ import java.util.function.UnaryOperator;
 import static java.lang.Integer.parseInt;
 
 public class ExitStockItemForm {
-    @FXML private JFXButton btnClose;
+    @FXML private Button btnClose;
     @FXML private Label errorLabel;
 
     // FORM INPUTS

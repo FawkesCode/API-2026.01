@@ -24,7 +24,8 @@ public class AddEmployeeForm {
 
     @FXML private ToggleButton btnTogglePassword;
     @FXML private ImageView btnToggleIcon;
-    @FXML private JFXButton btnClose;
+    @FXML private Button btnClose;
+    @FXML private Button btnConfirm;
     @FXML private Label errorLabel;
 
     // FORM INPUTS

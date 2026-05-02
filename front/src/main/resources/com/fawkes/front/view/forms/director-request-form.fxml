@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="364.0" prefWidth="673.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.controller.DirectorRequestForm">
+    <children>
+      <VBox layoutX="16.0" layoutY="21.0" prefHeight="267.0" prefWidth="642.0" spacing="15.0">
+         <children>
+            <AnchorPane prefHeight="145.0" prefWidth="623.0">
+               <children>
+                  <Label fx:id="descDetails" layoutX="31.0" layoutY="14.0" prefHeight="135.0" prefWidth="622.0" styleClass="input__label" text="Pedido de 5 itens, sendo eles: caneta, lápis, apontador, borracha e estojo; Total de R$25,00. Compra pedida pelo nome do operacional para o setor ADMINISTRATIVO. Solicitação sendo aprovada/recusada por nome do diretor logado." wrapText="true" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="107.0" prefWidth="642.0">
+               <children>
+                  <Label fx:id="noteTitle" layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Gostaria de deixar uma observaçao?" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                  <TextField fx:id="noteField" layoutX="11.0" layoutY="39.0" prefHeight="68.0" prefWidth="542.0" promptText="Descrição do pedido de compra" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                     <styleClass>
+                        <String fx:value="input__text" />
+                        <String fx:value="input__text--form" />
+                     </styleClass>
+                  </TextField>
+               </children>
+            </AnchorPane>
+            <HBox alignment="CENTER_RIGHT" prefHeight="54.0" prefWidth="650.0" spacing="15.0">
+               <children>
+                  <Button fx:id="btnConfirm" styleClass="btn--submit" text="Aprovar/Recusar" />
+                  <Button fx:id="btnClose" prefHeight="26.0" prefWidth="77.0" styleClass="btn--cancel" text="Cancelar" />
+               </children>
+            </HBox>
+            <HBox prefHeight="115.0" prefWidth="562.0" />
+         </children>
+      </VBox>
+    </children>
+</AnchorPane>

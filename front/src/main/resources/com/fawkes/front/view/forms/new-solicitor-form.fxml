@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="364.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.controller.AddSolicitorForm">
+   <children>
+      <VBox layoutX="6.0" layoutY="7.0" prefHeight="351.0" prefWidth="788.0">
+         <children>
+            <Label fx:id="solicitorName" text="Solicitante: nome do Operador Logado" />
+            <HBox prefHeight="330.0" prefWidth="800.0">
+               <children>
+                  <VBox prefHeight="346.0" prefWidth="522.0" spacing="15.0">
+                     <children>
+                        <HBox prefHeight="86.0" prefWidth="562.0">
+                           <children>
+                              <AnchorPane prefHeight="100.0" prefWidth="294.0">
+                                 <children>
+                                    <Label fx:id="districtName" layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Setor*" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                                    <TextField fx:id="districtField" layoutY="39.0" promptText="Digite o nome" text="Digite o Setor" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                                       <styleClass>
+                                          <String fx:value="input__text" />
+                                          <String fx:value="input__text--form" />
+                                       </styleClass>
+                                    </TextField>
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="86.0" prefWidth="562.0">
+                           <children>
+                              <AnchorPane prefHeight="100.0" prefWidth="294.0">
+                                 <children>
+                                    <Label fx:id="paymentMethod" layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Forma de Pagamento*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                                    <ComboBox fx:id="paymentField" layoutY="39.0" prefWidth="150.0" promptText="Selecionar" styleClass="input__text" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane prefHeight="100.0" prefWidth="294.0">
+                                 <children>
+                                    <Label fx:id="costCenter" layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Centro de Custo*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                                    <ComboBox fx:id="costField" layoutY="39.0" prefWidth="150.0" promptText="Selecionar" styleClass="input__text" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="86.0" prefWidth="562.0">
+                           <children>
+                              <AnchorPane prefHeight="86.0" prefWidth="562.0">
+                                 <children>
+                                    <Label fx:id="description" layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Descriçao:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                                    <TextField fx:id="descriptionField" layoutY="39.0" prefHeight="53.0" prefWidth="542.0" promptText="Digite o email" text="Descriçao de Campo" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                                       <styleClass>
+                                          <String fx:value="input__text" />
+                                          <String fx:value="input__text--form" />
+                                       </styleClass>
+                                    </TextField>
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox alignment="TOP_CENTER" prefHeight="391.0" prefWidth="226.0" spacing="20.0">
+                     <children>
+                        <VBox alignment="TOP_CENTER" prefHeight="147.0" prefWidth="226.0">
+                           <children>
+                              <Label fx:id="productList" styleClass="input__label" text="Resumo do Pedido:" />
+                              <Label fx:id="productName" styleClass="input__label" text="nome do produto" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefHeight="135.0" prefWidth="226.0">
+                           <children>
+                              <Label fx:id="supplierList" styleClass="input__label" text="Fornecedores Envolvidos:" />
+                              <Label fx:id="supplierName" styleClass="input__label" text="nome do fornecedor" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefHeight="79.0" prefWidth="226.0">
+                           <children>
+                              <Label fx:id="finalTotal" styleClass="input__label" text="Total:" />
+                              <Label fx:id="finalQuantity" styleClass="input__label" text="Quantidade de Itens:" />
+                           </children>
+                        </VBox>
+                        <HBox alignment="CENTER" prefHeight="54.0" prefWidth="246.0" spacing="15.0">
+                           <children>
+                              <Button fx:id="btnSubmit" styleClass="btn--submit" text="Solicitar" />
+                              <Button fx:id="btnClose" styleClass="btn--cancel" text="Cancelar" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
