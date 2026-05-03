@@ -28,5 +28,8 @@ public interface ProductsRepository extends JpaRepository<Products, Long> {
         )
         ORDER BY p.productName, p.productType
     """)
+
     List<CheaperProductDTO> findCheaperProduct();
+    List<Products> findByProductName(String productName);
+
 }

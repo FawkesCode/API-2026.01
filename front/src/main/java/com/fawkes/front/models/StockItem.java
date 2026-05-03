@@ -42,8 +42,9 @@ public class StockItem {
     }
 
     public static StockItem fromJson(JsonNode node) {
-        Long productId = node.path("productId").asLong();
-        String productName = node.path("productName").asText("-");
+        Long productId = node.has("productId")
+                ? node.path("productId").asLong()
+                : node.path("id").asLong();        String productName = node.path("productName").asText("-");
         String productType = node.path("productType").asText("-");
         String measurementUnit = node.path("measurementUnit").asText("-");
         BigDecimal unitValue = new BigDecimal(node.path("unitValue").asText("0"));

@@ -30,7 +30,7 @@ public class DataInitializer {
         return args -> {
             System.out.println("🚀 Iniciando seed de dados de teste...");
 
-            // ==================== GRUPO ====================
+            // GRUPOS
             Group adminGroup = groupRepository.findById(1L).orElseGet(() -> {
                 Group g = new Group();
                 g.setRole(Roles.DIRECTOR);
@@ -44,6 +44,7 @@ public class DataInitializer {
                 g.setGroupDescription("Grupo de gerentes do sistema");
                 return groupRepository.save(g);
             });
+
             Group operationalGroup = groupRepository.findById(3L).orElseGet(() -> {
                 Group g = new Group();
                 g.setRole(Roles.OPERATIONAL);
@@ -51,8 +52,7 @@ public class DataInitializer {
                 return groupRepository.save(g);
             });
 
-
-            // ==================== DEPARTAMENTO ====================
+            // DEPARTAMENTO
             Department logisticaDept = departmentRepository.findById(1L).orElseGet(() -> {
                 Department d = new Department();
                 d.setDepartamentName("Logística");
@@ -60,7 +60,8 @@ public class DataInitializer {
                 return departmentRepository.save(d);
             });
 
-            // ==================== FORNECEDOR ====================
+            // FORNECEDOR
+            // Busca por CNPJ (campo único) em vez de ID fixo
             Suppliers fornecedorTeste = supplierRepository.findByCnpj("12.345.678/0001-55")
                     .orElseGet(() -> {
                         Suppliers s = new Suppliers();
@@ -71,16 +72,18 @@ public class DataInitializer {
                         return supplierRepository.save(s);
                     });
 
-            // ==================== ESTOQUE ====================
-            Stock estoquePrincipal = stockRepository.findById(1L)
+            // ESTOQUE
+            // Busca por nome em vez de ID fixo — evita criar novo estoque a cada restart
+            Stock estoquePrincipal = stockRepository.findByStockName("Estoque Principal")
                     .orElseGet(() -> {
                         Stock s = new Stock();
                         s.setStockName("Estoque Principal");
                         return stockRepository.save(s);
                     });
 
-            // ==================== PRODUTO ====================
-            Products produtoTeste = productsRepository.findById(2L)
+            // PRODUTO
+            Products produtoTeste = productsRepository.findByProductName("Produto Teste")
+                    .stream().findFirst()
                     .orElseGet(() -> {
                         Products p = new Products();
                         p.setProductName("Produto Teste");
@@ -93,8 +96,8 @@ public class DataInitializer {
                         return productsRepository.save(p);
                     });
 
-            // ==================== PRODUCT STOCK ====================
-            productStockRepository.findById(1L)
+            // PRODUCT STOCK
+            productStockRepository.findByProductId(produtoTeste.getId())
                     .orElseGet(() -> {
                         ProductStock ps = new ProductStock();
                         ps.setProduct(produtoTeste);
@@ -104,7 +107,8 @@ public class DataInitializer {
                         return productStockRepository.save(ps);
                     });
 
-            // ==================== USUÁRIO DE TESTE ====================
+            // USUÁRIO DE TESTE
+            // Sempre atualiza a senha para garantir que o hash está correto
             Users user = userRepository.findByUserMail("teste@gmail.com")
                     .orElseGet(Users::new);
 
@@ -114,7 +118,6 @@ public class DataInitializer {
             user.setIsActive(true);
             user.setGroup(adminGroup);
             user.setDepartments(logisticaDept);
-
             if (user.getCreationDate() == null) {
                 user.setCreationDate(LocalDateTime.now());
             }
