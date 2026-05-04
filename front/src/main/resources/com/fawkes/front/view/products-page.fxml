@@ -19,7 +19,7 @@
          </styleClass></TextField>
       <Region HBox.hgrow="ALWAYS" />
       <JFXButton onAction="#handleBackButton" ripplerFill="#465161" styleClass="btn--link" text="Voltar" />
-      <JFXButton fx:id="btnInput" onAction="#handleAddSupplier" styleClass="btn--primary" text="Novo Produto">
+      <JFXButton fx:id="btnInput" onAction="#handleNewRequest" styleClass="btn--primary" text="Novo Produto">
          <graphic>
             <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                <image>

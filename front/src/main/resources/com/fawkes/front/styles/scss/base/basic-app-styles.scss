@@ -103,6 +103,16 @@
 
 /* BUTTON STYLES  */
 .btn {
+  &--cart {
+    -fx-text-fill: $primary-light;
+    -fx-underline: true;
+
+    &:hover {
+      -fx-text-fill: $surface-700;
+    }
+
+  }
+
   &--primary,
   &--secondary {
     -fx-background-color: $primary-dark;
@@ -142,6 +152,10 @@
   &-status {
     -fx-text-fill: $surface-700;
     -fx-font-weight: 700;
+
+    &--pending {
+      -fx-text-fill: $surface-300;
+    }
 
     &--active {
       -fx-text-fill: $primary-light;

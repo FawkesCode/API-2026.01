@@ -1,58 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.geometry.Insets?>
+<?import java.lang.String?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="pageContent" spacing="16.0" styleClass="pageContent" maxWidth="1200.0" minWidth="800.0" prefHeight="720.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.controller.OrdersPageController">
-
-   <padding>
-      <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
-   </padding>
-
-   <HBox alignment="CENTER_LEFT" spacing="12.0">
-      <Label text="Gestão de Pedidos" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
-      <Region HBox.hgrow="ALWAYS" />
-      <JFXButton fx:id="btnCreateOrder" styleClass="btn--primary" text="Abrir pedido">
-         <graphic>
-            <ImageView fitHeight="16.0" fitWidth="16.0">
-               <image>
-                  <Image url="@../img/add-icon.png" />
-               </image>
-            </ImageView>
-         </graphic>
-      </JFXButton>
+<VBox fx:id="pageContent" maxWidth="1200.0" minWidth="800.0" prefHeight="720.0" spacing="16.0" styleClass="pageContent" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.controller.OrdersPageController">
+   <HBox alignment="CENTER_LEFT" spacing="12">
+      <children>
+         <Label fx:id="pendingRequestsLabel" styleClass="label-status" text="Pendentes">
+            <graphic>
+               <Label styleClass="label-status--pending" text="●" />
+            </graphic>
+         </Label>
+         <Label fx:id="aprovedRequestsLabell" styleClass="label-status" text="Aprovados">
+            <graphic>
+               <Label styleClass="label-status--active" text="●" />
+            </graphic>
+         </Label>
+         <Label fx:id="declinedRequestsLabel" styleClass="label-status" text="Negados">
+            <graphic>
+               <Label styleClass="label-status--inactive" text="●" />
+            </graphic>
+         </Label>
+         <Region prefHeight="26.0" prefWidth="298.0" HBox.hgrow="ALWAYS" />
+         <JFXButton fx:id="newEmployee" onAction="#handleNewRequest" styleClass="btn--primary" text="Abrir Pedido">
+            <graphic>
+               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../img/add-icon.png" />
+                  </image>
+               </ImageView>
+            </graphic>
+         </JFXButton>
+         <TextField fx:id="searchField" onKeyReleased="#handleSearch" prefHeight="26.0" prefWidth="280.0" promptText="Buscar funcionario...">
+            <styleClass>
+               <String fx:value="input__text" />
+               <String fx:value="input__text--search" />
+            </styleClass>
+         </TextField>
+      </children>
    </HBox>
 
-   <VBox spacing="10.0" VBox.vgrow="ALWAYS">
-      <Label text="SEÇÃO PENDENTE" style="-fx-font-weight: bold;" />
-      <TableView fx:id="pendingTable" VBox.vgrow="ALWAYS">
-         <columns>
-            <TableColumn fx:id="colPendRequester" text="Solicitante" prefWidth="150"/>
-            <TableColumn fx:id="colPendProduct" text="Produto" prefWidth="150"/>
-            <TableColumn fx:id="colPendSector" text="Setor" prefWidth="100"/>
-            <TableColumn fx:id="colPendPayment" text="Pagamento" prefWidth="120"/>
-            <TableColumn fx:id="colPendQuantity" text="Qtd" prefWidth="60"/>
-            <TableColumn fx:id="colPendTotal" text="Total" prefWidth="100"/>
-            <TableColumn fx:id="colPendStatus" text="Status" prefWidth="100"/>
-         </columns>
-      </TableView>
-   </VBox>
-
-   <VBox spacing="10.0" VBox.vgrow="ALWAYS">
-      <Label text="SEÇÃO REVISADAS" style="-fx-font-weight: bold;" />
-      <TableView fx:id="reviewedTable" VBox.vgrow="ALWAYS">
-         <columns>
-            <TableColumn fx:id="colRevRequester" text="Solicitante" prefWidth="150"/>
-            <TableColumn fx:id="colRevProduct" text="Produto" prefWidth="150"/>
-            <TableColumn fx:id="colRevSector" text="Setor" prefWidth="100"/>
-            <TableColumn fx:id="colRevPayment" text="Pagamento" prefWidth="120"/>
-            <TableColumn fx:id="colRevQuantity" text="Qtd" prefWidth="60"/>
-            <TableColumn fx:id="colRevTotal" text="Total" prefWidth="100"/>
-            <TableColumn fx:id="colRevStatus" text="Status" prefWidth="100"/>
-         </columns>
-      </TableView>
-   </VBox>
+   <VBox fx:id="requestsContainer" spacing="10.0" VBox.vgrow="ALWAYS" />
 </VBox>
