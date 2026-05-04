@@ -64,7 +64,7 @@ public class ModalManager {
             scene.getStylesheets().add(GLOBAL_CSS);
 
             overlayStage.setScene(scene);
-            overlayStage.showAndWait();
+            overlayStage.show();
 
         } catch (IOException e) {
             throw new RuntimeException(e);

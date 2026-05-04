@@ -42,4 +42,13 @@ public class StringUtils {
             default -> measure;
         };
     }
+
+    public static String requestStatusTranslation(String status) {
+        return switch (status) {
+            case "pending" -> "••• Pendente";
+            case "aproved" -> "✔ Aprovado";
+            case "declined" -> "✖ Recusado";
+            default -> status;
+        };
+    }
 }

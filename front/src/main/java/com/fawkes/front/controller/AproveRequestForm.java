@@ -1,19 +1,24 @@
 package com.fawkes.front.controller;
 
+import com.fawkes.front.models.FormProducts;
 import com.fawkes.front.models.Order;
 import com.fawkes.front.models.RequestItem;
+import com.fawkes.front.models.RequestSupplier;
 import com.fawkes.front.service.UserInfoManager;
 import com.jfoenix.controls.JFXButton;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class DeclineRequestForm {
+public class AproveRequestForm {
     @FXML private Label detailsLabel;
     @FXML private JFXButton btnCancel;
     @FXML private JFXButton btnCommand;
@@ -21,7 +26,7 @@ public class DeclineRequestForm {
     UserInfoManager loggedUser = UserInfoManager.getInstance();
 
     public void initialize() {
-        btnCommand.setText("Recusar");
+        btnCommand.setText("Aprovar");
     }
 
 
@@ -38,7 +43,7 @@ public class DeclineRequestForm {
         }
 
 
-        String text = "Pedido de " + order.getQuantity() + " itens, sendo eles: " + productsList + "; Total de " + order.getTotalValue() + ". Compra pedida pelo " + order.getRequesterName() + " para o setor " + order.getSector().toUpperCase() + ". Solicitação sendo recusada por " + loggedUser.getUserName() + ".";
+        String text = "Pedido de " + order.getQuantity() + " itens, sendo eles: " + productsList + "; Total de " + order.getTotalValue() + ". Compra pedida pelo " + order.getRequesterName() + " para o setor " + order.getSector().toUpperCase() + ". Solicitação sendo aprovada por " + loggedUser.getUserName() + ".";
 
         detailsLabel.setText(text);
     }
@@ -47,5 +52,6 @@ public class DeclineRequestForm {
     private void handleCloseModal() {
         ((Stage) btnCommand.getScene().getWindow()).close();
     }
-}
 
+
+}

@@ -1,107 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import com.jfoenix.controls.JFXButton?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="364.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.controller.PendingRequestForm">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="364.0" prefWidth="684.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.controller.PendingRequestForm">
    <children>
-      <VBox layoutY="14.0" prefHeight="337.0" prefWidth="800.0">
+      <VBox layoutY="14.0" prefHeight="272.0" prefWidth="800.0">
          <children>
-            <HBox prefHeight="330.0" prefWidth="800.0">
+            <HBox prefHeight="272.0" prefWidth="713.0" spacing="20.0">
                <children>
-                  <VBox prefHeight="346.0" prefWidth="522.0" spacing="15.0">
+                  <VBox alignment="CENTER" maxWidth="-Infinity" prefHeight="272.0" prefWidth="331.0" spacing="20.0">
                      <children>
-                        <HBox prefHeight="86.0" prefWidth="562.0">
+                        <HBox prefHeight="50.0" prefWidth="562.0">
                            <children>
-                              <AnchorPane prefHeight="100.0" prefWidth="294.0">
+                              <AnchorPane prefHeight="100.0" prefWidth="180.0">
                                  <children>
-                                    <VBox layoutX="14.0" prefHeight="86.0" prefWidth="247.0">
+                                    <VBox layoutX="14.0" prefHeight="50.0" prefWidth="166.0">
                                        <children>
-                                          <Label fx:id="requisitor" styleClass="input__label" text="Solicitante:" />
-                                          <Label fx:id="operatorName" styleClass="input__label" text="Nome do Operador" />
+                                          <Label styleClass="input__label" text="Solicitante:" />
+                                          <Label fx:id="requisitor" styleClass="input__label--info--dark" text="Nome do Operador" />
                                        </children>
                                     </VBox>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="294.0">
+                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="180.0">
                                  <children>
-                                    <VBox layoutX="14.0" prefHeight="86.0" prefWidth="226.0">
+                                    <VBox layoutX="14.0" prefHeight="50.0" prefWidth="134.0">
                                        <children>
-                                          <Label fx:id="district" styleClass="input__label" text="Setor:" />
-                                          <Label fx:id="districtName" styleClass="input__label" text="Administrativo" />
+                                          <Label styleClass="input__label" text="Setor:" />
+                                          <Label fx:id="department" styleClass="input__label--info--dark" text="Administrativo" />
                                        </children>
                                     </VBox>
                                  </children>
                               </AnchorPane>
                            </children>
                         </HBox>
-                        <HBox prefHeight="86.0" prefWidth="562.0">
+                        <HBox prefHeight="50.0" prefWidth="396.0">
                            <children>
-                              <AnchorPane prefHeight="86.0" prefWidth="326.0">
+                              <AnchorPane prefHeight="50.0" prefWidth="180.0">
                                  <children>
-                                    <VBox layoutX="14.0" prefHeight="44.0" prefWidth="156.0">
+                                    <VBox layoutX="14.0" prefHeight="44.0" prefWidth="167.0">
                                        <children>
-                                          <Label fx:id="paymentMethod" styleClass="input__label" text="Forma de Pagamento*:" />
-                                          <Label fx:id="chosenMethod" styleClass="input__label" text="Pix e/ou crédito" />
+                                          <Label styleClass="input__label" text="Forma de Pagamento*:" />
+                                          <Label fx:id="paymentMethod" styleClass="input__label--info--dark" text="Pix e/ou crédito" />
                                        </children>
                                     </VBox>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane prefHeight="86.0" prefWidth="290.0">
+                              <AnchorPane prefHeight="50.0" prefWidth="161.0">
                                  <children>
-                                    <VBox prefHeight="44.0" prefWidth="226.0">
+                                    <VBox prefHeight="44.0" prefWidth="146.0">
                                        <children>
-                                          <Label fx:id="costCenter" prefHeight="18.0" prefWidth="214.0" styleClass="input__label" text="Centro de Custo*:" />
-                                          <Label fx:id="costCenter1" styleClass="input__label" text="???-???-???-???" />
+                                          <Label prefHeight="18.0" prefWidth="214.0" styleClass="input__label" text="Centro de Custo*:" />
+                                          <Label fx:id="costCenter" styleClass="input__label--info--dark" text="???-???-???-???" />
                                        </children>
                                     </VBox>
                                  </children>
                               </AnchorPane>
                            </children>
                         </HBox>
-                        <HBox prefHeight="122.0" prefWidth="476.0">
+                        <AnchorPane prefHeight="122.0" prefWidth="514.0">
                            <children>
-                              <AnchorPane prefHeight="122.0" prefWidth="487.0">
+                              <VBox layoutX="14.0" prefHeight="110.0" prefWidth="302.0">
                                  <children>
-                                    <VBox layoutX="14.0" prefHeight="122.0" prefWidth="479.0">
-                                       <children>
-                                          <Label fx:id="description" styleClass="input__label" text="Descriçao:" />
-                                          <Label fx:id="descriptionText" prefHeight="104.0" prefWidth="493.0" styleClass="input__label" text="Descrição colocada pelo próprio operacional ou outro funcionário falando sobre o pedido, caso não tenha, nem mostrar esse campo." wrapText="true" />
-                                       </children>
-                                    </VBox>
+                                    <Label styleClass="input__label" text="Descriçao:" />
+                                    <Label fx:id="description" alignment="TOP_LEFT" prefHeight="94.0" prefWidth="305.0" styleClass="input__label--info--dark" text="Descrição colocada pelo próprio operacional ou outro funcionário falando sobre o pedido, caso não tenha, nem mostrar esse campo." wrapText="true" />
                                  </children>
-                              </AnchorPane>
+                              </VBox>
                            </children>
-                        </HBox>
+                        </AnchorPane>
                      </children>
                   </VBox>
-                  <VBox alignment="CENTER" prefHeight="295.0" prefWidth="226.0" spacing="20.0">
+                  <VBox alignment="CENTER" prefHeight="276.0" prefWidth="302.0" spacing="20.0">
                      <children>
-                        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                        <VBox alignment="TOP_CENTER" prefHeight="301.0" prefWidth="226.0">
                            <children>
-                              <Label fx:id="productList" styleClass="input__label" text="Resumo do Pedido:" />
-                              <Label fx:id="productName" styleClass="input__label" text="nome do produto" />
+                              <Label styleClass="input__label" text="Resumo do Pedido:" />
+                              <VBox fx:id="productsContainer" alignment="TOP_CENTER" prefHeight="98.0" prefWidth="226.0" VBox.vgrow="ALWAYS" />
                            </children>
                         </VBox>
-                        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                        <VBox alignment="TOP_CENTER" prefHeight="309.0" prefWidth="226.0">
                            <children>
-                              <Label fx:id="supplierList" styleClass="input__label" text="Fornecedores Envolvidos:" />
-                              <Label fx:id="supplierName" styleClass="input__label" text="nome do fornecedor" />
+                              <Label styleClass="input__label" text="Fornecedores Envolvidos:" />
+                              <VBox fx:id="suppliersContainer" alignment="TOP_CENTER" prefHeight="64.0" prefWidth="226.0" VBox.vgrow="ALWAYS" />
                            </children>
                         </VBox>
-                        <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0">
+                        <HBox alignment="CENTER" prefHeight="18.0" prefWidth="287.0" spacing="10.0">
                            <children>
-                              <Label fx:id="finalTotal" styleClass="input__label" text="Total:" />
-                              <Label fx:id="finalQuantity" styleClass="input__label" text="Quantidade de Itens:" />
-                           </children>
-                        </VBox>
-                        <HBox alignment="CENTER" prefHeight="54.0" prefWidth="246.0" spacing="15.0">
-                           <children>
-                              <Button fx:id="btnApprove" styleClass="btn--submit" text="Aprovar" />
-                              <Button fx:id="btnDecline" styleClass="btn--cancel" text="Recusar" />
+                              <Label fx:id="totalPrice" prefHeight="18.0" prefWidth="122.0" styleClass="input__label--resume" text="Total:" />
+                              <Label fx:id="totalQuantity" prefHeight="18.0" prefWidth="135.0" styleClass="input__label--resume" text="Quantidade de Itens:" />
                            </children>
                         </HBox>
                      </children>
@@ -110,5 +100,11 @@
             </HBox>
          </children>
       </VBox>
+      <HBox alignment="CENTER" layoutX="440.0" layoutY="304.0" prefHeight="54.0" prefWidth="246.0" spacing="15.0">
+         <children>
+            <JFXButton fx:id="btnApprove" onAction="#handleAproved" styleClass="btn--submit" text="Aprovar" />
+            <JFXButton fx:id="btnDecline" onAction="#handleDeclined" styleClass="btn--cancel" text="Recusar" />
+         </children>
+      </HBox>
    </children>
 </AnchorPane>

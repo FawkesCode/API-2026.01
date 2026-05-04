@@ -37,6 +37,29 @@
       -fx-text-fill: $surface-400;
       -fx-font-size: 14px;
     }
+
+    &--info {
+       -fx-font-family: $poppins !important;
+       -fx-text-fill: $surface-500 !important;
+       -fx-font-size: 13px;
+
+       &--dark {
+         -fx-font-family: $poppins !important;
+         -fx-text-fill: $surface-700;
+
+       }
+    }
+
+    &--product-desc {
+       -fx-font-family: $poppins !important;
+       -fx-text-fill: $surface-700;
+       -fx-font-size: 14px;
+    }
+
+    &--resume {
+        -fx-font-family: $sofia;
+        -fx-font-size: 18px;
+    }
   }
 }
 

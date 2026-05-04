@@ -29,11 +29,7 @@ public class DashboardController {
     }
     @FXML
     private void openModal2() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/fawkes/front/view/forms/director-request-form.fxml"));
-        Parent formulario = loader.load();
-        DirectorRequestForm controller = loader.getController();
-        Stage curStage = ((Stage) btnOpen.getScene().getWindow());
-        ModalManager.openModal(curStage, formulario, "Confirmar/Recusar Pedido");
+       System.out.println("Retirei este botão");
     }
     @FXML
     private void openModal4() throws IOException {

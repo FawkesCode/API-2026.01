@@ -1,20 +1,29 @@
 package com.fawkes.front.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fawkes.front.components.EmployeeCard;
+import com.fawkes.front.components.OrdersCard;
 import com.fawkes.front.models.Employee;
 import com.fawkes.front.models.Order;
 import com.fawkes.front.service.ApiClient;
+import com.fawkes.front.utils.ModalManager;
 import com.fawkes.front.utils.NavigationManager;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,49 +63,15 @@ public class OrdersPageController {
 
     NavigationManager nm = NavigationManager.getInstance();
     private static final NumberFormat CURRENCY_FMT = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
-    private List<Employee> allRequests = new ArrayList<>();
+    private List<Order> allRequests = new ArrayList<>();
 
     @FXML
     public void initialize() {
-        setupColumns();
         loadOrders();
+        requestsContainer.setMinWidth(0);
+        requestsContainer.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        requestsContainer.setMaxWidth(Double.MAX_VALUE);
     }
-
-    private void setupColumns() {
-        // Mapeamento Pendentes
-//        colPendRequester.setCellValueFactory(new PropertyValueFactory<>("requesterName"));
-//        colPendProduct.setCellValueFactory(new PropertyValueFactory<>("product"));
-//        colPendSector.setCellValueFactory(new PropertyValueFactory<>("sector"));
-//        colPendPayment.setCellValueFactory(new PropertyValueFactory<>("paymentMethod"));
-//        colPendQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-//        colPendStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
-
-        // Mapeamento Revisados
-//        colRevRequester.setCellValueFactory(new PropertyValueFactory<>("requesterName"));
-//        colRevProduct.setCellValueFactory(new PropertyValueFactory<>("product"));
-//        colRevSector.setCellValueFactory(new PropertyValueFactory<>("sector"));
-//        colRevPayment.setCellValueFactory(new PropertyValueFactory<>("paymentMethod"));
-//        colRevQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-//        colRevStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
-//
-//        setupCurrencyColumn(colPendTotal);
-//        setupCurrencyColumn(colRevTotal);
-    }
-
-//    private void setupCurrencyColumn(TableColumn<Order, Double> column) {
-//        column.setCellValueFactory(new PropertyValueFactory<>("totalValue"));
-//        column.setCellFactory(tc -> new TableCell<>() {
-//            @Override
-//            protected void updateItem(Double value, boolean empty) {
-//                super.updateItem(value, empty);
-//                if (empty || value == null) {
-//                    setText(null);
-//                } else {
-//                    setText(CURRENCY_FMT.format(value));
-//                }
-//            }
-//        });
-//    }
 
     private void setErrorMessage(String message) {
         requestsContainer.getChildren().clear();
@@ -132,7 +107,7 @@ public class OrdersPageController {
 
             allRequests.clear();
             for (JsonNode node: data) {
-                allRequests.add(Employee.fromJson(node));
+                allRequests.add(Order.fromJson(node));
             }
 
             System.out.println("DADOS DA API:" + data.toPrettyString());
@@ -155,7 +130,7 @@ public class OrdersPageController {
             int qtdAprovedOrders = aprovedOrders.toArray().length;
             int qtdDeclinedOrders = declinedOrders.toArray().length;
 
-//            renderEmployeesGroup(allEmployees);
+            renderOrders(allRequests);
 
             pendingRequestsLabel.setText(qtdPendingOrders + " Pendentes");
             aprovedRequestsLabell.setText(qtdAprovedOrders + " Aprovados");
@@ -173,47 +148,62 @@ public class OrdersPageController {
 
     }
 
-//    @FXML
-//    public void loadOrders() {
-//        Task<JsonNode> task = new Task<>() {
-//            @Override
-//            protected JsonNode call() throws Exception {
-//                // Endpoint unificado de ordens de compra
-//                return ApiClient.get("/api/purchase-orders");
-//            }
-//        };
-//
-//        task.setOnSucceeded(e -> {
-//            JsonNode data = task.getValue();
-//            List<Order> pendingList = new ArrayList<>();
-//            List<Order> reviewedList = new ArrayList<>();
-//
-//            if (data != null && data.isArray()) {
-//                for (JsonNode node : data) {
-//                    Order order = Order.fromJson(node);
-//
-//                    if ("PENDING".equalsIgnoreCase(order.getStatus())) {
-//                        pendingList.add(order);
-//                    } else {
-//                        reviewedList.add(order);
-//                    }
-//                }
-//            }
-//
-//            Platform.runLater(() -> {
-//                pendingTable.setItems(FXCollections.observableArrayList(pendingList));
-//                reviewedTable.setItems(FXCollections.observableArrayList(reviewedList));
-//            });
-//        });
-//
-//        task.setOnFailed(e -> {
-//            System.err.println("Erro ao carregar pedidos: " + task.getException().getMessage());
-//        });
-//
-//        Thread thread = new Thread(task);
-//        thread.setDaemon(true);
-//        thread.start();
-//    }
+    @FXML
+    private void renderOrders(List<Order> orders) {
+        requestsContainer.getChildren();
+
+        java.util.Map<String, java.util.List<Order>> byGroup = new java.util.LinkedHashMap<>();
+
+        byGroup.put("PENDING", new ArrayList<>());
+        byGroup.put("REVIEWED", new ArrayList<>());
+
+        for (Order ord : orders) {
+            String status = ord.getStatus().toLowerCase();
+
+            if (status.equals("pending")) {
+                byGroup.get("PENDING").add(ord);
+            } else {
+                byGroup.get("REVIEWED").add(ord);
+            }
+        }
+
+        for (java.util.Map.Entry<String, java.util.List<Order>> entry : byGroup.entrySet()) {
+            if (entry.getValue().isEmpty()) continue;
+
+            String title = entry.getKey().equals("PENDING") ? "Solicitações de Compra" : "Compras já revisadas";
+            Label groupLabel = new Label(title);
+            groupLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #37404C; "
+                    + "-fx-padding: 16px 0px 8px 0px;");
+
+            FlowPane flow = new FlowPane();
+            flow.setHgap(16);
+            flow.setVgap(16);
+            flow.getChildren().add(groupLabel);
+
+            for (Order order : entry.getValue()) {
+                OrdersCard card = new OrdersCard();
+                card.setData(order);
+                card.setOnViewAction(this::openPendingModal);
+                card.prefWidthProperty().bind(requestsContainer.widthProperty());
+
+                flow.getChildren().add(card);
+            }
+            requestsContainer.getChildren().add(flow);
+        }
+    }
+
+    private void openPendingModal(Order ord) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/fawkes/front/view/forms/pending-request-form.fxml"));
+            Parent formulario = loader.load();
+            PendingRequestForm controller = loader.getController();
+            Stage curStage = ((Stage) requestsContainer.getScene().getWindow());
+            controller.setData(ord, curStage);
+            ModalManager.openModal(curStage, formulario, "Visualizar Pedido " + ord.getId(), 700.0, 400.0, "ModalFrameM.fxml", false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void handleNewRequest() {
         StackPane container = (StackPane) requestsContainer.getScene().getRoot().lookup("#container");
