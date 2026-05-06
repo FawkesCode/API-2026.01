@@ -53,6 +53,9 @@
     & .employee {
         &__status, &__department, &__name, &__email {
             -fx-background-color: transparent;
+            -fx-text-fill: $surface-300;
         }
+
+
     }
 }

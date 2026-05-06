@@ -56,9 +56,9 @@ public class SupplierCard extends AnchorPane {
         }
 
         if (supplier.getActive().equals("Inativo")) {
-            getStyleClass().add("supplier--inactive");
+            this.getStyleClass().add("supplier--inactive");
         } else {
-            getStyleClass().remove("supplier--inactive");
+            this.getStyleClass().remove("supplier--inactive");
         }
 
         Label nameLabel = (Label) this.lookup(".suppiler__name");

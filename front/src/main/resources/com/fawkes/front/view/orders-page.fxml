@@ -38,7 +38,7 @@
                </ImageView>
             </graphic>
          </JFXButton>
-         <TextField fx:id="searchField" onKeyReleased="#handleSearch" prefHeight="26.0" prefWidth="280.0" promptText="Buscar funcionario...">
+         <TextField fx:id="searchField" onKeyReleased="#handleSearch" prefHeight="26.0" prefWidth="280.0" promptText="Buscar por pedido...">
             <styleClass>
                <String fx:value="input__text" />
                <String fx:value="input__text--search" />

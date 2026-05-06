@@ -24,15 +24,6 @@
                          </ImageView>
                       </graphic>
                    </Button>
-                   <Button fx:id="btnToggleStatus" layoutX="180.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleToggleStatus" prefHeight="22.0" prefWidth="24.0" styleClass="btn-toggle-status" AnchorPane.rightAnchor="30.0">
-                      <graphic>
-                         <ImageView fx:id="toggleStatusIcon" fitHeight="14.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                               <Image url="@../../img/bin-icon.png" />
-                            </image>
-                         </ImageView>
-                      </graphic>
-                   </Button>
                 </children>
              </AnchorPane>
             <Label fx:id="department" styleClass="employee__department" text="SETOR | ADMINISTRATIVO" />

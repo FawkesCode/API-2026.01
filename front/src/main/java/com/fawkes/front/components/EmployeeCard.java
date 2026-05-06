@@ -32,7 +32,7 @@ public class EmployeeCard extends AnchorPane {
     @FXML private Label email;
     @FXML private Label signed;
     @FXML private Button editEmployee;
-    @FXML private Button btnToggleStatus;
+//    @FXML private Button btnToggleStatus;
 
     private Employee employee;
     private Consumer<Employee> onEditAction;
@@ -104,10 +104,10 @@ public class EmployeeCard extends AnchorPane {
         }
     }
 
-    @FXML
-    public void handleToggleStatus() {
-        if (onToggleStatusAction != null) {
-            onToggleStatusAction.accept(this.employee);
-        }
-    }
+//    @FXML
+//    public void handleToggleStatus() {
+//        if (onToggleStatusAction != null) {
+//            onToggleStatusAction.accept(this.employee);
+//        }
+//    }
 }

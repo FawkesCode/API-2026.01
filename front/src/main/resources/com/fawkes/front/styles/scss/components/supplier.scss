@@ -2,10 +2,6 @@
   -fx-padding: 15px;
   -fx-background-color: $surface-0;
 
-  &--inactive {
-    -fx-background-color: $surface-50;
-  }
-
   &__name {
     -fx-font-family: $montserrat;
     -fx-font-weight: 900;
@@ -21,4 +17,10 @@
 #supplier__name {
     -fx-text-fill: $surface-800;
     -fx-font-size: 21 !important;
+}
+
+.supplier--inactive {
+    & #supplier__name, .supplier__signed {
+        -fx-text-fill: $surface-300 !important;
+    }
 }
