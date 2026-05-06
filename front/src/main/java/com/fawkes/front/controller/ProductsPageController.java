@@ -40,9 +40,6 @@ public class ProductsPageController {
     private List<StockItem> allProducts = new ArrayList<>();
 
     public void initialize() {
-        System.out.println(nm.getCurrentPage());
-        System.out.println(nm.getCurrentPageDescription());
-
         applyRBACRestrictions();
         loadStock();
     }

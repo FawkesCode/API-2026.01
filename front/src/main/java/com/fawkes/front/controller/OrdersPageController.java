@@ -5,9 +5,11 @@ import com.fawkes.front.components.EmployeeCard;
 import com.fawkes.front.components.OrdersCard;
 import com.fawkes.front.models.Employee;
 import com.fawkes.front.models.Order;
+import com.fawkes.front.models.StockItem;
 import com.fawkes.front.service.ApiClient;
 import com.fawkes.front.utils.ModalManager;
 import com.fawkes.front.utils.NavigationManager;
+import com.fawkes.front.utils.RBACUtil;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -33,33 +35,12 @@ public class OrdersPageController {
 
     @FXML private VBox pageContent;
     @FXML private VBox requestsContainer;
+    @FXML private TextField searchField;
 
     // Status
     @FXML private Label pendingRequestsLabel;
     @FXML private Label aprovedRequestsLabell;
     @FXML private Label declinedRequestsLabel;
-
-    // --- Tabelas ---
-    @FXML private TableView<Order> pendingTable;
-    @FXML private TableView<Order> reviewedTable;
-
-    // --- Colunas Pendentes ---
-    @FXML private TableColumn<Order, String> colPendRequester;
-    @FXML private TableColumn<Order, String> colPendProduct;
-    @FXML private TableColumn<Order, String> colPendSector;
-    @FXML private TableColumn<Order, String> colPendPayment;
-    @FXML private TableColumn<Order, Integer> colPendQuantity;
-    @FXML private TableColumn<Order, Double> colPendTotal;
-    @FXML private TableColumn<Order, String> colPendStatus;
-
-    // --- Colunas Revisadas ---
-    @FXML private TableColumn<Order, String> colRevRequester;
-    @FXML private TableColumn<Order, String> colRevProduct;
-    @FXML private TableColumn<Order, String> colRevSector;
-    @FXML private TableColumn<Order, String> colRevPayment;
-    @FXML private TableColumn<Order, Integer> colRevQuantity;
-    @FXML private TableColumn<Order, Double> colRevTotal;
-    @FXML private TableColumn<Order, String> colRevStatus;
 
     NavigationManager nm = NavigationManager.getInstance();
     private static final NumberFormat CURRENCY_FMT = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
@@ -72,6 +53,8 @@ public class OrdersPageController {
         requestsContainer.setPrefWidth(Region.USE_COMPUTED_SIZE);
         requestsContainer.setMaxWidth(Double.MAX_VALUE);
     }
+
+
 
     private void setErrorMessage(String message) {
         requestsContainer.getChildren().clear();
@@ -150,7 +133,7 @@ public class OrdersPageController {
 
     @FXML
     private void renderOrders(List<Order> orders) {
-        requestsContainer.getChildren();
+        requestsContainer.getChildren().clear();
 
         java.util.Map<String, java.util.List<Order>> byGroup = new java.util.LinkedHashMap<>();
 
@@ -211,7 +194,26 @@ public class OrdersPageController {
     }
 
     public void handleSearch() {
-        System.out.println("PESQUISE MAAAAIS");
+        String query = searchField.getText().trim().toLowerCase();
+        requestsContainer.getChildren().clear();
+        if (query.isEmpty()) {
+            renderOrders(allRequests);
+            return;
+        }
+
+        List<Order> filtered = allRequests.stream().filter(ord ->
+                (ord.getStatus() != null && ord.getStatus().toLowerCase().contains(query)) ||
+                        (ord.getSector() != null && ord.getSector().toLowerCase().contains(query)) ||
+                        (ord.getRequesterName() != null && ord.getRequesterName().toLowerCase().contains(query))
+        ).toList();
+
+        if (filtered.isEmpty()) {
+            setErrorMessage("Nenhum pedido encontrado.");
+        } else {
+            renderOrders(filtered);
+        }
+
+
     }
 
 

@@ -15,6 +15,7 @@ public class RequestSupplier {
     }
 
     public String getSupplierName() { return supplierName; };
+    public int getSupplierId() { return id; }
 
 
 }

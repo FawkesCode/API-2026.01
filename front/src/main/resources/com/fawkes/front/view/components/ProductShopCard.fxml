@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#openViewModal" prefHeight="165.0" prefWidth="215.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="165.0" prefWidth="215.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox prefHeight="85.0" prefWidth="215.0" style="-fx-padding: 6 10;">
          <children>
@@ -22,8 +22,8 @@
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="46.0" prefWidth="215.0" spacing="50.0" style="-fx-padding: 6 10;">
                <children>
-                  <Label fx:id="productPrice" styleClass="product__price" text="R$ 100,00" />
-                  <JFXButton maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="28.0" styleClass="btn--secondary">
+                  <Label fx:id="productPrice" prefHeight="18.0" prefWidth="154.0" styleClass="product__price" text="R$ 100,00" />
+                  <JFXButton maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#addToCart" prefHeight="28.0" prefWidth="28.0" styleClass="btn--secondary">
                      <graphic>
                         <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                            <image>

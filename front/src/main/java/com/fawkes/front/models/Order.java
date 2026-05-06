@@ -50,24 +50,7 @@ public class Order {
         String prod = "Produto N/A";
         int qty = 0;
 
-        JsonNode itemsNode = node.path("items");
-        if (itemsNode.isArray()) {
-            for (JsonNode item : itemsNode) {
-                int id = item.get("id").asInt();
-                int quantity = item.get("quantity").asInt();
-                double totalPrice = item.get("totalPrice").asDouble();
-                double unitPrice = item.get("unitPrice").asDouble();
 
-                JsonNode productNode = item.get("product");
-                int productId = productNode.get("id").asInt();
-                String productName = productNode.get("productName").asText();
-
-                RequestProduct product = new RequestProduct(productId, productName);
-                RequestItem requestItem = new RequestItem(id, product, quantity, totalPrice, unitPrice);
-
-                requestItemsList.add(requestItem);
-            }
-        }
 
         // 3. Extraindo o Solicitante (userName) e Setor (departamentName)
         if (node.has("createdBy") && !node.get("createdBy").isNull()) {
@@ -130,6 +113,25 @@ public class Order {
 
             RequestSupplier sup = new RequestSupplier(id, paymentMethods, name);
             suppliersList.add(sup);
+        }
+
+        JsonNode itemsNode = node.path("items");
+        if (itemsNode.isArray()) {
+            for (JsonNode item : itemsNode) {
+                int id = item.get("id").asInt();
+                int quantity = item.get("quantity").asInt();
+                double totalPrice = item.get("totalPrice").asDouble();
+                double unitPrice = item.get("unitPrice").asDouble();
+
+                JsonNode productNode = item.get("product");
+                int productId = productNode.get("id").asInt();
+                String productName = productNode.get("productName").asText();
+
+                RequestProduct product = new RequestProduct(productId, productName, suppliersList.getFirst().getSupplierId());
+                RequestItem requestItem = new RequestItem(id, product, quantity, totalPrice, unitPrice);
+
+                requestItemsList.add(requestItem);
+            }
         }
 
         // 5. Extraindo Produtos e somando as Quantidades da lista de itens

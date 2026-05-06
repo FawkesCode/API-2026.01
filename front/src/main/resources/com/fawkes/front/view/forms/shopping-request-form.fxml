@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import com.jfoenix.controls.JFXButton?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="364.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="364.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.controller.ShoppingRequestForm">
     <children>
-      <VBox alignment="TOP_CENTER" layoutX="334.0" layoutY="36.0" prefHeight="195.0" prefWidth="243.0" spacing="15.0">
+      <VBox alignment="TOP_CENTER" layoutX="319.0" layoutY="17.0" prefHeight="219.0" prefWidth="243.0" spacing="15.0">
          <children>
             <Label styleClass="input__label" text="Total dos produtos" />
+            <VBox fx:id="productsViewContainer" prefHeight="200.0" prefWidth="100.0" />
          </children>
       </VBox>
-      <HBox alignment="CENTER" layoutX="356.0" layoutY="314.0" prefHeight="26.0" prefWidth="200.0" spacing="30.0">
+      <HBox alignment="CENTER" layoutX="326.0" layoutY="315.0" prefHeight="26.0" prefWidth="250.0" spacing="30.0">
          <children>
-            <Button mnemonicParsing="false" text="Prosseguir" />
-            <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Cancelar" />
+            <JFXButton mnemonicParsing="false" onAction="#handleContinueRequest" prefHeight="26.0" prefWidth="123.0" styleClass="btn--submit" text="Prosseguir" />
+            <JFXButton layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleCloseModal" prefHeight="26.0" prefWidth="115.0" styleClass="btn--cancel" text="Cancelar" />
          </children>
       </HBox>
-      <VBox layoutX="335.0" layoutY="244.0" prefHeight="53.0" prefWidth="243.0" spacing="10.0">
+      <HBox alignment="CENTER" layoutX="314.0" layoutY="261.0" prefHeight="34.0" prefWidth="282.0" spacing="20.0">
          <children>
-            <Label styleClass="input__label" text="Total:" />
-            <Label fx:id="maxQtdLabel" styleClass="input__label--desc" text="Qtd. de itens:" />
+            <Label fx:id="requestTotal" prefHeight="18.0" prefWidth="132.0" styleClass="input__label" text="Total:" />
+            <Label fx:id="requestTotalItens" prefHeight="18.0" prefWidth="114.0" styleClass="input__label--desc" text="Qtd. de itens:" />
          </children>
-      </VBox>
+      </HBox>
+      <VBox fx:id="itensContainer" layoutX="10.0" layoutY="11.0" prefHeight="334.0" prefWidth="292.0" spacing="8.0" />
     </children>
 </AnchorPane>

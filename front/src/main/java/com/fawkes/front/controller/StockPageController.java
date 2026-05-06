@@ -29,32 +29,8 @@ import java.text.NumberFormat;
 import java.util.*;
 
 public class StockPageController {
-
-    @FXML private TableView<JsonNode>          stockTable;
-    @FXML private TableColumn<JsonNode, String> colName;
-    @FXML private TableColumn<JsonNode, String> colType;
-    @FXML private TableColumn<JsonNode, String> colUnit;
-    @FXML private TableColumn<JsonNode, String> colValue;
-    @FXML private TableColumn<JsonNode, String> colCurrent;
-    @FXML private TableColumn<JsonNode, String> colMin;
-    @FXML private TableColumn<JsonNode, String> colMax;
-    @FXML private TextField searchField;
-    @FXML private Button btnInput;
-    @FXML private Button btnOutput;
-
-    @FXML private VBox      inputDialog;
-    @FXML private TextField inputStockId;
-    @FXML private TextField inputProductId;
-    @FXML private TextField inputQuantity;
-    @FXML private Label     inputErrorLabel;
-
-    // --- Diálogo de Saída ---
-    @FXML private VBox      outputDialog;
-    @FXML private ComboBox<String> outputProductCombo;
-    @FXML private TextField outputQuantity;
-    @FXML private Label     outputErrorLabel;
-
     @FXML private VBox stockContainer;
+    @FXML private TextField searchField;
 
     private ObservableList<JsonNode> allItems = FXCollections.observableArrayList();
     private HashMap<String, Long> productMap = new HashMap<>();
@@ -67,19 +43,9 @@ public class StockPageController {
 
     @FXML
     public void initialize() {
-        // Apply RBAC restrictions based on user role
-        applyRBACRestrictions();
-
         loadStock();
     }
 
-    private void applyRBACRestrictions() {
-        // OPERATIONAL users cannot create new products, only register output
-        if (!RBACUtil.canManageProducts()) {
-            btnInput.setVisible(false);
-            btnInput.setManaged(false);
-        }
-    }
 
     @FXML
     public void loadStock() {
@@ -208,7 +174,7 @@ public class StockPageController {
         Parent formulario = loader.load();
         AddStockItemForm controller = loader.getController();
         controller.setOnSaveSuccess(this::loadStock);
-        Stage curStage = ((Stage) btnInput.getScene().getWindow());
+        Stage curStage = ((Stage) searchField.getScene().getWindow());
         ModalManager.openModal(curStage, formulario, "Cadastrar Produto");
     }
 
@@ -218,7 +184,7 @@ public class StockPageController {
         Parent formulario = loader.load();
         ExitStockItemForm controller = loader.getController();
         controller.setOnSaveSuccess(this::loadStock);
-        Stage curStage = ((Stage) btnOutput.getScene().getWindow());
+        Stage curStage = ((Stage) searchField.getScene().getWindow());
         ModalManager.openModal(curStage, formulario, "Registrar Saída", 600, 400, "ModalFrameSM.fxml", true);
     }
 

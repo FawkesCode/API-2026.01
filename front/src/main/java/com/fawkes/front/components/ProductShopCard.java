@@ -18,13 +18,14 @@ public class ProductShopCard extends AnchorPane {
     @FXML private Label productName;
     @FXML private Label productPrice;
     @FXML private Label productType;
+    @FXML private Label productSupplier;
 
 
     private StockItem product;
-    private Consumer<StockItem> onEditAction;
+    private Consumer<StockItem> onAddToCart;
 
-    public void setOnEditAction(Consumer<StockItem> action) {
-        this.onEditAction = action;
+    public void setOnAddToCart(Consumer<StockItem> action) {
+        this.onAddToCart = action;
     }
 
     private static final NumberFormat CURRENCY =
@@ -46,14 +47,15 @@ public class ProductShopCard extends AnchorPane {
         productType.setText(item.getProductType());
         productName.setText(item.getProductName());
         productPrice.setText(CURRENCY.format(item.getUnitValue()));
+        productSupplier.setText(item.getSupplierName());
 
         this.product = item;
     }
 
     @FXML
-    public void openViewModal(){
-        if (onEditAction != null) {
-            onEditAction.accept(this.product);
+    public void addToCart(){
+        if (onAddToCart != null) {
+            onAddToCart.accept(this.product);
         }
     }
 }

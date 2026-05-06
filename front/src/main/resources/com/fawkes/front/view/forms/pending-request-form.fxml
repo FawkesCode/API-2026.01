@@ -100,7 +100,7 @@
             </HBox>
          </children>
       </VBox>
-      <HBox alignment="CENTER" layoutX="440.0" layoutY="304.0" prefHeight="54.0" prefWidth="246.0" spacing="15.0">
+      <HBox fx:id="btnActionContainer" alignment="CENTER" layoutX="440.0" layoutY="304.0" prefHeight="54.0" prefWidth="246.0" spacing="15.0">
          <children>
             <JFXButton fx:id="btnApprove" onAction="#handleAproved" styleClass="btn--submit" text="Aprovar" />
             <JFXButton fx:id="btnDecline" onAction="#handleDeclined" styleClass="btn--cancel" text="Recusar" />

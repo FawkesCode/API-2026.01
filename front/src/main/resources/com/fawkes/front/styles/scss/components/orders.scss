@@ -40,3 +40,51 @@
     }
   }
 }
+
+.shopItem {
+    -fx-padding: 10;
+    -fx-border-style: solid;
+    -fx-border-color: $surface-100;
+    -fx-border-radius: 5px;
+
+    &__price {
+        -fx-text-fill: $primary-light;
+        -fx-font-size: 13px;
+        -fx-underline: true;
+        -fx-font-family: $poppins;
+    }
+
+    &__name {
+        -fx-text-fill: $surface-400;
+        -fx-font-family:$poppins;
+    }
+
+    &__btn {
+        -fx-background-color: transparent;
+        -fx-text-fill: $surface-500;
+        -fx-font-family: $montserrat;
+
+        &:hover {
+            -fx-text-fill: $primary-light;
+        }
+    }
+
+    &__input {
+      -fx-background-radius: 5px;
+      -fx-background-color: #EDF1F4;
+      -fx-prompt-text-fill: $surface-300;
+      -fx-font-size: 12px;
+      -fx-text-fill: $surface-800;
+    }
+
+    &__supplier {
+        -fx-font-family: $sofia-bold !important;
+        -fx-text-fill: $surface-800;
+        -fx-font-size: 16px;
+    }
+
+    &__message {
+        -fx-font-family: $poppins !important;
+        -fx-text-fill: $surface-800;
+    }
+}

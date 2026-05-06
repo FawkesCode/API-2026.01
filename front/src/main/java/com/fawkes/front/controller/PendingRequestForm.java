@@ -2,6 +2,7 @@ package com.fawkes.front.controller;
 
 import com.fawkes.front.models.*;
 import com.fawkes.front.utils.ModalManager;
+import com.fawkes.front.utils.RBACUtil;
 import com.fawkes.front.utils.StringUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
@@ -35,10 +36,23 @@ public class PendingRequestForm {
     @FXML private VBox suppliersContainer;
     @FXML private Label totalPrice;
     @FXML private Label totalQuantity;
+    @FXML private HBox btnActionContainer;
 
     private static final NumberFormat CURRENCY = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
     private Stage curStage;
     private Order order;
+
+    public void initialize() {
+        applyRBACRestrictions();
+    }
+
+    private void applyRBACRestrictions() {
+        // if OPERATIONAL users can't aprove or reject orders, and I know they also cant manage products, we can use the canManageProducts
+        if (!RBACUtil.canManageProducts()) {
+            btnActionContainer.setVisible(false);
+            btnActionContainer.setManaged(false);
+        }
+    }
 
     public void setData(Order order, Stage curStage) {
         this.curStage = curStage;
@@ -61,7 +75,7 @@ public class PendingRequestForm {
             double price = pro.getUnitPrice();
             int quantity = pro.getQuantity();
 
-            FormProducts product = new FormProducts(name, price, quantity);
+            FormProducts product = new FormProducts(name, price, quantity, pro.getProduct().getId(), pro.getProduct().getSupplierId());
 
             products.add(product);
         }

@@ -8,6 +8,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -130,12 +131,12 @@ public class LayoutController {
             btnSuppliers.setManaged(false);
 
             // Navigate to Stock by default for operational users
-            handleStockButton();
+            Platform.runLater(this::handleStockButton);
         } else if (RBACUtil.isManager()) {
-            handleDashboardButton();
+            Platform.runLater(this::handleHistoryButton);
         } else {
             // Maybe it will be needed to take off some buttons from here as well, depending on what exactly appears for the director
-            handleDashboardButton();
+            Platform.runLater(this::handleHistoryButton);
         }
     }
 

@@ -13,7 +13,7 @@
          <children>
             <Label fx:id="status" styleClass="orders__status" text="Pendente" />
             <Label fx:id="solicitorName" prefHeight="18.0" prefWidth="668.0" styleClass="orders__solicitor" text="Solicitado por Nome do solicitante (x_DiasAtrás) Ou direto a data também" />
-            <Label fx:id="department" prefHeight="18.0" prefWidth="473.0" styleClass="orders__department" text="SETOR | Solicitação de compra" />
+            <Label fx:id="department" prefHeight="18.0" prefWidth="647.0" styleClass="orders__department" text="SETOR | Solicitação de compra" />
             <HBox prefHeight="20.0" prefWidth="648.0" spacing="15.0">
                <children>
                   <Label fx:id="paymentMethod" prefHeight="18.0" prefWidth="206.0" styleClass="orders__info" text="Método de pagamento: PIX" />

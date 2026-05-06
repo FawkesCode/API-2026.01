@@ -11,7 +11,7 @@
    <children>
       <HBox alignment="CENTER_LEFT" spacing="12">
          <children>
-            <JFXButton fx:id="newEmployee" onAction="#handleAddToCart" styleClass="btn--cart" text="Ver itens adicionados ao carrinho &gt;" />
+            <JFXButton fx:id="newEmployee" onAction="#handleOpenCart" styleClass="btn--cart" text="Ver itens adicionados ao carrinho &gt;" />
             <Region prefHeight="26.0" prefWidth="298.0" HBox.hgrow="ALWAYS" />
             <TextField fx:id="searchField" onKeyReleased="#handleSearch" prefHeight="26.0" prefWidth="280.0" promptText="Buscar funcionario...">
                <styleClass>
