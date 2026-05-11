@@ -6,6 +6,7 @@ import com.fawkes.front.models.FormProducts;
 import com.fawkes.front.models.RequestItem;
 import com.fawkes.front.models.StockItem;
 import com.fawkes.front.utils.ModalManager;
+import com.fawkes.front.utils.NavigationManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;

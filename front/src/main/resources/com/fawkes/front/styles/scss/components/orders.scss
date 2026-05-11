@@ -9,11 +9,11 @@
     -fx-font-weight: 700;
 
     &--aproved {
-        -fx-background-color: $primary-light;
+        -fx-background-color: $primary-light !important;
     }
 
     &--declined {
-        -fx-background-color: $surface-900;
+        -fx-background-color: $surface-900 !important;
     }
   }
   &__solicitor {

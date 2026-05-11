@@ -39,7 +39,7 @@ public class TicketCreateService {
     @Transactional
     public Ticket createOrder(Integer userID, 
         Integer departmentID, 
-        BigDecimal value){
+        BigDecimal value,String description){
         
         Department dept = departmentRepository.findById(Long.valueOf(departmentID))
         .orElseThrow(() -> new RuntimeException("Departamento não encontrado."));
@@ -56,6 +56,7 @@ public class TicketCreateService {
         order.setUsuario(userIdNumber);
         order.setValor(value);
         order.setStatus(TicketEnum.pendente);
+        order.setDescription(description);
         
         return orderRepository.save(order);
 

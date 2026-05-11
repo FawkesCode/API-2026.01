@@ -50,16 +50,7 @@
                                     </VBox>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane prefHeight="50.0" prefWidth="161.0">
-                                 <children>
-                                    <VBox prefHeight="44.0" prefWidth="146.0">
-                                       <children>
-                                          <Label prefHeight="18.0" prefWidth="214.0" styleClass="input__label" text="Centro de Custo*:" />
-                                          <Label fx:id="costCenter" styleClass="input__label--info--dark" text="???-???-???-???" />
-                                       </children>
-                                    </VBox>
-                                 </children>
-                              </AnchorPane>
+                              <AnchorPane prefHeight="50.0" prefWidth="161.0" />
                            </children>
                         </HBox>
                         <AnchorPane prefHeight="122.0" prefWidth="514.0">
@@ -88,12 +79,6 @@
                               <VBox fx:id="suppliersContainer" alignment="TOP_CENTER" prefHeight="64.0" prefWidth="226.0" VBox.vgrow="ALWAYS" />
                            </children>
                         </VBox>
-                        <HBox alignment="CENTER" prefHeight="18.0" prefWidth="287.0" spacing="10.0">
-                           <children>
-                              <Label fx:id="totalPrice" prefHeight="18.0" prefWidth="122.0" styleClass="input__label--resume" text="Total:" />
-                              <Label fx:id="totalQuantity" prefHeight="18.0" prefWidth="135.0" styleClass="input__label--resume" text="Quantidade de Itens:" />
-                           </children>
-                        </HBox>
                      </children>
                   </VBox>
                </children>
@@ -104,6 +89,12 @@
          <children>
             <JFXButton fx:id="btnApprove" onAction="#handleAproved" styleClass="btn--submit" text="Aprovar" />
             <JFXButton fx:id="btnDecline" onAction="#handleDeclined" styleClass="btn--cancel" text="Recusar" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" layoutX="386.0" layoutY="270.0" prefHeight="18.0" prefWidth="287.0" spacing="10.0">
+         <children>
+            <Label fx:id="totalPrice" prefHeight="18.0" prefWidth="122.0" styleClass="input__label--resume" text="Total:" />
+            <Label fx:id="totalQuantity" prefHeight="18.0" prefWidth="135.0" styleClass="input__label--resume" text="Quantidade de Itens:" />
          </children>
       </HBox>
    </children>

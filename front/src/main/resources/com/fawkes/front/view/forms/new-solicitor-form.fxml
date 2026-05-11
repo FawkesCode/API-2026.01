@@ -3,10 +3,8 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -31,31 +29,10 @@
                      <children>
                         <HBox prefHeight="86.0" prefWidth="562.0">
                            <children>
-                              <AnchorPane prefHeight="83.0" prefWidth="293.0">
-                                 <children>
-                                    <Label fx:id="districtName" layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Setor*" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-                                    <TextField fx:id="departmentField" layoutY="39.0" promptText="Digite o setor" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
-                                       <styleClass>
-                                          <String fx:value="input__text" />
-                                          <String fx:value="input__text--form" />
-                                       </styleClass>
-                                    </TextField>
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane prefHeight="100.0" prefWidth="294.0">
-                                 <children>
-                                    <Label fx:id="paymentMethod" layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Método de Pagamento*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-                                    <ComboBox fx:id="paymentField" layoutY="39.0" prefWidth="150.0" promptText="Selecionar" styleClass="input__text" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-                                 </children>
-                              </AnchorPane>
-                           </children>
-                        </HBox>
-                        <HBox prefHeight="86.0" prefWidth="562.0">
-                           <children>
-                              <AnchorPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="130.0" prefWidth="504.0">
+                              <AnchorPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="191.0" prefWidth="428.0">
                                  <children>
                                     <Label fx:id="description" layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Justificativa/Observação:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-                                    <TextArea fx:id="descriptionField" layoutX="11.2" layoutY="-54.0" prefHeight="90.0" prefWidth="482.0" promptText="Descreva o motivo da solicitação" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="11.0">
+                                    <TextArea fx:id="descriptionField" layoutX="11.2" layoutY="-54.0" prefHeight="148.0" prefWidth="421.0" promptText="Descreva o motivo da solicitação" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="11.0">
                                        <styleClass>
                                           <String fx:value="input__text" />
                                           <String fx:value="input__text--form" />
@@ -98,7 +75,7 @@
             <HBox alignment="CENTER_RIGHT" prefHeight="102.0" prefWidth="788.0" spacing="15.0">
                <children>
                   <JFXButton fx:id="btnApprove" onAction="#handleSubmmit" prefHeight="26.0" prefWidth="157.0" styleClass="btn--submit" text="Solicitar" />
-                  <JFXButton fx:id="btnDecline" prefHeight="26.0" prefWidth="126.0" styleClass="btn--cancel" text="Voltar" />
+                  <JFXButton fx:id="btnDecline" onAction="#handleCloseModal" prefHeight="26.0" prefWidth="126.0" styleClass="btn--cancel" text="Cancelar" />
                </children>
                <opaqueInsets>
                   <Insets />

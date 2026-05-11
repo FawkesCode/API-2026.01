@@ -120,16 +120,21 @@ public class RequestProductsPageController {
     }
 
     public void handleOpenCart(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/fawkes/front/view/forms/shopping-request-form.fxml"));
-            Parent formulario = loader.load();
-            ShoppingRequestForm controller = loader.getController();
-            controller.setData(cartProducts);
-            Stage curStage = ((Stage) productsContainer.getScene().getWindow());
-            ModalManager.openModal(curStage, formulario, "Itens a serem pedidos", 600.0, 400.0, "ModalFrameSM.fxml", false);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (!cartProducts.isEmpty()) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/fawkes/front/view/forms/shopping-request-form.fxml"));
+                Parent formulario = loader.load();
+                ShoppingRequestForm controller = loader.getController();
+                controller.setData(cartProducts);
+                Stage curStage = ((Stage) productsContainer.getScene().getWindow());
+                ModalManager.openModal(curStage, formulario, "Itens a serem pedidos", 600.0, 400.0, "ModalFrameSM.fxml", false);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            showCartMessage("Adicione itens ao carrinho para poder abri-lo!", infoIcon);
         }
+
     }
 
     public void handleAddToCart(StockItem pro) {

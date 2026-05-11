@@ -225,7 +225,7 @@ public class ProductsPageController {
     @FXML
     public void handleBackButton() throws IOException {
         StackPane container = (StackPane) productsContainer.getScene().getRoot().lookup("#container");
-        nm.navigateToPage(container, "view/suppliers-page.fxml", "Fornecedores", "Aqui é onde você e outros gerentes podem administrar os fornecedores cadastrados na plataforma..");
+        nm.navigateToPage(container, "view/suppliers-page.fxml", "Fornecedores", "Aqui é onde você e outros gerentes podem administrar os fornecedores cadastrados na plataforma.");
     }
 
 }

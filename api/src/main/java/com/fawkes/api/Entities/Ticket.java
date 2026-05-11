@@ -47,6 +47,9 @@ public class Ticket {
     @Column(name = "value", nullable = false, precision = 10, scale = 2)
     private BigDecimal valor;
 
+    @Column(name = "description", columnDefinition = "TEXT",nullable = false)
+    private String Description;
+
     @PrePersist
     protected void onCreate() {
         LocalDateTime now = LocalDateTime.now();

@@ -7,6 +7,7 @@ import com.fawkes.front.models.FormProducts;
 import com.fawkes.front.models.StockItem;
 import com.fawkes.front.service.ApiClient;
 import com.fawkes.front.service.UserInfoManager;
+import com.fawkes.front.utils.NavigationManager;
 import com.fawkes.front.utils.StringUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
@@ -48,39 +49,15 @@ public class NewRequestForm {
     int requestQtd;
     double requestPrice;
     List<String> suppliers;
+    NavigationManager nm = NavigationManager.getInstance();
 
-    private List<String> PAYMENTS = Arrays.asList("PIX", "CREDITO", "DEBITO", "BOLETO");
     private static final NumberFormat CURRENCY =
             NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
     UserInfoManager loggedUser = UserInfoManager.getInstance();
 
     @FXML
     public void initialize() {
-        paymentField.getItems().addAll(PAYMENTS);
-
-        paymentField.setConverter(new StringConverter<String>() {
-            @Override
-            public String toString(String payment) {
-                return StringUtils.paymentTranslation(payment);
-            }
-
-            @Override
-            public String fromString(String s) {
-                return null;
-            }
-        });
-
-        paymentField.setCellFactory(v -> new ListCell<String>() {
-            @Override
-            protected void  updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty ? null : StringUtils.paymentTranslation(item));
-            }
-        });
-
         solicitorName.setText(loggedUser.getUserName() + " | " + StringUtils.roleTranslation(loggedUser.getUserRole()));
-
-
     }
 
     public void setData(List<FormProducts> productsList, int qtd, double price, List<String> suppliersList) {
@@ -174,9 +151,22 @@ public class NewRequestForm {
         };
 
         task.setOnSucceeded(e -> Platform.runLater(() -> {
-            showError("Pedidos enviado com sucesso!");
-            Stage stage = (Stage) totalQuantity.getScene().getWindow();
-            stage.close();
+            Stage modalStage = (Stage) totalQuantity.getScene().getWindow();
+            modalStage.close();
+
+            Stage primaryStage = (Stage) javafx.stage.Window.getWindows().stream()
+                    .filter(w -> w instanceof Stage && w != modalStage)
+                    .findFirst()
+                    .orElse(null);
+
+            if (primaryStage != null) {
+                StackPane container = (StackPane) primaryStage.getScene().getRoot().lookup("#container");
+                if (container != null) {
+                    nm.navigateToPage(container, "view/orders-page.fxml", "Pedidos de Compras", "Onde você e outros funcionários podem vizualizar os pedidos em aberto ou finalizados.");
+                }
+            }
+            products.clear();
+            suppliers.clear();
         }));
 
         task.setOnFailed(e -> Platform.runLater(() -> {
@@ -188,4 +178,8 @@ public class NewRequestForm {
     }
 
     private void showError(String msg) { Platform.runLater(() -> messageLabel.setText(msg)); }
+    @FXML
+    private void handleCloseModal() {
+        ((Stage) btnApprove.getScene().getWindow()).close();
+    }
 }

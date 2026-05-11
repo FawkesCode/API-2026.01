@@ -22,8 +22,8 @@
       </HBox>
       <HBox alignment="CENTER" layoutX="314.0" layoutY="261.0" prefHeight="34.0" prefWidth="282.0" spacing="20.0">
          <children>
-            <Label fx:id="requestTotal" prefHeight="18.0" prefWidth="132.0" styleClass="input__label" text="Total:" />
-            <Label fx:id="requestTotalItens" prefHeight="18.0" prefWidth="114.0" styleClass="input__label--desc" text="Qtd. de itens:" />
+            <Label fx:id="requestTotal" prefHeight="18.0" prefWidth="132.0" styleClass="input__label--resume" text="Total:" />
+            <Label fx:id="requestTotalItens" prefHeight="18.0" prefWidth="114.0" styleClass="input__label--resume" text="Qtd. de itens:" />
          </children>
       </HBox>
       <VBox fx:id="itensContainer" layoutX="10.0" layoutY="11.0" prefHeight="334.0" prefWidth="292.0" spacing="8.0" />

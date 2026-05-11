@@ -46,8 +46,8 @@ public class StringUtils {
     public static String requestStatusTranslation(String status) {
         return switch (status) {
             case "pending" -> "••• Pendente";
-            case "aproved" -> "✔ Aprovado";
-            case "declined" -> "✖ Recusado";
+            case "confirmed" -> "✔ Aprovado";
+            case "cancelled" -> "✖ Recusado";
             default -> status;
         };
     }

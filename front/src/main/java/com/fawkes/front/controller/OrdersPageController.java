@@ -102,7 +102,7 @@ public class OrdersPageController {
 
                 if (status.toLowerCase().equals("pending")) {
                     pendingOrders.add(ord);
-                } else if (status.toLowerCase().equals("aproved")) {
+                } else if (status.toLowerCase().equals("confirmed")) {
                     aprovedOrders.add(ord);
                 } else {
                     declinedOrders.add(ord);

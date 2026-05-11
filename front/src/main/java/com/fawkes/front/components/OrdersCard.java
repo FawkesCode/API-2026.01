@@ -42,16 +42,14 @@ public class OrdersCard extends AnchorPane {
     }
 
     public void setData(Order order) {
+        status.getStyleClass().removeAll("order__status--aproved", "order__status--declined");
         this.status.setText(StringUtils.requestStatusTranslation(order.getStatus()));
-        if (order.getStatus().equalsIgnoreCase("aproved")) {
-            status.getStyleClass().add("order__status--aproved");
-            status.getStyleClass().remove("order__status--declined");
-        } else if (order.getStatus().equalsIgnoreCase("declined")) {
+        if (order.getStatus().equalsIgnoreCase("confirmed")) {
+//            status.getStyleClass().add("order__status--aproved");
+            status.setStyle("-fx-background-color: #07b0f3;");
+        } else if (order.getStatus().equalsIgnoreCase("cancelled")) {
             status.getStyleClass().add("order__status--declined");
-            status.getStyleClass().remove("order__status--aproved");
-        } else {
-            status.getStyleClass().remove("order__status--aproved");
-            status.getStyleClass().remove("order__status--declined");
+            status.setStyle("-fx-background-color: #282e38;");
         }
 
         this.solicitorName.setText("Solicitado por "+ order.getRequesterName());
