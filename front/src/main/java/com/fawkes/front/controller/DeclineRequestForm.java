@@ -1,7 +1,9 @@
 package com.fawkes.front.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fawkes.front.models.Order;
 import com.fawkes.front.models.RequestItem;
+import com.fawkes.front.service.ApiClient;
 import com.fawkes.front.service.UserInfoManager;
 import com.jfoenix.controls.JFXButton;
 import javafx.event.ActionEvent;
@@ -18,8 +20,14 @@ public class DeclineRequestForm {
     @FXML private JFXButton btnCancel;
     @FXML private JFXButton btnCommand;
     @FXML private TextArea descriptionField;
+    @FXML private Label errorLabel;
     UserInfoManager loggedUser = UserInfoManager.getInstance();
 
+    private Order order;
+    private Runnable onSaveSuccess;
+    public void setOnSaveSuccess(Runnable onSaveSuccess) {
+        this.onSaveSuccess = onSaveSuccess;
+    }
     public void initialize() {
         btnCommand.setText("Recusar");
     }
@@ -39,6 +47,7 @@ public class DeclineRequestForm {
 
 
         String text = "Pedido de " + order.getQuantity() + " itens, sendo eles: " + productsList + "; Total de " + order.getTotalValue() + ". Compra pedida pelo " + order.getRequesterName() + " para o setor " + order.getSector().toUpperCase() + ". Solicitação sendo recusada por " + loggedUser.getUserName() + ".";
+        this.order = order;
 
         detailsLabel.setText(text);
     }
@@ -46,6 +55,23 @@ public class DeclineRequestForm {
     @FXML
     private void handleCloseModal() {
         ((Stage) btnCommand.getScene().getWindow()).close();
+    }
+
+    @FXML
+    private void handleSubmit() {
+        try {
+            JsonNode response = ApiClient.post("/api/purchase-orders/" + order.getId() + "/cancel", "{}" );
+            System.out.println("RETORNO DO BACKEND: " + response.toPrettyString());
+
+
+            if (onSaveSuccess != null) {
+                onSaveSuccess.run();
+            }
+
+            handleCloseModal();
+        } catch (Exception e) {
+            errorLabel.setText("Erro: " + e.getMessage());
+        }
     }
 }
 

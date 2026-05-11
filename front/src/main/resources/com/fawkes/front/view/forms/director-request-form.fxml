@@ -24,11 +24,12 @@
                   </TextArea>
                </children>
             </AnchorPane>
+            <Label fx:id="errorLabel" prefHeight="18.0" prefWidth="687.0" />
          </children>
       </VBox>
       <HBox alignment="CENTER_RIGHT" prefHeight="42.0" prefWidth="674.0" spacing="15.0" AnchorPane.bottomAnchor="20.0">
          <children>
-            <JFXButton fx:id="btnCommand" prefHeight="26.0" prefWidth="110.0" styleClass="btn--submit" text="Aprovar" />
+            <JFXButton fx:id="btnCommand" onAction="#handleSubmit" prefHeight="26.0" prefWidth="110.0" styleClass="btn--submit" text="Aprovar" />
             <JFXButton fx:id="btnCancel" onAction="#handleCloseModal" prefHeight="26.0" prefWidth="101.0" styleClass="btn--cancel" text="Cancelar" />
          </children>
       </HBox>

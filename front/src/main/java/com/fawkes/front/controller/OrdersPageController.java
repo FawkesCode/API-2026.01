@@ -182,6 +182,7 @@ public class OrdersPageController {
             PendingRequestForm controller = loader.getController();
             Stage curStage = ((Stage) requestsContainer.getScene().getWindow());
             controller.setData(ord, curStage);
+            controller.setOnSaveSuccess(this::loadOrders);
             ModalManager.openModal(curStage, formulario, "Visualizar Pedido " + ord.getId(), 700.0, 400.0, "ModalFrameM.fxml", false);
         } catch (IOException e) {
             e.printStackTrace();

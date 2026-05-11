@@ -41,6 +41,10 @@ public class PendingRequestForm {
     private static final NumberFormat CURRENCY = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
     private Stage curStage;
     private Order order;
+    private Runnable onSaveSuccess;
+    public void setOnSaveSuccess(Runnable onSaveSuccess) {
+        this.onSaveSuccess = onSaveSuccess;
+    }
 
     public void initialize() {
         applyRBACRestrictions();
@@ -131,6 +135,7 @@ public class PendingRequestForm {
             loader.setController(controller);
             Parent formulario = loader.load();
             controller.setData(order);
+            controller.setOnSaveSuccess(onSaveSuccess);
 
             Stage stageAtual = (Stage) btnApprove.getScene().getWindow();
 
@@ -151,6 +156,7 @@ public class PendingRequestForm {
             loader.setController(controller);
             Parent formulario = loader.load();
             controller.setData(order);
+            controller.setOnSaveSuccess(onSaveSuccess);
 
             Stage stageAtual = (Stage) btnApprove.getScene().getWindow();
 
