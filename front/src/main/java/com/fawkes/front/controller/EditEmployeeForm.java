@@ -25,7 +25,6 @@ public class EditEmployeeForm {
 
     // FORM INPUTS
     @FXML private ToggleButton statusField;
-    @FXML private ImageView employeeView;
     @FXML private TextField emailField;
 
     @FXML private ComboBox<String> userGroupField;
@@ -85,7 +84,6 @@ public class EditEmployeeForm {
         emailField.setText(emp.getEmail());
         departmentField.setText(emp.getDepartment());
         userGroupField.getSelectionModel().select(emp.getPosition());
-        employeeView.setImage(emp.getPicture());
 
 
         if (emp.getStatus().toLowerCase().equals("ativo")) {
@@ -104,22 +102,6 @@ public class EditEmployeeForm {
     @FXML
     private void handleCloseModal() {
         ((Stage) btnClose.getScene().getWindow()).close();
-    }
-
-    @FXML
-    private void handleOpenExplorer(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Selecionar a Imagem do Funcionário");
-
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Arquivos de Imagem", "*.png", "*.jpg", "*.jpeg"));
-
-        Window stage = ((Node) event.getSource()).getScene().getWindow();
-        File file = fileChooser.showOpenDialog(stage);
-
-        if (file != null) {
-            Image image = new Image(file.toURI().toString());
-            employeeView.setImage(image);
-        }
     }
 
     @FXML

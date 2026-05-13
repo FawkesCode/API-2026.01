@@ -45,7 +45,6 @@ public class OrdersCard extends AnchorPane {
         status.getStyleClass().removeAll("order__status--aproved", "order__status--declined");
         this.status.setText(StringUtils.requestStatusTranslation(order.getStatus()));
         if (order.getStatus().equalsIgnoreCase("confirmed")) {
-//            status.getStyleClass().add("order__status--aproved");
             status.setStyle("-fx-background-color: #07b0f3;");
         } else if (order.getStatus().equalsIgnoreCase("cancelled")) {
             status.getStyleClass().add("order__status--declined");
@@ -53,7 +52,7 @@ public class OrdersCard extends AnchorPane {
         }
 
         this.solicitorName.setText("Solicitado por "+ order.getRequesterName());
-        this.department.setText(order.getSector().toUpperCase() + " | Solicitação de Compra");
+        this.department.setText(order.getSector().toUpperCase() + " | Solicitação de Compra PED-" + order.getId());
         this.paymentMethod.setText("Método de pagamento: "+ StringUtils.paymentTranslation(order.getPaymentMethod()).toUpperCase());
         this.quantityValue.setText("Quantidade de Itens: " + order.getQuantity());
         this.priceValue.setText("Valor Total: " + order.getTotalValue());

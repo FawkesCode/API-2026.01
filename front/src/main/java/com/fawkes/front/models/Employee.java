@@ -17,12 +17,11 @@ public class Employee {
     private String department;
     private String position;
     private String signed;
-    private Image picture;
 
     public Employee() {}
 
     public Employee(Long id, String name, String email, String status,
-                    String department, String position, String signed, Image picture) {
+                    String department, String position, String signed) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -30,12 +29,9 @@ public class Employee {
         this.department = department;
         this.position = position;
         this.signed = signed;
-        this.picture = picture;
     }
 
-    // Constrói um Employee a partir do JsonNode retornado pelo back
-    // Espera campos: id, userName, userMail, isActive, creationDate,
-    //                departments.departmentName, group.groupName
+
     public static Employee fromJson(com.fasterxml.jackson.databind.JsonNode node) {
         Long id = node.path("id").asLong();
         String name = node.path("userName").asText("-");
@@ -49,10 +45,9 @@ public class Employee {
         String rawDate = node.path("creationDate").asText("");
         String signed = formatDate(rawDate);
 
-        return new Employee(id, name, email, status, department, position, signed, null);
+        return new Employee(id, name, email, status, department, position, signed);
     }
 
-    /** Converte "2026-03-19T10:30:00" em "19 de Mar. 2026" */
     private static String formatDate(String iso) {
         if (iso == null || iso.isBlank()) return "-";
         try {
@@ -67,7 +62,6 @@ public class Employee {
         }
     }
 
-    // Getters e Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -88,9 +82,6 @@ public class Employee {
 
     public String getSigned() { return signed; }
     public void setSigned(String signed) { this.signed = signed; }
-
-    public Image getPicture() { return picture; }
-    public void setPicture(Image picture) { this.picture = picture; }
 
     @Override
     public String toString() {

@@ -9,7 +9,7 @@
     <children>
         <VBox alignment="CENTER_LEFT" layoutY="-50.0" prefHeight="150.0" prefWidth="473.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <Label styleClass="log__type" text="Edição - Funcionário" />
+                <Label fx:id="typeLabel" styleClass="log__status" text="Edição - Funcionário" />
             <Label styleClass="log__owner" text="Nome do Funcionário" />
                 <Label prefHeight="18.0" prefWidth="473.0" styleClass="log__description" text="Descrição do que foi alterado" />
             </children>

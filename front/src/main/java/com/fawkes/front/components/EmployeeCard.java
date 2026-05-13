@@ -26,7 +26,6 @@ public class EmployeeCard extends AnchorPane {
     @FXML private AnchorPane container;
     @FXML private Label status;
     @FXML private Label department;
-    @FXML private ImageView picture;
     @FXML private Label position;
     @FXML private Label name;
     @FXML private Label email;
@@ -65,24 +64,7 @@ public class EmployeeCard extends AnchorPane {
         this.name.setText(employee.getName().toUpperCase());
         this.email.setText(employee.getEmail());
 
-
-        // Imagem: usa a do model se disponível, senão tenta carregar um placeholder
-        if (employee.getPicture() != null) {
-            this.picture.setImage(employee.getPicture());
-        } else {
-            try {
-                Image placeholder = new Image(
-                        Objects.requireNonNull(
-                                getClass().getResourceAsStream(
-                                        "/com/fawkes/front/img/placeholder-user.png")));
-                this.picture.setImage(placeholder);
-            } catch (Exception ignored) {
-                // sem placeholder, deixa vazio
-            }
-        }
-
         this.status.setText("● " + employee.getStatus());
-        // Azul para ativo, cinza para inativo
         if ("Ativo".equalsIgnoreCase(employee.getStatus())) {
             this.getStyleClass().remove("employee--inactive");
             this.status.getStyleClass().remove("status-label--inactive");

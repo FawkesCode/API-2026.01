@@ -30,7 +30,6 @@ public class AddEmployeeForm {
 
     // FORM INPUTS
     @FXML private PasswordField passwordField;
-    @FXML private ImageView employeeView;
     @FXML private TextField emailField;
     @FXML private TextField nameField;
     @FXML private TextField departmentField;
@@ -94,21 +93,6 @@ public class AddEmployeeForm {
         ((Stage) btnClose.getScene().getWindow()).close();
     }
 
-    @FXML
-    private void handleOpenExplorer(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Selecionar a Imagem do Funcionário");
-
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Arquivos de Imagem", "*.png", "*.jpg", "*.jpeg"));
-
-        Window stage = ((Node) event.getSource()).getScene().getWindow();
-        File file = fileChooser.showOpenDialog(stage);
-
-        if (file != null) {
-            Image image = new Image(file.toURI().toString());
-            employeeView.setImage(image);
-        }
-    }
     @FXML
     private void handleOnSubmit(ActionEvent event) {
         if (emailField.getText().isEmpty() || passwordField.getText().isEmpty() || nameField.getText() .isEmpty() || userGroupField.getSelectionModel().getSelectedItem() == null ) {

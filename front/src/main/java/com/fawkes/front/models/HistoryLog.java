@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public class HistoryLog {
 
-    public enum MovementType { ENTRADA, SAIDA }
+    public enum MovementType { ENTRADA, SAIDA, REVISAO, APROVACAO, NEGACAO, COMPRA, EM_TRANSITO, EM_ATRASO, RECEBIDO, PROBLEMA, NAO_RECEBIDO, DEVOLVIDO }
 
     private Long id;
     private MovementType type;

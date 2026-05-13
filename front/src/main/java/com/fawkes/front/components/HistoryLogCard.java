@@ -11,10 +11,8 @@ import java.util.Objects;
 
 public class HistoryLogCard extends AnchorPane {
 
-    // O FXML atual só tem fx:id="status" (exibe a data no lado direito).
-    // Os outros labels (log__type, log__owner, log__description) não têm fx:id,
-    // então são acessados via lookup por styleClass após o carregamento.
     @FXML private Label status;
+    @FXML private Label typeLabel;
 
     public HistoryLogCard() {
         FXMLLoader fxmlLoader = new FXMLLoader(
@@ -31,15 +29,29 @@ public class HistoryLogCard extends AnchorPane {
     public void setData(HistoryLog log) {
         boolean isInput = log.getType() == HistoryLog.MovementType.ENTRADA;
 
-        // fx:id disponível: data no lado direito
         if (status != null) {
             status.setText(log.getDate());
         }
 
-        // Labels sem fx:id — acessados por styleClass
-        Label typeLabel = (Label) this.lookup(".log__type");
         if (typeLabel != null) {
             typeLabel.setText(isInput ? "Entrada - Estoque" : "Saída - Estoque");
+            typeLabel.getStyleClass().add(switch (log.getType()) {
+                case HistoryLog.MovementType.ENTRADA -> "log__status--1";
+                case HistoryLog.MovementType.SAIDA -> "log__status--2";
+                case HistoryLog.MovementType.REVISAO -> "log__status--3";
+                case HistoryLog.MovementType.APROVACAO -> "log__status--4";
+                case HistoryLog.MovementType.NEGACAO -> "log__status--5";
+                case HistoryLog.MovementType.COMPRA -> "log__status--6";
+                case HistoryLog.MovementType.EM_TRANSITO -> "log__status--7";
+                case HistoryLog.MovementType.EM_ATRASO -> "log__status--8";
+                case HistoryLog.MovementType.RECEBIDO -> "log__status--9";
+                case HistoryLog.MovementType.PROBLEMA -> "log__status--10";
+                case HistoryLog.MovementType.NAO_RECEBIDO -> "log__status--11";
+                case HistoryLog.MovementType.DEVOLVIDO -> "log__status--12";
+                default -> "log__status";
+
+            });
+
             typeLabel.setStyle(isInput
                     ? "-fx-text-fill: #4FE481;"
                     : "-fx-text-fill: #E14B50;");
