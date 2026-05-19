@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @EnableWebSecurity
@@ -44,6 +44,7 @@ public class SecurityConfig {
                         .requestMatchers("/manager/**").hasRole("MANAGER")
                         .requestMatchers("/operational/**").hasRole("OPERATIONAL")
                         .requestMatchers("/director/**").hasRole("DIRECTOR")
+                        .requestMatchers(HttpMethod.POST, "/api/purchase-orders/*/receive").hasRole("MANAGER")
                         .anyRequest().authenticated()
                 )
                 // ✅ Adicionar handler customizado para 403

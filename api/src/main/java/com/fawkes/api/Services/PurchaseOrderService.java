@@ -11,6 +11,12 @@ import com.fawkes.api.Repositories.ProductsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.fawkes.api.DTOs.Request.ReceiveOrderRequest;
+import com.fawkes.api.Entities.OrderNote;
+import com.fawkes.api.Exceptions.RegraDeNegocioException;
+import com.fawkes.api.Exceptions.RecursoNaoEncontradoException;
+import com.fawkes.api.Repositories.OrderNoteRepository;
+import java.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -26,6 +32,8 @@ public class PurchaseOrderService {
     private final SupplierRepository supplierRepository;
     private final UserRepository userRepository;
     private final ProductsRepository productsRepository;
+    private final StockMovementService stockMovementService;
+    private final OrderNoteRepository orderNoteRepository;
 
     public List<PurchaseOrder> listAll() {
         return purchaseOrderRepository.findAll();
@@ -119,9 +127,44 @@ public class PurchaseOrderService {
     }
 
     @Transactional
-    public PurchaseOrder receiveOrder(Long orderId) {
+    public PurchaseOrder receiveOrder(Long orderId, ReceiveOrderRequest request) {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado"));
+
+        if (order.getStatus() != PurchaseOrder.Status.shipped) {
+            throw new RegraDeNegocioException("Só é possível receber pedidos com status 'shipped'");
+        }
+
+        if (request.invoiceNumber() == null || request.invoiceNumber().isBlank()) {
+            throw new RegraDeNegocioException("Número da nota fiscal é obrigatório");
+        }
+
+        for (ReceiveOrderRequest.ReceivedItemRequest receivedItem : request.items()) {
+            PurchaseOrderItem orderItem = order.getItems().stream()
+                    .filter(i -> i.getProduct().getId().equals(receivedItem.productId()))
+                    .findFirst()
+                    .orElseThrow(() -> new RegraDeNegocioException(
+                            "Produto " + receivedItem.productId() + " não pertence a este pedido"));
+
+            if (receivedItem.receivedQuantity() <= 0) {
+                throw new RegraDeNegocioException("Quantidade recebida deve ser maior que zero");
+            }
+
+            orderItem.setReceivedQuantity(receivedItem.receivedQuantity());
+
+            Long stockId = orderItem.getProduct().getStock().getId();
+            stockMovementService.registerInput(
+                    stockId,
+                    receivedItem.productId(),
+                    receivedItem.receivedQuantity()
+            );
+        }
+
+        OrderNote note = new OrderNote();
+        note.setNumberNote(request.invoiceNumber());
+        note.setSerie(request.invoiceSerie());
+        note.setOrderNoteDate(request.invoiceDate() != null ? request.invoiceDate() : LocalDate.now());
+        order.setOrderNote(note);
 
         order.setStatus(PurchaseOrder.Status.received);
         return purchaseOrderRepository.save(order);
