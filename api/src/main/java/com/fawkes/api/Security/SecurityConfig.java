@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpMethod;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
     private final AuthTokenFilter authTokenFilter;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
@@ -48,7 +50,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 // ✅ Adicionar handler customizado para 403
-                .exceptionHandling(exception -> 
+                .exceptionHandling(exception ->
                         exception.accessDeniedHandler(customAccessDeniedHandler)
                 )
                 // Pra quem sabe ExpressJS, isso aqui é basicamente o Middleware
