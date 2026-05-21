@@ -35,7 +35,7 @@ public class ProductOutputs {
     // nullable → ON DELETE SET NULL
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id_fk", nullable = true)
-    private Ticket order;
+    private PurchaseOrder order;
 
     @PrePersist
     protected void onCreate() {

@@ -13,10 +13,6 @@ import java.util.List;
 @Table(name = "TB_purchase_order")
 public class PurchaseOrder {
 
-    public enum Status {
-        draft, pending, confirmed, shipped, received, cancelled
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,7 +33,7 @@ public class PurchaseOrder {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private Status status = Status.draft;
+    private PurchaseOrderStatus status = PurchaseOrderStatus.draft;
 
     @Column(name = "total_value", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalValue = BigDecimal.ZERO;

@@ -1,11 +1,14 @@
 package com.fawkes.api.Repositories;
 
 import com.fawkes.api.Entities.PurchaseOrder;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+
+import com.fawkes.api.Entities.PurchaseOrderStatus;
 
 @Repository
 public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, Long> {
@@ -14,7 +17,7 @@ public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, Lo
 
     List<PurchaseOrder> findByCreatedById(Long userId);
 
-    List<PurchaseOrder> findByStatus(PurchaseOrder.Status status);
+    List<PurchaseOrder> findByStatus(PurchaseOrderStatus status);
 
     Optional<PurchaseOrder> findByIdAndSupplierId(Long id, Long supplierId);
 }

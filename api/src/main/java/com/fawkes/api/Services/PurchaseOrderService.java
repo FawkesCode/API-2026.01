@@ -8,7 +8,9 @@ import com.fawkes.api.Repositories.PurchaseOrderRepository;
 import com.fawkes.api.Repositories.SupplierRepository;
 import com.fawkes.api.Repositories.UserRepository;
 import com.fawkes.api.Repositories.ProductsRepository;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +19,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import com.fawkes.api.Entities.PurchaseOrderStatus;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +43,7 @@ public class PurchaseOrderService {
         return purchaseOrderRepository.findByCreatedById(userId);
     }
 
-    public List<PurchaseOrder> listByStatus(PurchaseOrder.Status status) {
+    public List<PurchaseOrder> listByStatus(PurchaseOrderStatus status) {
         return purchaseOrderRepository.findByStatus(status);
     }
 
@@ -57,7 +61,7 @@ public class PurchaseOrderService {
         PurchaseOrder order = new PurchaseOrder();
         order.setSupplier(supplier);
         order.setCreatedBy(user);
-        order.setStatus(PurchaseOrder.Status.draft);
+        order.setStatus(PurchaseOrderStatus.draft);
         order.setOrderDate(LocalDateTime.now());
         order.setItems(new ArrayList<>());
 
@@ -69,7 +73,7 @@ public class PurchaseOrderService {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
 
-        if (order.getStatus() != PurchaseOrder.Status.draft && order.getStatus() != PurchaseOrder.Status.pending) {
+        if (order.getStatus() != PurchaseOrderStatus.draft && order.getStatus() != PurchaseOrderStatus.pending) {
             throw new IllegalArgumentException("Cannot add items to order with status: " + order.getStatus());
         }
 
@@ -96,7 +100,7 @@ public class PurchaseOrderService {
             throw new IllegalArgumentException("Cannot submit empty order");
         }
 
-        order.setStatus(PurchaseOrder.Status.pending);
+        order.setStatus(PurchaseOrderStatus.pending);
         return purchaseOrderRepository.save(order);
     }
 
@@ -105,7 +109,7 @@ public class PurchaseOrderService {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
 
-        order.setStatus(PurchaseOrder.Status.confirmed);
+        order.setStatus(PurchaseOrderStatus.confirmed);
         return purchaseOrderRepository.save(order);
     }
 
@@ -114,7 +118,7 @@ public class PurchaseOrderService {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
 
-        order.setStatus(PurchaseOrder.Status.shipped);
+        order.setStatus(PurchaseOrderStatus.shipped);
         return purchaseOrderRepository.save(order);
     }
 
@@ -123,7 +127,7 @@ public class PurchaseOrderService {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
 
-        order.setStatus(PurchaseOrder.Status.received);
+        order.setStatus(PurchaseOrderStatus.received);
         return purchaseOrderRepository.save(order);
     }
 
@@ -132,11 +136,11 @@ public class PurchaseOrderService {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
 
-        if (order.getStatus() == PurchaseOrder.Status.received || order.getStatus() == PurchaseOrder.Status.cancelled) {
+        if (order.getStatus() == PurchaseOrderStatus.received || order.getStatus() == PurchaseOrderStatus.cancelled) {
             throw new IllegalArgumentException("Cannot cancel order with status: " + order.getStatus());
         }
 
-        order.setStatus(PurchaseOrder.Status.cancelled);
+        order.setStatus(PurchaseOrderStatus.cancelled);
         return purchaseOrderRepository.save(order);
     }
 
@@ -154,7 +158,7 @@ public class PurchaseOrderService {
         PurchaseOrder order = purchaseOrderRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
 
-        if (order.getStatus() != PurchaseOrder.Status.draft) {
+        if (order.getStatus() != PurchaseOrderStatus.draft) {
             throw new IllegalArgumentException("Only draft orders can be deleted");
         }
 

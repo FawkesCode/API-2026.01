@@ -1,6 +1,7 @@
 package com.fawkes.api.Controllers;
 
 import com.fawkes.api.Entities.PurchaseOrder;
+import com.fawkes.api.Entities.PurchaseOrderStatus;
 import com.fawkes.api.Services.PurchaseOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class PurchaseOrderController {
     }
 
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<PurchaseOrder>> listByStatus(@PathVariable PurchaseOrder.Status status) {
+    public ResponseEntity<List<PurchaseOrder>> listByStatus(@PathVariable PurchaseOrderStatus status) {
         return ResponseEntity.ok(purchaseOrderService.listByStatus(status));
     }
 
