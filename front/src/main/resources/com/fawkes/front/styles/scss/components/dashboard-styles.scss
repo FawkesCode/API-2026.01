@@ -1,0 +1,182 @@
+.dashboard {
+
+    &__filter {
+        -fx-padding: 3 !important;
+
+        &--label {
+            -fx-font-family: $poppins;
+            -fx-text-fill: $surface-400;
+        }
+
+        &--1 {
+            -fx-border-radius: 5 0 0 5;
+            -fx-background-radius: 5 0 0 5;
+            -fx-border-width: 1 0 1 1;
+        }
+        &--2 {
+            -fx-border-radius: 0;
+            -fx-background-radius: 0;
+        }
+        &--3 {
+            -fx-border-radius: 0 5 5 0;
+            -fx-background-radius: 0 5 5 0;
+            -fx-border-width: 1 1 1 0;
+        }
+    }
+
+    &__icons {
+        -fx-background-color: #DEE6EC;
+        -fx-background-radius: 3px;
+        -fx-padding: 5px;
+    }
+
+    &__status {
+        &-number {
+            -fx-font-size: 45px;
+            -fx-text-fill: $surface-900;
+            -fx-font-family: $poppins;
+        }
+
+        &-desc {
+            -fx-text-fill: $surface-700;
+            -fx-font-family: $poppins;
+        }
+    }
+
+    &__cards-container {
+        -fx-background-color: $surface-0;
+        -fx-padding: 20;
+        -fx-background-radius: 20;
+    }
+
+    &__alerts-container {
+        -fx-background-color: linear-gradient(to top right, $primary-light, $primary-dark);
+        -fx-padding: 15;
+        -fx-background-radius: 20;
+    }
+
+    &__title {
+        -fx-text-fill: $surface-400;
+        -fx-font-family: $poppins;
+    }
+
+    &__button {
+        -fx-text-fill: $primary-light;
+
+        &:hover {
+            -fx-text-fill: $primary-dark;
+        }
+    }
+
+    &__alerts {
+        &--title {
+            -fx-text-fill: $surface-0;
+            -fx-font-size: 28px;
+            -fx-font-weight: bold;
+        }
+
+        &--subtitle {
+            -fx-font-family: $poppins;
+            -fx-text-fill: $surface-0;
+            -fx-font-size: 14px;
+        }
+
+        &--price {
+            -fx-font-size: 35px;
+            -fx-font-family: $poppins;
+            -fx-text-fill: $surface-0;
+        }
+
+        &--info {
+            -fx-font-size: 11px;
+            -fx-text-fill: $surface-0;
+            -fx-font-family: $poppins;
+        }
+
+        &--products {
+            -fx-background-color: #BDDFFC;
+            -fx-text-fill: $primary-dark;
+            -fx-background-radius: 100px;
+            -fx-padding: 5px;
+            -fx-font-family: $poppins;
+        }
+
+        &--orders-container {
+            -fx-padding: 10px;
+            -fx-background-color: #E9F5FE;
+            -fx-background-radius: 10px;
+        }
+
+        &--orders-title {
+            -fx-text-fill: $primary-dark;
+            -fx-font-size: 14px;
+        }
+
+        &--orders-subtitle {
+            -fx-text-fill: $primary-light;
+            -fx-font-family: $poppins;
+        }
+
+    }
+
+}
+
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: #d5d4d9;
+    -fx-border-radius: 8px;
+}
+
+.table-view .table-column {
+    -fx-alignment: CENTER;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to right, $primary-light, $primary-dark);;
+    -fx-background-radius: 8px 8px 0px 0px;
+    -fx-background-insets: 0 0 0 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-size: 40px;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-family: 'Poppins SemiBold';
+}
+
+.table-view .filler {
+    -fx-background-color: transparent;
+}
+
+.table-view .table-cell {
+    -fx-padding: 5px 0 5px 0;
+}
+
+.custom-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent !important;
+    -fx-width: 6px !important;
+}
+
+.custom-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: #75A4F8 !important;
+    -fx-background-radius: 10px !important;
+}
+
+.custom-scroll .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #B9D1FC !important;
+}
+
+.custom-scroll .scroll-bar:vertical .increment-button,
+.custom-scroll .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent !important;
+    -fx-padding: 0 !important;
+}
+
+.custom-scroll .scroll-bar:vertical .increment-arrow,
+.custom-scroll .scroll-bar:vertical .decrement-arrow {
+    -fx-shape: " " !important;
+    -fx-padding: 0 !important;
+}

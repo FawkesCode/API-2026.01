@@ -1,5 +1,148 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox fx:id="pageContent" maxHeight="-Infinity" maxWidth="1200.0" minWidth="800.0" prefHeight="720.0" prefWidth="864.0" spacing="20.0" styleClass="pageContent" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.controller.DashboardController" />
+
+<VBox fx:id="pageContent" maxHeight="-Infinity" maxWidth="1200.0" minWidth="800.0" prefHeight="720.0" prefWidth="864.0" spacing="20.0" styleClass="pageContent" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.controller.DashboardPageController">
+   <children>
+      <HBox prefHeight="80.0" prefWidth="864.0">
+         <children>
+            <HBox prefHeight="80.0" prefWidth="352.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <AnchorPane prefHeight="80.0" prefWidth="155.0">
+                     <children>
+                        <Label layoutY="14.0" styleClass="dashboard__filter--label" text="Período" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="10.0" />
+                        <DatePicker layoutX="14.0" layoutY="40.0" promptText="Data" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                           <styleClass>
+                              <String fx:value="input__text" />
+                              <String fx:value="dashboard__filter--1" />
+                              <String fx:value="input__text--search" />
+                              <String fx:value="dashboard__filter" />
+                           </styleClass>
+                        </DatePicker>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="80.0" prefWidth="155.0">
+                     <children>
+                        <Label layoutX="10.0" layoutY="22.0" styleClass="dashboard__filter--label" text="Fornecedor" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="10.0" />
+                        <ComboBox layoutX="-3.0" layoutY="44.0" prefWidth="150.0" promptText="Selecionar Fornecedor" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                           <styleClass>
+                              <String fx:value="input__text" />
+                              <String fx:value="dashboard__filter" />
+                              <String fx:value="input__text--search" />
+                              <String fx:value="dashboard__filter--2" />
+                           </styleClass>
+                        </ComboBox>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="80.0" prefWidth="155.0">
+                     <children>
+                        <Label layoutX="10.0" layoutY="22.0" styleClass="dashboard__filter--label" text="Centro de Custo" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="10.0" />
+                        <ComboBox layoutX="-3.0" layoutY="44.0" prefWidth="150.0" promptText="Selecionar Centro de Custo" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                           <styleClass>
+                              <String fx:value="input__text" />
+                              <String fx:value="dashboard__filter" />
+                              <String fx:value="input__text--search" />
+                              <String fx:value="dashboard__filter--3" />
+                           </styleClass>
+                        </ComboBox>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </HBox>
+            <Region prefHeight="80.0" prefWidth="83.0" />
+            <HBox alignment="TOP_RIGHT" prefHeight="80.0" prefWidth="195.0" spacing="10.0" style="-fx-padding: 0 10 0 0;" HBox.hgrow="ALWAYS">
+               <children>
+                  <AnchorPane prefHeight="80.0" prefWidth="86.0">
+                     <children>
+                        <Label layoutX="34.0" layoutY="1.0" styleClass="dashboard__status-number" text="12">
+                           <font>
+                              <Font size="43.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="19.0" layoutY="56.0" styleClass="dashboard__status-desc" text="Pendentes" />
+                        <Label alignment="CENTER" layoutX="13.0" layoutY="32.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" prefHeight="20.0" prefWidth="20.0" styleClass="dashboard__icons">
+                           <graphic>
+                              <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../img/icon-clock.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="80.0" prefWidth="86.0">
+                     <children>
+                        <Label layoutX="34.0" layoutY="1.0" styleClass="dashboard__status-number" text="12">
+                           <font>
+                              <Font size="43.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="19.0" layoutY="56.0" styleClass="dashboard__status-desc" text="Aprovados" />
+                        <Label alignment="CENTER" layoutX="13.0" layoutY="32.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" prefHeight="20.0" prefWidth="20.0" styleClass="dashboard__icons">
+                           <graphic>
+                              <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../img/icon-check.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="80.0" prefWidth="86.0">
+                     <children>
+                        <Label layoutX="34.0" layoutY="1.0" styleClass="dashboard__status-number" text="12">
+                           <font>
+                              <Font size="43.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="19.0" layoutY="56.0" styleClass="dashboard__status-desc" text="Comprados" />
+                        <Label alignment="CENTER" layoutX="13.0" layoutY="32.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" prefHeight="20.0" prefWidth="20.0" styleClass="dashboard__icons">
+                           <graphic>
+                              <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../img/icon-shop.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="80.0" prefWidth="86.0">
+                     <children>
+                        <Label layoutX="34.0" layoutY="1.0" styleClass="dashboard__status-number" text="12">
+                           <font>
+                              <Font size="43.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="19.0" layoutY="56.0" styleClass="dashboard__status-desc" text="Recebidos" />
+                        <Label alignment="CENTER" layoutX="13.0" layoutY="32.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" prefHeight="20.0" prefWidth="20.0" styleClass="dashboard__icons">
+                           <graphic>
+                              <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../img/icon-bag.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <VBox fx:id="dashboardContainer" prefHeight="200.0" prefWidth="100.0" spacing="30.0" VBox.vgrow="ALWAYS" />
+   </children>
+</VBox>

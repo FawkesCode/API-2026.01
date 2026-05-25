@@ -33,9 +33,14 @@
     -fx-background-color: transparent, transparent, transparent;
 }
 
-.text-area .viewport {
+.text-area .viewport, .date-picker > .text-field, .date-picker > .button{
     -fx-background-color: transparent;
 }
+
+.date-picker > .arrow-button {
+    -fx-background-color: transparent !important;
+}
+
 
 /* Garante que o conteúdo interno não tenha bordas extras */
 .text-area .content {
