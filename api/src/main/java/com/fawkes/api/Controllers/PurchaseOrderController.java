@@ -5,6 +5,7 @@ import com.fawkes.api.Services.PurchaseOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.fawkes.api.DTOs.Request.ReceiveOrderRequest;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -78,8 +79,10 @@ public class PurchaseOrderController {
     }
 
     @PostMapping("/{id}/receive")
-    public ResponseEntity<PurchaseOrder> receive(@PathVariable Long id) {
-        return ResponseEntity.ok(purchaseOrderService.receiveOrder(id));
+    public ResponseEntity<PurchaseOrder> receive(
+            @PathVariable Long id,
+            @RequestBody ReceiveOrderRequest request) {
+        return ResponseEntity.ok(purchaseOrderService.receiveOrder(id, request));
     }
 
     @PostMapping("/{id}/cancel")

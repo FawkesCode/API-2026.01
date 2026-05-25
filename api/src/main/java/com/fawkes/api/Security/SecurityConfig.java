@@ -4,15 +4,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
     private final AuthTokenFilter authTokenFilter;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
@@ -44,10 +46,11 @@ public class SecurityConfig {
                         .requestMatchers("/manager/**").hasRole("MANAGER")
                         .requestMatchers("/operational/**").hasRole("OPERATIONAL")
                         .requestMatchers("/director/**").hasRole("DIRECTOR")
+                        .requestMatchers(HttpMethod.POST, "/api/purchase-orders/*/receive").hasRole("MANAGER")
                         .anyRequest().authenticated()
                 )
                 // ✅ Adicionar handler customizado para 403
-                .exceptionHandling(exception -> 
+                .exceptionHandling(exception ->
                         exception.accessDeniedHandler(customAccessDeniedHandler)
                 )
                 // Pra quem sabe ExpressJS, isso aqui é basicamente o Middleware

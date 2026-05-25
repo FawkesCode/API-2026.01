@@ -45,6 +45,10 @@ public class PurchaseOrder {
     @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_note_id_fk")
+    private OrderNote orderNote;
+
     @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PurchaseOrderItem> items;
 
