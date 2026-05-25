@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import java.lang.String?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -11,7 +15,6 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
 
 <VBox fx:id="pageContent" maxHeight="-Infinity" maxWidth="1200.0" minWidth="800.0" prefHeight="720.0" prefWidth="864.0" spacing="20.0" styleClass="pageContent" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fawkes.front.controller.DashboardPageController">
    <children>
@@ -143,6 +146,127 @@
             </HBox>
          </children>
       </HBox>
-      <VBox fx:id="dashboardContainer" prefHeight="200.0" prefWidth="100.0" spacing="30.0" VBox.vgrow="ALWAYS" />
+
+      <VBox fx:id="dashboardContainer" prefHeight="200.0" prefWidth="100.0" spacing="30.0" VBox.vgrow="ALWAYS">
+         <children>
+
+            <HBox spacing="10.0">
+               <children>
+
+                  <VBox minWidth="600.0" spacing="10.0" styleClass="dashboard__cards-container" HBox.hgrow="ALWAYS">
+                     <children>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label styleClass="dashboard__title" text="Pedidos já aprovados" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <JFXButton fx:id="btnSeeAllOrders" styleClass="dashboard__button" text="Ver Todos &gt;&gt;" />
+                           </children>
+                        </HBox>
+
+                        <TableView fx:id="lastOrdersTable" prefHeight="302.0" prefWidth="600.0">
+                           <columns>
+                              <TableColumn fx:id="columnId" prefWidth="63.19998246431351" text="ID" />
+                              <TableColumn fx:id="columnSupplier" prefWidth="135.99999618530273" text="Fornecedor" />
+                              <TableColumn fx:id="columnSolicitor" text="Solicitante" />
+                              <TableColumn fx:id="columnValue" prefWidth="72.79998779296875" text="Valor" />
+                              <TableColumn fx:id="columnStatus" prefWidth="103.20001220703125" text="Status" />
+                              <TableColumn fx:id="columnDeliveryDate" prefWidth="120.0" text="Previsão Entrega" />
+                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                        <HBox alignment="CENTER" prefHeight="54.0" prefWidth="590.0" spacing="10.0">
+                           <children>
+                              <JFXButton fx:id="btnPrev" maxHeight="33.0" maxWidth="33.0" minHeight="33.0" minWidth="33.0" onAction="#handlePrevPage" prefHeight="33.0" prefWidth="33.0" styleClass="dashboard__table--pagination" text="&lt;" />
+                              <Label fx:id="curPage" alignment="CENTER" prefHeight="18.0" prefWidth="144.0" styleClass="dashboard__table--pagination-cur" />
+                              <JFXButton fx:id="btnNext" maxHeight="33.0" maxWidth="33.0" minHeight="33.0" minWidth="33.0" onAction="#handleNextPage" prefHeight="33.0" prefWidth="33.0" styleClass="dashboard__table--pagination" text="&gt;" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+
+                  <Region />
+
+                  <VBox maxHeight="400.0" maxWidth="320.0" minHeight="400.0" minWidth="320.0" prefHeight="400.0" prefWidth="320.0" styleClass="dashboard__alerts-container">
+                     <children>
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background: transparent; -fx-background-color: transparent;" styleClass="custom-scroll" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
+                           <content>
+                              <VBox spacing="10.0">
+                                 <children>
+                                    <Label styleClass="dashboard__alerts--title" text="Atenção" />
+
+                                    <VBox>
+                                       <children>
+                                          <Label styleClass="dashboard__alerts--subtitle" text="Total gasto em pedidos" />
+                                          <VBox>
+                                             <children>
+                                                <Label fx:id="lblTotalPrice" styleClass="dashboard__alerts--price" text="R$ 1200,00" />
+                                                <Label fx:id="lblCount" styleClass="dashboard__alerts--info" text="em 10 compras realizadas e recebidas" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </VBox>
+
+                                    <VBox spacing="10.0">
+                                       <children>
+                                          <Label styleClass="dashboard__alerts--subtitle" text="Produtos que estão perto do mínimo " />
+                                          <VBox spacing="5.0">
+                                             <children>
+                                                <Label alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" styleClass="dashboard__alerts--products" text="Caneta -&gt; 10 restantes" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </VBox>
+
+                                    <VBox spacing="10.0">
+                                       <children>
+                                          <Label styleClass="dashboard__alerts--subtitle" text="Complicações com Pedidos" />
+                                          <VBox spacing="5.0">
+                                             <children>
+                                                <VBox styleClass="dashboard__alerts--orders-container">
+                                                   <children>
+                                                      <Label styleClass="dashboard__alerts--orders-title" text="Pedido PED-101" />
+                                                      <Label styleClass="dashboard__alerts--orders-subtitle" text="NEGADO - Diretor X" />
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+
+            <HBox spacing="20.0">
+               <children>
+                  <VBox minHeight="350.0" styleClass="dashboard__cards-container" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label styleClass="dashboard__title" text="Compras por mês" />
+                     </children>
+                  </VBox>
+
+                  <VBox minHeight="350.0" styleClass="dashboard__cards-container" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label styleClass="dashboard__title" text="Top Fornecedores" />
+                        <Label styleClass="dashboard__title" text="Produtos Críticos" />
+                     </children>
+                  </VBox>
+
+                  <VBox minHeight="350.0" styleClass="dashboard__cards-container" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label styleClass="dashboard__title" text="Compras por mês" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+
+         </children>
+      </VBox>
    </children>
 </VBox>

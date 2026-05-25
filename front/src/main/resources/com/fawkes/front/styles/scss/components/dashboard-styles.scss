@@ -56,7 +56,7 @@
     }
 
     &__title {
-        -fx-text-fill: $surface-400;
+        -fx-text-fill: $surface-800;
         -fx-font-family: $poppins;
     }
 
@@ -119,6 +119,81 @@
 
     }
 
+    &__table {
+        &--pagination {
+            -fx-font-size: 16px;
+            -fx-cursor: hand;
+
+            &:hover {
+                -fx-background-color: $surface-50;
+                -fx-background-radius: 50%;
+            }
+
+            &:focused {
+                -fx-text-fill: $primary-light;
+            }
+
+            &-cur {
+                -fx-font-family: $poppins;
+                -fx-text-fill: $surface-600;
+                -fx-background-color: $surface-50;
+                -fx-background-radius: 100px;
+
+            }
+        }
+
+        &--status {
+            -fx-background-radius: 30px;
+            -fx-border-radius: 30px;
+            -fx-border-style: 1px;
+            -fx-padding: 3px;
+            -fx-font-size: 10px;
+            -fx-font-family: $poppins;
+        }
+
+        &--pending, &--problems {
+            -fx-border-color: #9FA9B7;
+            -fx-text-fill: #9FA9B7;
+            -fx-background-color: #F1F2F4;
+        }
+
+        &--confirmed, &--received {
+            -fx-border-color: $primary-light;
+            -fx-text-fill: $primary-light;
+            -fx-background-color: #DCF4FD;
+        }
+
+        &--cancelled, &--not-received {
+            -fx-border-color: #282E38;
+            -fx-text-fill: #282E38;
+            -fx-background-color: #D1D3D5;
+        }
+
+        &--purchased {
+            -fx-border-color: #FFB700;
+            -fx-text-fill: #FFB700;
+            -fx-background-color: #FFF4D8;
+        }
+
+        &--transit {
+            -fx-border-color: #FF497D;
+            -fx-text-fill: #FF497D;
+            -fx-background-color: #FFD8E3;
+        }
+
+        &--delayed {
+            -fx-border-color: #8649FF;
+            -fx-text-fill: #8649FF;
+            -fx-background-color: #E5D8FF;
+        }
+
+        &--returned {
+            -fx-border-color: #FF6F00;
+            -fx-text-fill: #FF6F00;
+            -fx-background-color: #FFEAD9;
+        }
+    }
+
 }
 
 .table-view {
@@ -153,6 +228,19 @@
 
 .table-view .table-cell {
     -fx-padding: 5px 0 5px 0;
+}
+
+.table-view .table-row-cell:odd {
+    -fx-background-color: transparent;
+}
+
+.table-view .table-cell {
+    -fx-border-color: transparent;
+}
+
+.table-view .table-row-cell {
+    -fx-border-color: #E2E8F0;
+    -fx-border-width: 0 0 1 0;
 }
 
 .custom-scroll .scroll-bar:vertical {

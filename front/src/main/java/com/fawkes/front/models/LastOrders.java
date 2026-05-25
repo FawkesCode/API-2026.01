@@ -1,67 +1,27 @@
 package com.fawkes.front.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LastOrders {
-    private String id;
-    private String supplier;
-    private String solicitor;
-    private String value;
+    private int id;
+    private String supplierName;
+    private String requesterName;
+    private double totalValue;
     private String status;
-    private String deliveryDate;
+    private String expectedDeliveryDate;
 
-    public LastOrders(String id, String supplier, String solicitor, String value, String status, String deliveryDate) {
-        this.id = id;
-        this.supplier = supplier;
-        this.solicitor = solicitor;
-        this.value = value;
-        this.status = status;
-        this.deliveryDate = deliveryDate;
-    }
+    public int getId() { return id; }
+    public String getRequesterName() { return requesterName; }
+    public String getSupplierName() { return supplierName; }
+    public double getTotalValue() { return totalValue; }
+    public String getStatus() { return status; }
+    public String getExpectedDeliveryDate() { return expectedDeliveryDate; }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getSupplier() {
-        return supplier;
-    }
-
-    public void setSupplier(String supplier) {
-        this.supplier = supplier;
-    }
-
-    public String getSolicitor() {
-        return solicitor;
-    }
-
-    public void setSolicitor(String solicitor) {
-        this.solicitor = solicitor;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getDeliveryDate() {
-        return deliveryDate;
-    }
-
-    public void setDeliveryDate(String deliveryDate) {
-        this.deliveryDate = deliveryDate;
-    }
+    public void setId(int id) { this.id = id; }
+    public void setRequesterName(String requesterName) { this.requesterName = requesterName; }
+    public void setSupplierName(String supplierName) { this.supplierName = supplierName; }
+    public void setTotalValue(double totalValue) { this.totalValue = totalValue; }
+    public void setStatus(String statusLabel) { this.status = statusLabel; }
+    public void setExpectedDeliveryDate(String expectedDeliveryDate) { this.expectedDeliveryDate = expectedDeliveryDate; }
 }

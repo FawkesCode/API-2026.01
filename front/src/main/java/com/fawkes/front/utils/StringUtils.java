@@ -1,5 +1,8 @@
 package com.fawkes.front.utils;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class StringUtils {
 
     public static String roleTranslation(String role) {
@@ -51,4 +54,6 @@ public class StringUtils {
             default -> status;
         };
     }
+
+    public static final NumberFormat CURRENCY = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 }

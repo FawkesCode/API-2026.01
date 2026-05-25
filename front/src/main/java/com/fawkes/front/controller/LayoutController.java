@@ -133,10 +133,10 @@ public class LayoutController {
             // Navigate to Stock by default for operational users
             Platform.runLater(this::handleStockButton);
         } else if (RBACUtil.isManager()) {
-            Platform.runLater(this::handleHistoryButton);
+            Platform.runLater(this::handleDashboardButton);
         } else {
             // Maybe it will be needed to take off some buttons from here as well, depending on what exactly appears for the director
-            Platform.runLater(this::handleHistoryButton);
+            Platform.runLater(this::handleDashboardButton);
         }
     }
 
