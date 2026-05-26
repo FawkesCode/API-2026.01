@@ -48,6 +48,8 @@ public class StringUtils {
             case "pending" -> "••• Pendente";
             case "confirmed" -> "✔ Aprovado";
             case "cancelled" -> "✖ Recusado";
+            case "in_quotation" -> "⏳ Em Cotação";
+            case "quoted" -> "📋 Cotado";
             default -> status;
         };
     }
