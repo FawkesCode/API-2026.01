@@ -164,7 +164,7 @@ public interface DashboardPurchaseOrderRepository extends JpaRepository<Purchase
     // ── Tempo médio de processamento ──────────────────────────────────
     @Query(value = """
         SELECT AVG(DATEDIFF(po.updated_at, po.order_date))
-        FROM TB_purchase_order po
+        FROM tb_purchase_order po
         WHERE po.status = 'received'
           AND po.created_at BETWEEN :from AND :to
     """, nativeQuery = true)
