@@ -5,6 +5,7 @@ import com.fawkes.api.Services.PurchaseOrderService;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,12 +15,16 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import com.fawkes.api.Repositories.PurchaseOrderRepository;
+import com.fawkes.api.Services.PurchaseOrderEmail;
 
 @RestController
 @RequestMapping("/api/purchase-orders")
 @RequiredArgsConstructor
 public class PurchaseOrderController {
+
+
+    @Autowired
+    private PurchaseOrderEmail purchaseOrderEmail;
 
     private final PurchaseOrderService purchaseOrderService;
     
@@ -70,7 +75,7 @@ public class PurchaseOrderController {
 
     @PostMapping("/{id}/submit")
     public ResponseEntity<PurchaseOrder> submit(@PathVariable Long id) {
-       
+        purchaseOrderEmail.sendEmail(id,"vbomfimcunha@gmail.com");
         return ResponseEntity.ok(purchaseOrderService.submitOrder(id));
     }
 
