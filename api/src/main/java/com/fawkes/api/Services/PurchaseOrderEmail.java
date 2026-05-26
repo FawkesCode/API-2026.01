@@ -1,12 +1,9 @@
 
 package com.fawkes.api.Services;
 
-import java.math.BigDecimal;
-import java.util.Date;
+
 import java.util.Optional;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
