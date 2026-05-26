@@ -3,8 +3,11 @@ package com.fawkes.api.Services;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Optional;
+
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -14,21 +17,27 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import com.fawkes.api.Entities.PurchaseOrder;
+import com.fawkes.api.Repositories.PurchaseOrderRepository;
+
+import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class PurchaseOrderEmail{
+    private final PurchaseOrderRepository purchaseOrderRepository;
 
+    public PurchaseOrderEmail(PurchaseOrderRepository purchaseOrderRepository){
+        this.purchaseOrderRepository = purchaseOrderRepository;
+    }
 
     @Autowired
     private JavaMailSender mailSender;
 
-    public void sendEmail(
-        String toEmail,
-        String Username,
-        String itemName, 
-        BigDecimal itemPrice,
-        Date date ){
+    public void sendEmail(long orderId,String toEmail){
+        Optional<PurchaseOrder> orderOptional = purchaseOrderRepository.findById(orderId);
+        if (orderOptional.isPresent()) {
+            PurchaseOrder order = orderOptional.get();
 
         String emailBody = """
                 <!DOCTYPE html>
@@ -66,10 +75,7 @@ public class PurchaseOrderEmail{
                                 <td class="label">Solicitante:</td>
                                 <td class="value">{{userName}}</td>
                             </tr>
-                            <tr>
-                                <td class="label">Ativo:</td>
-                                <td class="value">{{itemName}}</td>
-                            </tr>
+                            
                             <tr>
                                 <td class="label">Valor:</td>
                                 <td class="value">R$ {{itemPrice}}</td>
@@ -93,10 +99,9 @@ public class PurchaseOrderEmail{
                 """;
 
                 String formatedEmailMessage = emailBody
-                        .replace("{{userName}}",Username)
-                        .replace("{{itemName}}",itemName)
-                        .replace("{{itemPrice}}",itemPrice.toString())
-                        .replace("{{requestDate}}",date.toString());
+                        .replace("{{userName}}",order.getCreatedBy().getUserName())
+                        .replace("{{itemPrice}}",order.getTotalValue().toString())
+                        .replace("{{requestDate}}",order.getCreatedAt().toString());
         try {
         MimeMessage orderAdviser = mailSender.createMimeMessage();
         MimeMessageHelper message = new MimeMessageHelper(orderAdviser, true, "UTF-8");               
@@ -118,4 +123,5 @@ public class PurchaseOrderEmail{
     }
 
     
+}
 }
