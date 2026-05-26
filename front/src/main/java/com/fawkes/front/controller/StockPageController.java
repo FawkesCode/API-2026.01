@@ -10,6 +10,7 @@ import com.fawkes.front.service.ApiClient;
 import com.fawkes.front.utils.ModalManager;
 import com.fawkes.front.utils.RBACUtil;
 import com.fawkes.front.utils.StringUtils;
+import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -31,6 +32,7 @@ import java.util.*;
 public class StockPageController {
     @FXML private VBox stockContainer;
     @FXML private TextField searchField;
+    @FXML private JFXButton btnOutput;
 
     private ObservableList<JsonNode> allItems = FXCollections.observableArrayList();
     private HashMap<String, Long> productMap = new HashMap<>();
@@ -44,8 +46,16 @@ public class StockPageController {
     @FXML
     public void initialize() {
         loadStock();
+        applyRBACRestrictions();
     }
 
+    private void applyRBACRestrictions() {
+        // Only DIRECTOR and MANAGER can create new employees
+        if (!RBACUtil.canManageEmployees()) {
+            btnOutput.setVisible(false);
+            btnOutput.setManaged(false);
+        }
+    }
 
     @FXML
     public void loadStock() {

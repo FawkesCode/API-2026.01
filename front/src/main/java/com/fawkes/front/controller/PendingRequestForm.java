@@ -1,6 +1,7 @@
 package com.fawkes.front.controller;
 
 import com.fawkes.front.models.*;
+import com.fawkes.front.service.UserInfoManager;
 import com.fawkes.front.utils.ModalManager;
 import com.fawkes.front.utils.RBACUtil;
 import com.fawkes.front.utils.StringUtils;
@@ -23,6 +24,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class PendingRequestForm {
     @FXML private JFXButton btnApprove;
@@ -45,14 +47,19 @@ public class PendingRequestForm {
     public void setOnSaveSuccess(Runnable onSaveSuccess) {
         this.onSaveSuccess = onSaveSuccess;
     }
-
+    UserInfoManager loggedUser = UserInfoManager.getInstance();
     public void initialize() {
         applyRBACRestrictions();
     }
 
     private void applyRBACRestrictions() {
         // if OPERATIONAL users can't aprove or reject orders, and I know they also cant manage products, we can use the canManageProducts
-        if (!RBACUtil.canManageProducts()) {
+//        if (!RBACUtil.canManageProducts()) {
+//            btnActionContainer.setVisible(false);
+//            btnActionContainer.setManaged(false);
+//        }
+
+        if (!Objects.equals(loggedUser.getUserRole(), "DIRECTOR")) {
             btnActionContainer.setVisible(false);
             btnActionContainer.setManaged(false);
         }

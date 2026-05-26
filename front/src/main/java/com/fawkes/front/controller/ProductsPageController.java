@@ -46,7 +46,7 @@ public class ProductsPageController {
 
     private void applyRBACRestrictions() {
         // OPERATIONAL users cannot create new products, only register output
-        if (!RBACUtil.canManageProducts()) {
+        if (!RBACUtil.isDirector()) {
             btnInput.setVisible(false);
             btnInput.setManaged(false);
         }

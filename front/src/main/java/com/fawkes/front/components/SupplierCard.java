@@ -2,6 +2,8 @@ package com.fawkes.front.components;
 
 import com.fawkes.front.models.Employee;
 import com.fawkes.front.models.Supplier;
+import com.fawkes.front.utils.RBACUtil;
+import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -15,7 +17,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 public class SupplierCard extends AnchorPane {
-
+    @FXML private JFXButton btnEdit;
     @FXML private Label status;
     @FXML private Button btnToggleStatus;
     @FXML private ImageView toggleStatusIcon;
@@ -39,8 +41,15 @@ public class SupplierCard extends AnchorPane {
         fxmlLoader.setController(this);
         try {
             fxmlLoader.load();
+            applyRBACRestrictions();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void applyRBACRestrictions() {
+        if (!RBACUtil.isDirector()) {
+            btnEdit.setVisible(false);
         }
     }
 

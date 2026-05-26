@@ -1,6 +1,7 @@
 package com.fawkes.front.components;
 
 import com.fawkes.front.models.StockItem;
+import com.fawkes.front.utils.RBACUtil;
 import com.fawkes.front.utils.StringUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
@@ -45,8 +46,17 @@ public class ProductSupplierCard extends AnchorPane {
         fxmlLoader.setController(this);
         try {
             fxmlLoader.load();
+            applyRBACRestrictions();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void applyRBACRestrictions() {
+
+        if (!RBACUtil.isDirector()) {
+            btnDelete.setVisible(false);
+            btnEdit.setVisible(false);
         }
     }
 

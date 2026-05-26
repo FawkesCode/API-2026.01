@@ -112,31 +112,23 @@ public class LayoutController {
 
         // Apply RBAC restrictions based on user role
         applyRBACRestrictions();
+        System.out.println(loggedUser.getUserRole());
     }
 
     private void applyRBACRestrictions() {
+        Platform.runLater(this::handleDashboardButton);
         // OPERATIONAL users can only access Stock
         if (RBACUtil.isOperational()) {
-            // Hide tabs for operational users
-            btnDashboard.setVisible(false);
-            btnDashboard.setManaged(false);
-
-            btnHistory.setVisible(false);
-            btnHistory.setManaged(false);
-
             btnEmployees.setVisible(false);
             btnEmployees.setManaged(false);
-
             btnSuppliers.setVisible(false);
             btnSuppliers.setManaged(false);
-
-            // Navigate to Stock by default for operational users
-            Platform.runLater(this::handleStockButton);
         } else if (RBACUtil.isManager()) {
-            Platform.runLater(this::handleDashboardButton);
-        } else {
-            // Maybe it will be needed to take off some buttons from here as well, depending on what exactly appears for the director
-            Platform.runLater(this::handleDashboardButton);
+            btnEmployees.setVisible(false);
+            btnEmployees.setManaged(false);
+        } else if (RBACUtil.isDirector()) {
+            btnEmployees.setVisible(true);
+            btnEmployees.setManaged(true);
         }
     }
 
