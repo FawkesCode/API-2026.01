@@ -20,3 +20,5 @@ Thumbs.db
 
 #arquivos npm
 node_modules
+.env
+.env/
