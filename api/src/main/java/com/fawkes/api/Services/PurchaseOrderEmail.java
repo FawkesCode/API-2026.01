@@ -2,14 +2,10 @@
 package com.fawkes.api.Services;
 
 
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -17,7 +13,6 @@ import org.springframework.stereotype.Service;
 import com.fawkes.api.Entities.PurchaseOrder;
 import com.fawkes.api.Repositories.PurchaseOrderRepository;
 
-import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
 @Service
@@ -94,11 +89,13 @@ public class PurchaseOrderEmail{
                 </body>
                 </html>
                 """;
-
+                DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                String formattedDate = formatterDate.format(order.getCreatedAt());
+                
                 String formatedEmailMessage = emailBody
                         .replace("{{userName}}",order.getCreatedBy().getUserName())
                         .replace("{{itemPrice}}",order.getTotalValue().toString())
-                        .replace("{{requestDate}}",order.getCreatedAt().toString());
+                        .replace("{{requestDate}}",formattedDate);
         try {
         MimeMessage orderAdviser = mailSender.createMimeMessage();
         MimeMessageHelper message = new MimeMessageHelper(orderAdviser, true, "UTF-8");               
