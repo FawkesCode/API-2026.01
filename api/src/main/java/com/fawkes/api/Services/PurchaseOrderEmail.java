@@ -89,7 +89,7 @@ public class PurchaseOrderEmail{
                 </body>
                 </html>
                 """;
-                DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
                 String formattedDate = formatterDate.format(order.getCreatedAt());
                 
                 String formatedEmailMessage = emailBody
