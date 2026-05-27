@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
 <?import java.lang.String?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
@@ -159,7 +159,7 @@
                            <children>
                               <Label styleClass="dashboard__title" text="Pedidos já aprovados" />
                               <Region HBox.hgrow="ALWAYS" />
-                              <JFXButton fx:id="btnSeeAllOrders" styleClass="dashboard__button" text="Ver Todos &gt;&gt;" />
+                              <Button fx:id="btnSeeAllOrders" styleClass="dashboard__button" text="Ver Todos &gt;&gt;" />
                            </children>
                         </HBox>
 
@@ -178,9 +178,9 @@
                         </TableView>
                         <HBox alignment="CENTER" prefHeight="54.0" prefWidth="590.0" spacing="10.0">
                            <children>
-                              <JFXButton fx:id="btnPrev" maxHeight="33.0" maxWidth="33.0" minHeight="33.0" minWidth="33.0" onAction="#handlePrevPage" prefHeight="33.0" prefWidth="33.0" styleClass="dashboard__table--pagination" text="&lt;" />
+                              <Button fx:id="btnPrev" maxHeight="33.0" maxWidth="33.0" minHeight="33.0" minWidth="33.0" onAction="#handlePrevPage" prefHeight="33.0" prefWidth="33.0" styleClass="dashboard__table--pagination" text="&lt;" />
                               <Label fx:id="curPage" alignment="CENTER" prefHeight="18.0" prefWidth="144.0" styleClass="dashboard__table--pagination-cur" />
-                              <JFXButton fx:id="btnNext" maxHeight="33.0" maxWidth="33.0" minHeight="33.0" minWidth="33.0" onAction="#handleNextPage" prefHeight="33.0" prefWidth="33.0" styleClass="dashboard__table--pagination" text="&gt;" />
+                              <Button fx:id="btnNext" maxHeight="33.0" maxWidth="33.0" minHeight="33.0" minWidth="33.0" onAction="#handleNextPage" prefHeight="33.0" prefWidth="33.0" styleClass="dashboard__table--pagination" text="&gt;" />
                            </children>
                         </HBox>
                      </children>
@@ -245,22 +245,15 @@
 
             <HBox spacing="20.0">
                <children>
-                  <VBox minHeight="350.0" styleClass="dashboard__cards-container" HBox.hgrow="ALWAYS">
+                  <VBox fx:id="purchasesPerMonth" minHeight="350.0" styleClass="dashboard__cards-container" HBox.hgrow="ALWAYS">
                      <children>
                         <Label styleClass="dashboard__title" text="Compras por mês" />
                      </children>
                   </VBox>
 
-                  <VBox minHeight="350.0" styleClass="dashboard__cards-container" HBox.hgrow="ALWAYS">
+                  <VBox fx:id="requestStatus" minHeight="350.0" styleClass="dashboard__cards-container" HBox.hgrow="ALWAYS">
                      <children>
-                        <Label styleClass="dashboard__title" text="Top Fornecedores" />
-                        <Label styleClass="dashboard__title" text="Produtos Críticos" />
-                     </children>
-                  </VBox>
-
-                  <VBox minHeight="350.0" styleClass="dashboard__cards-container" HBox.hgrow="ALWAYS">
-                     <children>
-                        <Label styleClass="dashboard__title" text="Compras por mês" />
+                        <Label styleClass="dashboard__title" text="Status de Pedidos" />
                      </children>
                   </VBox>
                </children>
