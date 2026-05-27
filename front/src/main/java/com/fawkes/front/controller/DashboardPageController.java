@@ -288,26 +288,27 @@ public class DashboardPageController {
         Task<JsonNode> task = new Task<>() {
             @Override
             protected JsonNode call() throws Exception {
-                return ApiClient.get("/dashboard/kpis");
+                return ApiClient.get("/dashboard/movimentacao-mensal");
             }
         };
         System.out.println("FUUUUUUUUUUUUUCK");
-        task.setOnSucceeded(e -> Platform.runLater(() -> {
-            JsonNode data = task.getValue();
-            System.out.println("oieeee");
-            System.out.println(data.toPrettyString());
-        }));
-        task.setOnFailed(e -> Platform.runLater(() -> {
-            System.out.println("Erro ao carregar funcionários: " + task.getException().getMessage());
-        }));
-        Thread thread = new Thread(task);
-        thread.setDaemon(true);
-        thread.start();
+//        task.setOnSucceeded(e -> Platform.runLater(() -> {
+//            JsonNode data = task.getValue();
+//            System.out.println("oieeee");
+//            System.out.println(data.toPrettyString());
+//        }));
+//        task.setOnFailed(e -> Platform.runLater(() -> {
+//            System.out.println("Erro ao carregar funcionários: " + task.getException().getMessage());
+//        }));
+
 
         task.setOnSucceeded(e -> Platform.runLater(() -> {
             JsonNode data = task.getValue();
             XYChart.Series<String, Number> series = createBarChart().getData().get(0);
             series.getData().clear();
+
+            System.out.println("DADOS REAL OFICIAL VAM BORA");
+            System.out.println(data.toPrettyString());
 
             for (JsonNode item : data) {
                 String month = item.get("monthLabel").asText();
@@ -316,7 +317,9 @@ public class DashboardPageController {
             }
         }));
 
-        new Thread(task).start();
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     protected void pieChart() {
