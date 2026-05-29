@@ -138,7 +138,7 @@ public class DashboardPageController {
         loadMinProducts();
         loadProblemsOrders();
         loadBarChart();
-        pieChart();
+        loadPieChart();
     }
 
     private void loadOrdersPrice() {
@@ -218,7 +218,6 @@ public class DashboardPageController {
 
         task.setOnSucceeded(e -> Platform.runLater(() -> {
             JsonNode data = task.getValue();
-
             try {
                 ObjectMapper mapper = new ObjectMapper();
                 JsonNode contentArray = data.get("content");
@@ -264,6 +263,7 @@ public class DashboardPageController {
 
 
     private BarChart<String, Number> createBarChart() {
+        purchasesPerMonth.getChildren().removeIf(node -> node instanceof BarChart);
 
         CategoryAxis xAxis = new CategoryAxis();
         xAxis.setLabel("Mês");
@@ -291,30 +291,27 @@ public class DashboardPageController {
                 return ApiClient.get("/dashboard/movimentacao-mensal");
             }
         };
-        System.out.println("FUUUUUUUUUUUUUCK");
-//        task.setOnSucceeded(e -> Platform.runLater(() -> {
-//            JsonNode data = task.getValue();
-//            System.out.println("oieeee");
-//            System.out.println(data.toPrettyString());
-//        }));
-//        task.setOnFailed(e -> Platform.runLater(() -> {
-//            System.out.println("Erro ao carregar funcionários: " + task.getException().getMessage());
-//        }));
-
 
         task.setOnSucceeded(e -> Platform.runLater(() -> {
             JsonNode data = task.getValue();
-            XYChart.Series<String, Number> series = createBarChart().getData().get(0);
+            BarChart<String, Number> barChart = createBarChart();
+            XYChart.Series<String, Number> series = barChart.getData().get(0);
             series.getData().clear();
+            System.out.println("#### ARRAY DO MOVIMENTO MENSAL #### "+data.toPrettyString());
+            JsonNode purchaseOrdersArray = data.get("purchaseOrders");
 
-            System.out.println("DADOS REAL OFICIAL VAM BORA");
-            System.out.println(data.toPrettyString());
-
-            for (JsonNode item : data) {
-                String month = item.get("monthLabel").asText();
-                double value = item.get("count").asDouble();
-                series.getData().add(new XYChart.Data<>(month, value));
+            if (purchaseOrdersArray != null && purchaseOrdersArray.isArray()) {
+                for (JsonNode item : purchaseOrdersArray) {
+                    String month = item.get("monthLabel").asText();
+                    double value = item.get("count").asDouble();
+                    series.getData().add(new XYChart.Data<>(month, value));
+                }
             }
+        }));
+
+        task.setOnFailed(e -> Platform.runLater(() -> {
+            System.err.println("Erro ao carregar movimentação mensal: " + task.getException().getMessage());
+            task.getException().printStackTrace();
         }));
 
         Thread thread = new Thread(task);
@@ -322,23 +319,53 @@ public class DashboardPageController {
         thread.start();
     }
 
-    protected void pieChart() {
-        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
-                new PieChart.Data("Aprovados", 10),
-                new PieChart.Data("Negados", 5),
-                new PieChart.Data("Entregues", 3),
-                new PieChart.Data("Devolvidos", 4),
-                new PieChart.Data("Atrasados", 2)
-        );
-        PieChart pieChart = new PieChart(pieChartData);
-        pieChart.setTitle("Status dos Pedidos");
-        pieChart.setClockwise(true);
-        pieChart.setLabelLineLength(50);
-        pieChart.setLabelsVisible(true);
-        pieChart.setStartAngle(180);
-        pieChart.setLabelsVisible(false);
+    private void loadPieChart() {
+        Task<JsonNode> task = new Task<>() {
+            @Override
+            protected JsonNode call() throws Exception {
+                return ApiClient.get("/dashboard/status-pedidos");
+            }
+        };
 
-        requestStatus.getChildren().add(pieChart);
+        task.setOnSucceeded(e -> Platform.runLater(() -> {
+            JsonNode data = task.getValue();
+            System.out.println("### ARRAY DO STATUS-PEDIDOS ####"+data.toPrettyString());
+            JsonNode ordersArray = data.get("purchaseOrders");
+            if (ordersArray == null || !ordersArray.isArray() || ordersArray.isEmpty()) {
+                ordersArray = data.get("orders");
+            }
+
+            ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+
+            if (ordersArray != null && ordersArray.isArray()) {
+                for (JsonNode item : ordersArray) {
+                    String statusLabel = item.get("statusLabel").asText();
+                    long count = item.get("count").asLong();
+                    if (count > 0) {
+                        pieChartData.add(new PieChart.Data(statusLabel, count));
+                    }
+                }
+            }
+
+            PieChart pieChart = new PieChart(pieChartData);
+            pieChart.setTitle("Status dos Pedidos");
+            pieChart.setClockwise(true);
+            pieChart.setLabelLineLength(50);
+            pieChart.setLabelsVisible(false);
+            pieChart.setStartAngle(180);
+
+            requestStatus.getChildren().removeIf(node -> node instanceof PieChart);
+            requestStatus.getChildren().add(pieChart);
+        }));
+
+        task.setOnFailed(e -> Platform.runLater(() -> {
+            System.err.println("Erro ao carregar status de pedidos: " + task.getException().getMessage());
+            task.getException().printStackTrace();
+        }));
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
     }
 
 
