@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.fawkes.api.DTOs.Request.ReceiveOrderRequest;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -44,11 +45,14 @@ public class PurchaseOrderController {
     }
 
     @PostMapping("/draft")
-    public ResponseEntity<PurchaseOrder> createDraft(@RequestBody Map<String, Long> request) {
-        return ResponseEntity.ok(purchaseOrderService.createDraft(
-                request.get("supplierId"),
-                request.get("userId")
-        ));
+    public ResponseEntity<PurchaseOrder> createDraft(@RequestBody Map<String, Object> request) {
+        Long supplierId = ((Number) request.get("supplierId")).longValue();
+        Long userId = ((Number) request.get("userId")).longValue();
+        LocalDateTime expectedDeliveryDate = null;
+        if (request.get("expectedDeliveryDate") != null) {
+            expectedDeliveryDate = LocalDateTime.parse(request.get("expectedDeliveryDate").toString());
+        }
+        return ResponseEntity.ok(purchaseOrderService.createDraft(supplierId, userId, expectedDeliveryDate));
     }
 
     @PostMapping("/{orderId}/items")

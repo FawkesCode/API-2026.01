@@ -44,30 +44,22 @@ public class PendingRequestForm {
     private Stage curStage;
     private Order order;
     private Runnable onSaveSuccess;
+
     public void setOnSaveSuccess(Runnable onSaveSuccess) {
         this.onSaveSuccess = onSaveSuccess;
     }
+
     UserInfoManager loggedUser = UserInfoManager.getInstance();
+
     public void initialize() {
-        applyRBACRestrictions();
-    }
-
-    private void applyRBACRestrictions() {
-        // if OPERATIONAL users can't aprove or reject orders, and I know they also cant manage products, we can use the canManageProducts
-//        if (!RBACUtil.canManageProducts()) {
-//            btnActionContainer.setVisible(false);
-//            btnActionContainer.setManaged(false);
-//        }
-
-        if (!Objects.equals(loggedUser.getUserRole(), "DIRECTOR")) {
-            btnActionContainer.setVisible(false);
-            btnActionContainer.setManaged(false);
-        }
+        btnActionContainer.setVisible(false);
+        btnActionContainer.setManaged(false);
     }
 
     public void setData(Order order, Stage curStage) {
         this.curStage = curStage;
         this.order = order;
+
         department.setText(order.getSector());
         description.setText(order.getDescription());
         paymentMethod.setText(StringUtils.paymentTranslation(order.getPaymentMethod()));
@@ -75,24 +67,27 @@ public class PendingRequestForm {
         totalPrice.setText("Total: " + CURRENCY.format(order.getTotalValue()));
         totalQuantity.setText("Qtd. de Itens: " + order.getQuantity());
 
+        boolean isPending = "pending".equalsIgnoreCase(order.getStatus());
+        boolean isDirector = Objects.equals(loggedUser.getUserRole(), "DIRECTOR");
+
+        if (isPending && isDirector) {
+            btnActionContainer.setVisible(true);
+            btnActionContainer.setManaged(true);
+        }
 
         List<RequestItem> productsInfo = order.getItemsList();
         List<RequestSupplier> suppliersInfo = order.getSuppliersList();
         List<FormProducts> products = new ArrayList<>();
 
-
         for (RequestItem pro : productsInfo) {
             String name = pro.getProduct().getName();
             double price = pro.getUnitPrice();
             int quantity = pro.getQuantity();
-
             FormProducts product = new FormProducts(name, price, quantity, pro.getProduct().getId(), pro.getProduct().getSupplierId());
-
             products.add(product);
         }
 
         for (FormProducts pro : products) {
-            // 1. Criar os Labels
             Label qtd = new Label("(x " + pro.getQuantity() + ")");
             qtd.getStyleClass().add("input__label--info");
 
@@ -102,11 +97,8 @@ public class PendingRequestForm {
             Label price = new Label(pro.getUnityPrice());
             price.getStyleClass().add("input__label--info");
 
-
             HBox productsLineContainer = new HBox(5);
             productsLineContainer.setAlignment(Pos.CENTER);
-
-
 
             StackPane spacer = new StackPane();
             spacer.setStyle("-fx-border-style: dotted; -fx-border-color: #818EA1; -fx-border-width: 0 0 3 0;");
@@ -114,17 +106,13 @@ public class PendingRequestForm {
             spacer.setMaxHeight(5);
             HBox.setHgrow(spacer, Priority.ALWAYS);
 
-
             productsLineContainer.getChildren().addAll(qtd, name, spacer, price);
-
-
             productsContainer.getChildren().add(productsLineContainer);
         }
 
-        for (RequestSupplier sup: suppliersInfo) {
+        for (RequestSupplier sup : suppliersInfo) {
             Label supplier = new Label(sup.getSupplierName());
             supplier.getStyleClass().add("input__label--info");
-
             suppliersContainer.getChildren().add(supplier);
         }
     }
@@ -145,12 +133,10 @@ public class PendingRequestForm {
             controller.setOnSaveSuccess(onSaveSuccess);
 
             Stage stageAtual = (Stage) btnApprove.getScene().getWindow();
-
             Platform.runLater(() -> {
                 stageAtual.close();
                 ModalManager.openModal(curStage, formulario, "Aprovando Pedido " + order.getId(), 700.0, 350.0, "ModalFrameM_heightSM.fxml", false);
             });
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -166,15 +152,12 @@ public class PendingRequestForm {
             controller.setOnSaveSuccess(onSaveSuccess);
 
             Stage stageAtual = (Stage) btnApprove.getScene().getWindow();
-
             Platform.runLater(() -> {
                 stageAtual.close();
                 ModalManager.openModal(curStage, formulario, "Recusando Pedido " + order.getId(), 700.0, 350.0, "ModalFrameM_heightSM.fxml", false);
             });
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 }

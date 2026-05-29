@@ -40,16 +40,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/register").hasRole("DIRECTOR")
-                        // Health check
                         .requestMatchers("/actuator/health").permitAll()
-                        // TUDO que foi listado acima (tirando o register) → NÃO exige autenticação
                         .requestMatchers("/manager/**").hasRole("MANAGER")
                         .requestMatchers("/operational/**").hasRole("OPERATIONAL")
                         .requestMatchers("/director/**").hasRole("DIRECTOR")
+                        .requestMatchers(HttpMethod.POST, "/api/purchase-orders/*/confirm").hasAnyRole("DIRECTOR", "MANAGER")
+                        .requestMatchers(HttpMethod.POST, "/api/purchase-orders/*/ship").hasRole("MANAGER")
                         .requestMatchers(HttpMethod.POST, "/api/purchase-orders/*/receive").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.POST, "/api/purchase-orders/*/cancel").hasAnyRole("DIRECTOR", "MANAGER")
                         .anyRequest().authenticated()
                 )
-                // ✅ Adicionar handler customizado para 403
                 .exceptionHandling(exception ->
                         exception.accessDeniedHandler(customAccessDeniedHandler)
                 )

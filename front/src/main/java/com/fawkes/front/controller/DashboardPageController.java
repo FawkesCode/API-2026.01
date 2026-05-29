@@ -139,6 +139,7 @@ public class DashboardPageController {
         loadProblemsOrders();
         loadBarChart();
         pieChart();
+        loadRecentActivity();
     }
 
     private void loadOrdersPrice() {
@@ -341,8 +342,62 @@ public class DashboardPageController {
         requestStatus.getChildren().add(pieChart);
     }
 
+    // ── Atividade Recente ────────────────────────────────────────────────
 
+    @FXML private VBox recentActivityContainer;
 
+    private void loadRecentActivity() {
+        if (recentActivityContainer == null) return; // segurança: FXML pode não ter o campo ainda
 
+        recentActivityContainer.getChildren().clear();
 
+        Label loading = new Label("Carregando atividades...");
+        recentActivityContainer.getChildren().add(loading);
+
+        Task<com.fasterxml.jackson.databind.JsonNode> task = new javafx.concurrent.Task<>() {
+            @Override
+            protected com.fasterxml.jackson.databind.JsonNode call() throws Exception {
+                return ApiClient.get("/api/stock/movements/activity");
+            }
+        };
+
+        task.setOnSucceeded(e -> Platform.runLater(() -> {
+            recentActivityContainer.getChildren().clear();
+            com.fasterxml.jackson.databind.JsonNode data = task.getValue();
+
+            if (!data.isArray() || data.isEmpty()) {
+                recentActivityContainer.getChildren().add(new Label("Nenhuma atividade registrada."));
+                return;
+            }
+
+            int limit = Math.min(data.size(), 10);
+            for (int i = 0; i < limit; i++) {
+                com.fasterxml.jackson.databind.JsonNode node = data.get(i);
+
+                String type         = node.path("type").asText("ENTRADA");
+                String productName  = node.path("productName").asText("-");
+                int    quantity     = node.path("quantity").asInt(0);
+                String dateRaw      = node.path("date").asText("-");
+
+                String icon  = "SAIDA".equals(type) ? "↓" : "↑";
+                String color = "SAIDA".equals(type) ? "#e74c3c" : "#2ecc71";
+
+                Label entry = new Label(icon + "  " + productName + "  ×" + quantity + "   " + dateRaw);
+                entry.setStyle("-fx-text-fill: " + color + "; -fx-font-size: 12px; -fx-padding: 4 0 4 0;");
+                entry.setWrapText(true);
+                recentActivityContainer.getChildren().add(entry);
+            }
+        }));
+
+        task.setOnFailed(e -> Platform.runLater(() -> {
+            recentActivityContainer.getChildren().clear();
+            recentActivityContainer.getChildren().add(
+                    new Label("Erro ao carregar atividades: " + task.getException().getMessage())
+            );
+        }));
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+    }
 }

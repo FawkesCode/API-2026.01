@@ -56,17 +56,18 @@ public class PurchaseOrderService {
     }
 
     @Transactional
-    public PurchaseOrder createDraft(Long supplierId, Long userId) {
+    public PurchaseOrder createDraft(Long supplierId, Long userId, LocalDateTime expectedDeliveryDate) {
         Suppliers supplier = supplierRepository.findById(supplierId)
-                .orElseThrow(() -> new IllegalArgumentException("Supplier not found"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Fornecedor não encontrado"));
         Users user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
 
         PurchaseOrder order = new PurchaseOrder();
         order.setSupplier(supplier);
         order.setCreatedBy(user);
         order.setStatus(PurchaseOrder.Status.draft);
         order.setOrderDate(LocalDateTime.now());
+        order.setExpectedDeliveryDate(expectedDeliveryDate);
         order.setItems(new ArrayList<>());
 
         return purchaseOrderRepository.save(order);
@@ -111,7 +112,13 @@ public class PurchaseOrderService {
     @Transactional
     public PurchaseOrder confirmOrder(Long orderId) {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado"));
+
+        if (order.getStatus() != PurchaseOrder.Status.pending) {
+            throw new RegraDeNegocioException(
+                    "Só é possível confirmar pedidos com status 'pending'. Status atual: " + order.getStatus()
+            );
+        }
 
         order.setStatus(PurchaseOrder.Status.confirmed);
         return purchaseOrderRepository.save(order);
@@ -120,7 +127,13 @@ public class PurchaseOrderService {
     @Transactional
     public PurchaseOrder markAsShipped(Long orderId) {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado"));
+
+        if (order.getStatus() != PurchaseOrder.Status.confirmed) {
+            throw new RegraDeNegocioException(
+                    "Só é possível marcar como shipped pedidos com status 'confirmed'. Status atual: " + order.getStatus()
+            );
+        }
 
         order.setStatus(PurchaseOrder.Status.shipped);
         return purchaseOrderRepository.save(order);

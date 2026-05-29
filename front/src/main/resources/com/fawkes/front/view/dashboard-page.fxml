@@ -259,6 +259,22 @@
                </children>
             </HBox>
 
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!-- ATIVIDADE RECENTE — adicionado                              -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <VBox spacing="8.0" styleClass="dashboard__cards-container">
+               <children>
+                  <Label styleClass="dashboard__title" text="Atividade Recente" />
+                  <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="200.0"
+                              style="-fx-background: transparent; -fx-background-color: transparent;"
+                              styleClass="custom-scroll" vbarPolicy="AS_NEEDED">
+                     <content>
+                        <VBox fx:id="recentActivityContainer" spacing="4.0" />
+                     </content>
+                  </ScrollPane>
+               </children>
+            </VBox>
+
          </children>
       </VBox>
    </children>
