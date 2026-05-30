@@ -13,9 +13,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductService {
 
-    private final ProductsRepository productsRepository;
-    private final SupplierRepository supplierRepository;
-    private final StockRepository stockRepository;
+    private final ProductsRepository       productsRepository;
+    private final SupplierRepository       supplierRepository;
+    private final StockRepository          stockRepository;
+    private final ProductStockRepository   productStockRepository;
+    private final CompanyStockRepository   companyStockRepository;
+    private final SupplierStockRepository  supplierStockRepository;
 
     public List<Products> listAll() {
         return productsRepository.findAll();
@@ -50,7 +53,20 @@ public class ProductService {
 
     @Transactional
     public void delete(Long id) {
-        productsRepository.deleteById(id);
+        Products product = productsRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+        // Remove registros filhos antes de deletar o produto
+        productStockRepository.findByProductId(id)
+                .ifPresent(productStockRepository::delete);
+
+        companyStockRepository.findByProductId(id)
+                .forEach(companyStockRepository::delete);
+
+        supplierStockRepository.findByProductId(id)
+                .forEach(supplierStockRepository::delete);
+
+        productsRepository.delete(product);
     }
 
     @Transactional
@@ -58,12 +74,10 @@ public class ProductService {
         Products product = productsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
-        if (request.getProductName() != null) {
+        if (request.getProductName() != null)
             product.setProductName(request.getProductName());
-        }
-        if (request.getProductType() != null) {
+        if (request.getProductType() != null)
             product.setProductType(request.getProductType());
-        }
         if (request.getMeasurementUnit() != null) {
             try {
                 product.setMeasurementUnit(Products.MeasurementUnit.valueOf(request.getMeasurementUnit()));
@@ -71,12 +85,10 @@ public class ProductService {
                 product.setMeasurementUnit(Products.MeasurementUnit.NAO_DEFINIDO);
             }
         }
-        if (request.getUnitValue() != null) {
+        if (request.getUnitValue() != null)
             product.setUnitValue(request.getUnitValue());
-        }
-        if (request.getDescription() != null) {
+        if (request.getDescription() != null)
             product.setDescription(request.getDescription());
-        }
         if (request.getSupplierId() != null) {
             Suppliers supplier = supplierRepository.findById(request.getSupplierId())
                     .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado"));
