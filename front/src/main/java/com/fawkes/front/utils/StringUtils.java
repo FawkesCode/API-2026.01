@@ -48,12 +48,17 @@ public class StringUtils {
 
     public static String requestStatusTranslation(String status) {
         return switch (status) {
-            case "pending" -> "••• Pendente";
+            case "draft"     -> "📝 Rascunho";
+            case "pending"   -> "••• Pendente";
             case "confirmed" -> "✔ Aprovado";
+            case "shipped"   -> "🚚 Em trânsito";
+            case "received"  -> "✅ Recebido";
             case "cancelled" -> "✖ Recusado";
             default -> status;
         };
     }
+
+
 
     public static final NumberFormat CURRENCY = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 }

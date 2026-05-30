@@ -100,12 +100,13 @@ public class OrdersPageController {
                 Order ord = Order.fromJson(node);
                 String status = ord.getStatus().toLowerCase();
 
-                if (status.toLowerCase().equals("pending")) {
-                    pendingOrders.add(ord);
-                } else if (status.toLowerCase().equals("confirmed")) {
-                    aprovedOrders.add(ord);
-                } else {
-                    declinedOrders.add(ord);
+                switch (status.toLowerCase()) {
+                    case "pending"   -> pendingOrders.add(ord);
+                    case "confirmed" -> aprovedOrders.add(ord);
+                    case "shipped"   -> aprovedOrders.add(ord);  // em trânsito conta como aprovado
+                    case "received"  -> aprovedOrders.add(ord);  // recebido também
+                    case "cancelled" -> declinedOrders.add(ord);
+                    case "draft"     -> { /* ignora rascunhos no contador */ }
                 }
             }
 
