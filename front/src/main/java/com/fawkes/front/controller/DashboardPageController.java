@@ -272,6 +272,7 @@ public class DashboardPageController {
                 ObjectMapper mapper = new ObjectMapper();
                 List<LastOrders> list = mapper.convertValue(
                         data.get("content"), new TypeReference<List<LastOrders>>() {});
+
                 lastOrdersTable.getItems().setAll(list);
 
                 isLastPage = data.get("last").asBoolean();
@@ -383,6 +384,7 @@ public class DashboardPageController {
         NavigationManager nm = NavigationManager.getInstance();
         StackPane container = (StackPane) dashboardContainer.getScene().getRoot().lookup("#container");
         nm.navigateToPage(container, "view/orders-page.fxml", "Pedidos", "Onde você e os outros poderão visualizar os pedidos realizados.");
+        nm.setCurrentPage("Pedidos");
     }
     // ── Gráfico de barras SEGUNDA FILEIRA ─────────────────────────────────────────────
     private void loadBarChartSuppliers() {
@@ -394,8 +396,6 @@ public class DashboardPageController {
         task.setOnSucceeded(e -> Platform.runLater(() -> {
             topSuppliers.getChildren().removeIf(n -> n instanceof BarChart);
             JsonNode data = task.getValue();
-            System.out.println("teste");
-            System.out.println(data.toPrettyString());
             CategoryAxis xAxis = new CategoryAxis(); xAxis.setLabel("Fornecedores");
             NumberAxis   yAxis = new NumberAxis();   yAxis.setLabel("Quantidade");
             BarChart<String, Number> chart = new BarChart<>(xAxis, yAxis);
@@ -403,7 +403,7 @@ public class DashboardPageController {
 
 
             XYChart.Series<String, Number> series = new XYChart.Series<>();
-            JsonNode arr = task.getValue().get("byOrderCount");
+            JsonNode arr = data.get("byOrderCount");
             if (arr != null && arr.isArray()) {
                 for (JsonNode item : arr)
                     series.getData().add(new XYChart.Data<>(
@@ -425,8 +425,6 @@ public class DashboardPageController {
         task.setOnSucceeded(e -> Platform.runLater(() -> {
             criticalProducts.getChildren().removeIf(n -> n instanceof BarChart);
             JsonNode data = task.getValue();
-            System.out.println("teste");
-            System.out.println(data.toPrettyString());
             CategoryAxis xAxis = new CategoryAxis(); xAxis.setLabel("Produto");
             NumberAxis   yAxis = new NumberAxis();   yAxis.setLabel("Quantidade");
             BarChart<String, Number> chart = new BarChart<>(xAxis, yAxis);

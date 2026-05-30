@@ -127,7 +127,7 @@ public class RequestProductsPageController {
                 ShoppingRequestForm controller = loader.getController();
                 controller.setData(cartProducts);
                 Stage curStage = ((Stage) productsContainer.getScene().getWindow());
-                ModalManager.openModal(curStage, formulario, "Itens a serem pedidos", 600.0, 400.0, "ModalFrameSM.fxml", false);
+                ModalManager.openModal(curStage, formulario, "Itens a serem pedidos", false);
             } catch (IOException e) {
                 e.printStackTrace();
             }

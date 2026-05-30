@@ -112,7 +112,24 @@ public class LayoutController {
 
         // Apply RBAC restrictions based on user role
         applyRBACRestrictions();
-        System.out.println(loggedUser.getUserRole());
+
+        nm.getCurrentPage().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                sinActiveBtn(newValue);
+            }
+        });
+    }
+
+    private void sinActiveBtn(String nomePagina) {
+        switch (nomePagina) {
+            case "Dashboard" -> updateActiveButton(btnDashboard);
+            case "Atividade Recente" -> updateActiveButton(btnHistory);
+            case "Funcionários" -> updateActiveButton(btnEmployees);
+            case "Fornecedores" -> updateActiveButton(btnSuppliers);
+            case "Estoque" -> updateActiveButton(btnStock);
+            case "Pedidos" -> updateActiveButton(btnOrders);
+            default -> {}
+        }
     }
 
     private void applyRBACRestrictions() {
@@ -239,11 +256,7 @@ public class LayoutController {
 
     public void handleOrdersButton() {
         nm.navigateToPage(contentWrapper, "view/orders-page.fxml", "Pedidos", "Onde você e os outros poderão visualizar os pedidos realizados.");
-        System.out.println("PAGINA ATUAL:" + nm.getCurrentPage());
-
-        if (nm.getCurrentPage().equals("Pedidos")) {
-            updateActiveButton(btnOrders);
-        }
+        updateActiveButton(btnOrders);
     }
 
     public void handleLogout(ActionEvent event) {

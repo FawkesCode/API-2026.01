@@ -91,8 +91,12 @@ public class NavigationManager {
         }
     }
 
+
     public StringProperty getCurrentPage() {
         return currentPage;
+    }
+    public void setCurrentPage(String page) {
+        currentPage.set(page);
     }
 
     public StringProperty getCurrentPageDescription() {

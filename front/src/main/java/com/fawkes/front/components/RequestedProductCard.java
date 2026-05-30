@@ -50,12 +50,12 @@ public class RequestedProductCard extends AnchorPane {
     }
 
     public void setData(StockItem pro) {
-        productPrice.setText(CURRENCY.format(pro.getUnitValue()));
         productName.setText(pro.getProductName());
 
 
         this.product = new FormProducts(pro.getProductName(), Double.parseDouble(pro.getUnitValue().toString()), Integer.parseInt(quantityField.getText()), Integer.parseInt(pro.getProductId().toString()), pro.getSupplierID());
         quantityField.setText(String.valueOf(1));
+        productPrice.setText("(x" + 1 + ")");
     }
 
     @FXML
@@ -63,6 +63,7 @@ public class RequestedProductCard extends AnchorPane {
         if (onAddItem != null) {
             onAddItem.accept(this.product);
             quantityField.setText(String.valueOf(product.getQuantity()));
+            productPrice.setText("(x" + product.getQuantity() + ")");
         }
     }
 
@@ -71,6 +72,7 @@ public class RequestedProductCard extends AnchorPane {
         if (onRemoveItem != null) {
             onRemoveItem.accept(this.product);
             quantityField.setText(String.valueOf(product.getQuantity()));
+            productPrice.setText("(x" + product.getQuantity() + ")");
         }
     }
 

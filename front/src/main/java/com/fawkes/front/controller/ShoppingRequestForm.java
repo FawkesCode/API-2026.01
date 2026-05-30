@@ -52,7 +52,6 @@ public class ShoppingRequestForm {
         java.util.Map<String, java.util.List<StockItem>> byGroup = new java.util.LinkedHashMap<>();
 
         for (StockItem pro : productItens) {
-            System.out.println(pro.getProductName());
             byGroup.computeIfAbsent(pro.getSupplierName(), k -> new ArrayList<>()).add(pro);
         }
 
@@ -137,14 +136,13 @@ public class ShoppingRequestForm {
             spacer.setMaxHeight(5);
             HBox.setHgrow(spacer, Priority.ALWAYS);
 
-            productsLineContainer.getChildren().addAll(qtd, name, spacer, price);
+            productsLineContainer.getChildren().addAll(name, spacer, qtd);
             totalQtd = totalQtd + p.getQuantity();
             totalPrice = totalPrice + p.getTotalValue();
 
             productsViewContainer.getChildren().add(productsLineContainer);
 
         }
-        requestTotal.setText("Total: " + CURRENCY.format(totalPrice));
         requestTotalItens.setText("Qtd. de itens: " + totalQtd);
     }
 

@@ -1,6 +1,8 @@
 package com.fawkes.front.models;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,10 +19,11 @@ public class Order {
     private List<RequestItem> itemsList;
     private int id;
     private String invoiceNumber;
+    private LocalDateTime createdAt;
 
     public Order(String requesterName, String product, String sector, String paymentMethod,
                  int quantity, double totalValue, String status, String description,
-                 List<RequestSupplier> suppliersList, List<RequestItem> itemsList, int id) {
+                 List<RequestSupplier> suppliersList, List<RequestItem> itemsList, int id, LocalDateTime createdAt) {
         this.id = id;
         this.requesterName = requesterName;
         this.product = product;
@@ -32,6 +35,7 @@ public class Order {
         this.description = description;
         this.suppliersList = suppliersList;
         this.itemsList = itemsList;
+        this.createdAt = createdAt;
     }
 
     public String getStatusLabel() {
@@ -132,6 +136,11 @@ public class Order {
             }
         }
 
+        LocalDateTime createdAtDate = null;
+        if (node.has("createdAt") && !node.get("createdAt").isNull()) {
+            createdAtDate = LocalDateTime.parse(node.get("createdAt").asText());
+        }
+
         String desc = node.path("notes").asText("Sem descição proporcionada pelo solicitante.");
 
         // Extrai número da nota fiscal
@@ -141,12 +150,13 @@ public class Order {
         }
 
         Order ord = new Order(requester, prod, sec, pay, qty, total, status, desc,
-                suppliersList, requestItemsList, orderId);
+                suppliersList, requestItemsList, orderId, createdAtDate);
         ord.setInvoiceNumber(invoiceNumber);
         return ord;
     }
 
     // --- Getters ---
+    public LocalDateTime getCreatedAt() { return createdAt; }
     public int getId() { return id; }
     public String getRequesterName() { return requesterName; }
     public String getProduct() { return product; }

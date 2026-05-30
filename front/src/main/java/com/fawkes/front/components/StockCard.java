@@ -48,7 +48,6 @@ public class StockCard extends AnchorPane {
         productType.setText(item.getProductType());
         productName.setText(item.getProductName());
         productSupplier.setText(item.getSupplierName());
-        productPrice.setText(CURRENCY.format(item.getUnitValue()));
         productQtd.setText(item.getCurrentStockQuantity().toString());
 
 

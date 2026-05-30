@@ -93,7 +93,10 @@ public class OrdersPageController {
                 allRequests.add(Order.fromJson(node));
             }
 
-            System.out.println("DADOS DA API:" + data.toPrettyString());
+            allRequests.sort((o1, o2) -> {
+                if (o1.getCreatedAt() == null || o2.getCreatedAt() == null) return 0;
+                return o2.getCreatedAt().compareTo(o1.getCreatedAt());
+            });
 
 
             for (JsonNode node: data) {

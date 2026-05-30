@@ -63,7 +63,6 @@ public class ProductSupplierCard extends AnchorPane {
     public void setData(StockItem item) {
         productType.setText(item.getProductType());
         productName.setText(item.getProductName());
-        productPrice.setText(CURRENCY.format(item.getUnitValue()));
         productUnit.setText(StringUtils.measureTranslation(item.getMeasurementUnit()));
 
         this.product = item;

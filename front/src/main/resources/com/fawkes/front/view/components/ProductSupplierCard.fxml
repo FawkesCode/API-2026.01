@@ -20,7 +20,6 @@
       </VBox>
       <HBox alignment="CENTER" prefHeight="47.0" prefWidth="215.0" spacing="10.0" style="-fx-padding: 6 10;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <Label fx:id="productPrice" styleClass="product__price" text="R$ 100,00" />
             <HBox alignment="CENTER" prefHeight="27.0" prefWidth="52.0" spacing="5.0">
                <children>
                   <JFXButton fx:id="btnEdit" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#openEditModal" prefHeight="28.0" prefWidth="28.0">
