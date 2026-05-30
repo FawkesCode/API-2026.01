@@ -268,3 +268,23 @@
     -fx-shape: " " !important;
     -fx-padding: 0 !important;
 }
+
+
+/*coisas do adler, se tiver cagado fique a vontade pra explodir*/
+
+.default-color0.chart-bar { -fx-bar-fill: #07B0F3}
+.default-color1.chart-bar { -fx-bar-fill: BLUE}
+
+.root{
+-fx-background-color:white;
+}
+.chart-plot-background {
+-fx-background-color:white;
+}
+
+
+.default-color0.chart-pie { -fx-pie-color: #4FE481;} /* Aprovação*/
+.default-color1.chart-pie { -fx-pie-color: #E14B50;} /* Negação*/
+.default-color2.chart-pie { -fx-pie-color: #07B0F3;} /* Entregues*/
+.default-color3.chart-pie { -fx-pie-color: #FF6F00;} /* Devolvidos*/
+.default-color4.chart-pie { -fx-pie-color: #FFB700;} /* Atrasados*/

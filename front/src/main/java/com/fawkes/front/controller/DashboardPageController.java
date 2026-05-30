@@ -50,6 +50,8 @@ public class DashboardPageController {
 
     @FXML private VBox purchasesPerMonth;
     @FXML private VBox requestStatus;
+    @FXML private VBox topSuppliers;
+    @FXML private VBox criticalProducts;
 
     private int  currentPage = 0;
     private final int pageSize = 7;
@@ -131,6 +133,8 @@ public class DashboardPageController {
         loadKpis();
         loadMinProducts();
         loadProblemsOrders();
+        loadBarChartProducts();
+        loadBarChartSuppliers();
     }
 
     // ── Produtos críticos ─────────────────────────────────────────────
@@ -363,7 +367,6 @@ public class DashboardPageController {
                 }
 
             PieChart pie = new PieChart(pieData);
-            pie.setTitle("Status dos Pedidos");
             pie.setClockwise(true);
             pie.setLabelsVisible(false);
             pie.setStartAngle(180);
@@ -379,5 +382,67 @@ public class DashboardPageController {
         NavigationManager nm = NavigationManager.getInstance();
         StackPane container = (StackPane) dashboardContainer.getScene().getRoot().lookup("#container");
         nm.navigateToPage(container, "view/orders-page.fxml", "Pedidos", "Onde você e os outros poderão visualizar os pedidos realizados.");
+    }
+    // ── Gráfico de barras SEGUNDA FILEIRA ─────────────────────────────────────────────
+    private void loadBarChartSuppliers() {
+        Task<JsonNode> task = new Task<>() {
+            @Override protected JsonNode call() throws Exception {
+                return ApiClient.get("/dashboard/top-fornecedores");
+            }
+        };
+        task.setOnSucceeded(e -> Platform.runLater(() -> {
+            topSuppliers.getChildren().removeIf(n -> n instanceof BarChart);
+            JsonNode data = task.getValue();
+            System.out.println("teste");
+            System.out.println(data.toPrettyString());
+            CategoryAxis xAxis = new CategoryAxis(); xAxis.setLabel("Fornecedores");
+            NumberAxis   yAxis = new NumberAxis();   yAxis.setLabel("Quantidade");
+            BarChart<String, Number> chart = new BarChart<>(xAxis, yAxis);
+            chart.setLegendVisible(false);
+
+
+            XYChart.Series<String, Number> series = new XYChart.Series<>();
+            JsonNode arr = task.getValue().get("byOrderCount");
+            if (arr != null && arr.isArray()) {
+                for (JsonNode item : arr)
+                    series.getData().add(new XYChart.Data<>(
+                            item.get("supplierName").asText(),
+                            item.get("totalOrders").asInt()));
+            }
+            chart.getData().add(series);
+            topSuppliers.getChildren().add(chart);
+        }));
+        new Thread(task) {{ setDaemon(true); }}.start();
+    }
+
+    private void loadBarChartProducts() {
+        Task<JsonNode> task = new Task<>() {
+            @Override protected JsonNode call() throws Exception {
+                return ApiClient.get("/dashboard/produtos-criticos");
+            }
+        };
+        task.setOnSucceeded(e -> Platform.runLater(() -> {
+            criticalProducts.getChildren().removeIf(n -> n instanceof BarChart);
+            JsonNode data = task.getValue();
+            System.out.println("teste");
+            System.out.println(data.toPrettyString());
+            CategoryAxis xAxis = new CategoryAxis(); xAxis.setLabel("Produto");
+            NumberAxis   yAxis = new NumberAxis();   yAxis.setLabel("Quantidade");
+            BarChart<String, Number> chart = new BarChart<>(xAxis, yAxis);
+            chart.setLegendVisible(false);
+
+            XYChart.Series<String, Number> series = new XYChart.Series<>();
+            JsonNode arr = data.get("lowStock");
+            if (arr != null && arr.isArray()) {
+                for (JsonNode item : arr) {
+                    series.getData().add(new XYChart.Data<>(
+                            item.path("productName").asText("Produto"),
+                            item.path("availableQuantity").asDouble(0)));
+                }
+            }
+            chart.getData().add(series);
+            criticalProducts.getChildren().add(chart);
+        }));
+        new Thread(task) {{ setDaemon(true); }}.start();
     }
 }

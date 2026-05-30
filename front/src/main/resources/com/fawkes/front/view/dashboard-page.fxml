@@ -241,12 +241,12 @@
             </HBox>
             <HBox spacing="20.0">
                <children>
-                  <VBox fx:id="purchasesPerMonth1" minHeight="350.0" styleClass="dashboard__cards-container" HBox.hgrow="ALWAYS">
+                  <VBox fx:id="criticalProducts" minHeight="350.0" styleClass="dashboard__cards-container" HBox.hgrow="ALWAYS">
                      <children>
                         <Label styleClass="dashboard__title" text="Produtos Críticos" />
                      </children>
                   </VBox>
-                  <VBox fx:id="requestStatus1" minHeight="350.0" styleClass="dashboard__cards-container" HBox.hgrow="ALWAYS">
+                  <VBox fx:id="topSuppliers" minHeight="350.0" styleClass="dashboard__cards-container" HBox.hgrow="ALWAYS">
                      <children>
                         <Label styleClass="dashboard__title" text="Top Fornecedores" />
                      </children>
