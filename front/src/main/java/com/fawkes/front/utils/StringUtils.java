@@ -54,6 +54,9 @@ public class StringUtils {
             case "shipped"   -> "🚚 Em trânsito";
             case "received"  -> "✅ Recebido";
             case "cancelled" -> "✖ Recusado";
+            case "overdue" -> "⚠ Em atraso";
+            case "problem"  -> "⚠ Problema no recebimento";
+            case "returned" -> "↩ Devolvido";
             default -> status;
         };
     }

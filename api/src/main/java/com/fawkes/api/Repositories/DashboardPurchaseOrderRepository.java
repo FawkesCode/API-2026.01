@@ -39,17 +39,18 @@ public interface DashboardPurchaseOrderRepository extends JpaRepository<Purchase
 
     // ── Movimentação mensal ────────────────────────────────────────────
     @Query("""
-        SELECT
-            YEAR(p.createdAt)  AS year,
-            MONTH(p.createdAt) AS month,
-            COUNT(p)           AS count,
-            COALESCE(SUM(p.totalValue), 0) AS totalValue
-        FROM PurchaseOrder p
-        WHERE p.createdAt BETWEEN :from AND :to
-          AND (:supplierId IS NULL OR p.supplier.id = :supplierId)
-        GROUP BY YEAR(p.createdAt), MONTH(p.createdAt)
-        ORDER BY year, month
-    """)
+    SELECT
+        YEAR(p.createdAt)  AS year,
+        MONTH(p.createdAt) AS month,
+        COUNT(p)           AS count,
+        COALESCE(SUM(p.totalValue), 0) AS totalValue
+    FROM PurchaseOrder p
+    WHERE p.createdAt BETWEEN :from AND :to
+      AND (:supplierId IS NULL OR p.supplier.id = :supplierId)
+      AND p.status = 'received'
+    GROUP BY YEAR(p.createdAt), MONTH(p.createdAt)
+    ORDER BY year, month
+""")
     List<MonthlyCountProjection> fetchMonthlyPurchaseOrders(
             @Param("from")       LocalDateTime from,
             @Param("to")         LocalDateTime to,
@@ -107,20 +108,21 @@ public interface DashboardPurchaseOrderRepository extends JpaRepository<Purchase
 
     // ── Últimas purchase orders (tabela) ───────────────────────────────
     @Query("""
-        SELECT
-            p.id                    AS id,
-            p.supplier.supplierName AS supplierName,
-            p.createdBy.userName    AS userName,
-            p.totalValue            AS totalValue,
-            CAST(p.status AS string) AS status,
-            p.createdAt             AS createdAt,
-            p.orderDate             AS orderDate,
-            p.expectedDeliveryDate  AS expectedDeliveryDate
-        FROM PurchaseOrder p
-        WHERE (:supplierId IS NULL OR p.supplier.id  = :supplierId)
-          AND (:userId     IS NULL OR p.createdBy.id = :userId)
-          AND (:status     IS NULL OR CAST(p.status AS string) = :status)
-        ORDER BY p.createdAt DESC
+    SELECT
+        p.id                    AS id,
+        p.supplier.supplierName AS supplierName,
+        p.createdBy.userName    AS userName,
+        p.totalValue            AS totalValue,
+        CAST(p.status AS string) AS status,
+        p.createdAt             AS createdAt,
+        p.orderDate             AS orderDate,
+        p.expectedDeliveryDate  AS expectedDeliveryDate
+    FROM PurchaseOrder p
+    WHERE (:supplierId IS NULL OR p.supplier.id  = :supplierId)
+      AND (:userId     IS NULL OR p.createdBy.id = :userId)
+      AND (:status     IS NULL OR CAST(p.status AS string) = :status)
+      AND p.status NOT IN ('cancelled', 'draft')
+    ORDER BY p.createdAt DESC
     """)
     Page<RecentPurchaseOrderProjection> fetchRecentPurchaseOrders(
             @Param("supplierId") Long supplierId,

@@ -19,6 +19,7 @@ public class Order {
     private List<RequestItem> itemsList;
     private int id;
     private String invoiceNumber;
+    private String expectedDeliveryDate; // ISO string, ex: "2026-05-01T00:00:00"
     private LocalDateTime createdAt;
 
     public Order(String requesterName, String product, String sector, String paymentMethod,
@@ -46,6 +47,8 @@ public class Order {
             case "shipped"   -> "Em trânsito";
             case "received"  -> "Recebido";
             case "cancelled" -> "Cancelado/Recusado";
+            case "problem"  -> "Problema no recebimento";
+            case "returned" -> "Devolvido";
             default          -> status;
         };
     }
@@ -151,12 +154,26 @@ public class Order {
 
         Order ord = new Order(requester, prod, sec, pay, qty, total, status, desc,
                 suppliersList, requestItemsList, orderId, createdAtDate);
+        String expectedDeliveryDate = node.path("expectedDeliveryDate").asText(null);
+        if ("null".equals(expectedDeliveryDate)) expectedDeliveryDate = null;
         ord.setInvoiceNumber(invoiceNumber);
+        ord.setExpectedDeliveryDate(expectedDeliveryDate);
         return ord;
     }
 
+    public String getEffectiveStatus() {
+        if (!"shipped".equals(status)) return status;
+        if (expectedDeliveryDate == null) return "shipped";
+        try {
+            java.time.LocalDateTime delivery = java.time.LocalDateTime.parse(expectedDeliveryDate);
+            return delivery.isBefore(java.time.LocalDateTime.now()) ? "overdue" : "shipped";
+        } catch (Exception e) {
+            return "shipped";
+        }
+    }
+
+
     // --- Getters ---
-    public LocalDateTime getCreatedAt() { return createdAt; }
     public int getId() { return id; }
     public String getRequesterName() { return requesterName; }
     public String getProduct() { return product; }
@@ -170,4 +187,7 @@ public class Order {
     public List<RequestItem> getItemsList() { return itemsList; }
     public String getInvoiceNumber() { return invoiceNumber; }
     public void setInvoiceNumber(String invoiceNumber) { this.invoiceNumber = invoiceNumber; }
+    public String getExpectedDeliveryDate() { return expectedDeliveryDate; }
+    public void setExpectedDeliveryDate(String v) { this.expectedDeliveryDate = v; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
 }

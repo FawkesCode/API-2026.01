@@ -1,5 +1,6 @@
 package com.fawkes.api.Services;
 
+import com.fawkes.api.DTOs.ProductDTO;
 import com.fawkes.api.DTOs.Request.ProductRequest;
 import com.fawkes.api.Entities.*;
 import com.fawkes.api.Repositories.*;
@@ -13,15 +14,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductService {
 
-    private final ProductsRepository       productsRepository;
-    private final SupplierRepository       supplierRepository;
-    private final StockRepository          stockRepository;
-    private final ProductStockRepository   productStockRepository;
-    private final CompanyStockRepository   companyStockRepository;
-    private final SupplierStockRepository  supplierStockRepository;
+    private final ProductsRepository      productsRepository;
+    private final SupplierRepository      supplierRepository;
+    private final StockRepository         stockRepository;
+    private final ProductStockRepository  productStockRepository;
+    private final CompanyStockRepository  companyStockRepository;
+    private final SupplierStockRepository supplierStockRepository;
 
-    public List<Products> listAll() {
-        return productsRepository.findAll();
+    public List<ProductDTO> listAll() {
+        return productsRepository.findAll()
+                .stream()
+                .map(ProductDTO::fromEntity)
+                .toList();
     }
 
     @Transactional
@@ -54,9 +58,8 @@ public class ProductService {
     @Transactional
     public void delete(Long id) {
         Products product = productsRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + id));
 
-        // Remove registros filhos antes de deletar o produto
         productStockRepository.findByProductId(id)
                 .ifPresent(productStockRepository::delete);
 
@@ -70,9 +73,9 @@ public class ProductService {
     }
 
     @Transactional
-    public Products update(Long id, ProductRequest request) {
+    public ProductDTO update(Long id, ProductRequest request) {
         Products product = productsRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + id));
 
         if (request.getProductName() != null)
             product.setProductName(request.getProductName());
@@ -95,6 +98,6 @@ public class ProductService {
             product.setSuppliers(supplier);
         }
 
-        return productsRepository.save(product);
+        return ProductDTO.fromEntity(productsRepository.save(product));
     }
 }

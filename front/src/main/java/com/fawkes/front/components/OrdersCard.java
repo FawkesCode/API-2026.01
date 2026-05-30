@@ -42,21 +42,31 @@ public class OrdersCard extends AnchorPane {
     }
 
     public void setData(Order order) {
-        status.getStyleClass().removeAll("order__status--aproved", "order__status--declined");
-        this.status.setText(StringUtils.requestStatusTranslation(order.getStatus()));
-        if (order.getStatus().equalsIgnoreCase("confirmed")) {
-            status.setStyle("-fx-background-color: #07b0f3;");
-        } else if (order.getStatus().equalsIgnoreCase("cancelled")) {
-            status.getStyleClass().add("order__status--declined");
-            status.setStyle("-fx-background-color: #282e38;");
+        status.getStyleClass().removeAll(
+                "order__status--aproved", "order__status--declined",
+                "order__status--shipped", "order__status--overdue");
+
+        String effectiveStatus = order.getEffectiveStatus();
+        this.status.setText(StringUtils.requestStatusTranslation(effectiveStatus));
+
+        switch (effectiveStatus) {
+            case "confirmed" -> status.setStyle("-fx-background-color: #07b0f3;");
+            case "shipped"   -> status.setStyle("-fx-background-color: #7F77DD;");
+            case "overdue"   -> status.setStyle("-fx-background-color: #E24B4A;");
+            case "received"  -> status.setStyle("-fx-background-color: #639922;");
+            case "cancelled" -> status.setStyle("-fx-background-color: #282e38;");
+            case "problem"  -> status.setStyle("-fx-background-color: #EF9F27;");
+            case "returned" -> status.setStyle("-fx-background-color: #888780;");
+            default          -> status.setStyle("");
         }
 
-        this.solicitorName.setText("Solicitado por "+ order.getRequesterName());
-        this.department.setText(order.getSector().toUpperCase() + " | Solicitação de Compra PED-" + order.getId());
-        this.paymentMethod.setText("Método de pagamento: "+ StringUtils.paymentTranslation(order.getPaymentMethod()).toUpperCase());
+        this.solicitorName.setText("Solicitado por " + order.getRequesterName());
+        this.department.setText(order.getSector().toUpperCase()
+                + " | Solicitação de Compra PED-" + order.getId());
+        this.paymentMethod.setText("Método de pagamento: "
+                + StringUtils.paymentTranslation(order.getPaymentMethod()).toUpperCase());
         this.quantityValue.setText("Quantidade de Itens: " + order.getQuantity());
         this.priceValue.setText("Valor Total: " + order.getTotalValue());
-
         this.order = order;
     }
 
