@@ -1,5 +1,6 @@
 package com.fawkes.api.Services;
 
+import com.fawkes.api.DTOs.ProductDTO;
 import com.fawkes.api.DTOs.Request.ProductRequest;
 import com.fawkes.api.Entities.*;
 import com.fawkes.api.Repositories.*;
@@ -13,12 +14,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductService {
 
-    private final ProductsRepository productsRepository;
-    private final SupplierRepository supplierRepository;
-    private final StockRepository stockRepository;
+    private final ProductsRepository      productsRepository;
+    private final SupplierRepository      supplierRepository;
+    private final StockRepository         stockRepository;
+    private final ProductStockRepository  productStockRepository;
+    private final CompanyStockRepository  companyStockRepository;
+    private final SupplierStockRepository supplierStockRepository;
 
-    public List<Products> listAll() {
-        return productsRepository.findAll();
+    public List<ProductDTO> listAll() {
+        return productsRepository.findAll()
+                .stream()
+                .map(ProductDTO::fromEntity)
+                .toList();
     }
 
     @Transactional
@@ -50,20 +57,30 @@ public class ProductService {
 
     @Transactional
     public void delete(Long id) {
-        productsRepository.deleteById(id);
+        Products product = productsRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + id));
+
+        productStockRepository.findByProductId(id)
+                .ifPresent(productStockRepository::delete);
+
+        companyStockRepository.findByProductId(id)
+                .forEach(companyStockRepository::delete);
+
+        supplierStockRepository.findByProductId(id)
+                .forEach(supplierStockRepository::delete);
+
+        productsRepository.delete(product);
     }
 
     @Transactional
-    public Products update(Long id, ProductRequest request) {
+    public ProductDTO update(Long id, ProductRequest request) {
         Products product = productsRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + id));
 
-        if (request.getProductName() != null) {
+        if (request.getProductName() != null)
             product.setProductName(request.getProductName());
-        }
-        if (request.getProductType() != null) {
+        if (request.getProductType() != null)
             product.setProductType(request.getProductType());
-        }
         if (request.getMeasurementUnit() != null) {
             try {
                 product.setMeasurementUnit(Products.MeasurementUnit.valueOf(request.getMeasurementUnit()));
@@ -71,18 +88,16 @@ public class ProductService {
                 product.setMeasurementUnit(Products.MeasurementUnit.NAO_DEFINIDO);
             }
         }
-        if (request.getUnitValue() != null) {
+        if (request.getUnitValue() != null)
             product.setUnitValue(request.getUnitValue());
-        }
-        if (request.getDescription() != null) {
+        if (request.getDescription() != null)
             product.setDescription(request.getDescription());
-        }
         if (request.getSupplierId() != null) {
             Suppliers supplier = supplierRepository.findById(request.getSupplierId())
                     .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado"));
             product.setSuppliers(supplier);
         }
 
-        return productsRepository.save(product);
+        return ProductDTO.fromEntity(productsRepository.save(product));
     }
 }

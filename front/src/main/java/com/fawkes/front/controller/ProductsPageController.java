@@ -2,14 +2,11 @@ package com.fawkes.front.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fawkes.front.components.ProductSupplierCard;
-import com.fawkes.front.components.StockCard;
 import com.fawkes.front.models.StockItem;
-import com.fawkes.front.models.Supplier;
 import com.fawkes.front.service.ApiClient;
 import com.fawkes.front.utils.ModalManager;
 import com.fawkes.front.utils.NavigationManager;
 import com.fawkes.front.utils.RBACUtil;
-import com.fawkes.front.utils.StringUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -46,7 +43,7 @@ public class ProductsPageController {
 
     private void applyRBACRestrictions() {
         // OPERATIONAL users cannot create new products, only register output
-        if (!RBACUtil.canManageProducts()) {
+        if (!RBACUtil.isDirector()) {
             btnInput.setVisible(false);
             btnInput.setManaged(false);
         }

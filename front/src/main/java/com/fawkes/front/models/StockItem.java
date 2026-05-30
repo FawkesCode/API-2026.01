@@ -42,18 +42,19 @@ public class StockItem {
     }
 
     public static StockItem fromJson(JsonNode node) {
-        Long productId = node.path("id").asLong();
-        String productName = node.path("productName").asText("-");
-        String productType = node.path("productType").asText("-");
-        String measurementUnit = node.path("measurementUnit").asText("-");
+        Long productId      = node.path("productId").asLong();
+        String productName  = node.path("productName").asText("-");
+        String productType  = node.path("productType").asText("-");
+        String measureUnit  = node.path("measurementUnit").asText("-");
         BigDecimal unitValue = new BigDecimal(node.path("unitValue").asText("0"));
-        Integer current = node.path("currentStockQuantity").asInt(0);
-        Integer min = node.path("minStockQuantity").asInt(0);
-        Integer max = node.path("maxStockQuantity").asInt(0);
-        String supplierName = node.path("suppliers").path("supplierName").asText("Sem Fornecedor");
-        Integer supplierID = node.path("suppliers").path("id").asInt(0);
+        Integer current     = node.path("currentStockQuantity").asInt(0);
+        Integer min         = node.path("minStockQuantity").asInt(0);
+        Integer max         = node.path("maxStockQuantity").asInt(0);
+        String supplierName = node.path("supplierName").asText("Sem Fornecedor");
+        Integer supplierID  = 0; // não retornado pelo DTO, mantido como 0
+
         return new StockItem(productId, productName, productType,
-                measurementUnit, unitValue, current, min, max, null, supplierName, supplierID);
+                measureUnit, unitValue, current, min, max, null, supplierName, supplierID);
     }
 
     /** Retorna true se o estoque atual está em ou abaixo do mínimo */

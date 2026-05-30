@@ -100,13 +100,12 @@ public class NewRequestForm {
             spacer.setMaxHeight(5);
             HBox.setHgrow(spacer, Priority.ALWAYS);
 
-            productsLineContainer.getChildren().addAll(qtd, name, spacer, price);
+            productsLineContainer.getChildren().addAll(name, spacer, qtd);
 
             productsContainer.getChildren().add(productsLineContainer);
 
         }
 
-        totalPrice.setText("Total: " + CURRENCY.format(requestPrice));
         totalQuantity.setText("Qtd. de Itens: " + requestQtd);
     }
 

@@ -93,19 +93,23 @@ public class OrdersPageController {
                 allRequests.add(Order.fromJson(node));
             }
 
-            System.out.println("DADOS DA API:" + data.toPrettyString());
+            allRequests.sort((o1, o2) -> {
+                if (o1.getCreatedAt() == null || o2.getCreatedAt() == null) return 0;
+                return o2.getCreatedAt().compareTo(o1.getCreatedAt());
+            });
 
 
             for (JsonNode node: data) {
                 Order ord = Order.fromJson(node);
                 String status = ord.getStatus().toLowerCase();
 
-                if (status.toLowerCase().equals("pending")) {
-                    pendingOrders.add(ord);
-                } else if (status.toLowerCase().equals("confirmed")) {
-                    aprovedOrders.add(ord);
-                } else {
-                    declinedOrders.add(ord);
+                switch (status.toLowerCase()) {
+                    case "pending"   -> pendingOrders.add(ord);
+                    case "confirmed" -> aprovedOrders.add(ord);
+                    case "shipped"   -> aprovedOrders.add(ord);  // em trânsito conta como aprovado
+                    case "received"  -> aprovedOrders.add(ord);  // recebido também
+                    case "cancelled" -> declinedOrders.add(ord);
+                    case "draft"     -> { /* ignora rascunhos no contador */ }
                 }
             }
 

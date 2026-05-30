@@ -12,9 +12,15 @@ public record StockItemDTO(
         BigDecimal unitValue,
         Integer currentStockQuantity,
         Integer minStockQuantity,
-        Integer maxStockQuantity
+        Integer maxStockQuantity,
+        Long stockId,
+        String supplierName   // adicionado
 ) {
     public static StockItemDTO fromEntity(ProductStock ps) {
+        String supplier = ps.getProduct().getSuppliers() != null
+                ? ps.getProduct().getSuppliers().getSupplierName()
+                : "Sem Fornecedor";
+
         return new StockItemDTO(
                 ps.getProduct().getId(),
                 ps.getProduct().getProductName(),
@@ -23,7 +29,9 @@ public record StockItemDTO(
                 ps.getProduct().getUnitValue(),
                 ps.getCurrentStockQuantity(),
                 ps.getMinStockQuantity(),
-                ps.getMaxStockQuantity()
+                ps.getMaxStockQuantity(),
+                ps.getProduct().getStock() != null ? ps.getProduct().getStock().getId() : null,
+                supplier
         );
     }
 }

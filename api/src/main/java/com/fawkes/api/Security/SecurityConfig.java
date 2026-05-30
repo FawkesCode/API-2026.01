@@ -46,7 +46,7 @@ public class SecurityConfig {
                         .requestMatchers("/manager/**").hasRole("MANAGER")
                         .requestMatchers("/operational/**").hasRole("OPERATIONAL")
                         .requestMatchers("/director/**").hasRole("DIRECTOR")
-                        .requestMatchers(HttpMethod.POST, "/api/purchase-orders/*/receive").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.POST, "/api/purchase-orders/*/receive").hasAnyRole("MANAGER", "DIRECTOR", "OPERATIONAL")
                         .anyRequest().authenticated()
                 )
                 // ✅ Adicionar handler customizado para 403

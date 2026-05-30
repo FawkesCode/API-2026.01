@@ -64,7 +64,6 @@
                         </VBox>
                         <HBox alignment="CENTER" prefHeight="18.0" prefWidth="287.0" spacing="10.0">
                            <children>
-                              <Label fx:id="totalPrice" prefHeight="18.0" prefWidth="106.0" styleClass="input__label--resume" text="Total:" />
                               <Label fx:id="totalQuantity" prefHeight="18.0" prefWidth="125.0" styleClass="input__label--resume" text="Quantidade de Itens:" />
                            </children>
                         </HBox>

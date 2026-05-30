@@ -10,6 +10,7 @@ import com.fawkes.front.utils.ModalManager;
 import com.fawkes.front.utils.NavigationManager;
 import com.fawkes.front.utils.RBACUtil;
 import com.fawkes.front.utils.StringUtils;
+import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -29,14 +30,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class SupplierPageController {
-
-    // Tabela
-    @FXML private TableView<JsonNode>           supplierTable;
-    @FXML private TableColumn<JsonNode, String> colId;
-    @FXML private TableColumn<JsonNode, String> colNome;
-    @FXML private TableColumn<JsonNode, String> colCnpj;
-    @FXML private TableColumn<JsonNode, String> colPagamento;
-    @FXML private TableColumn<JsonNode, String> colAcoes;
+    @FXML private JFXButton btnProducts;
 
     // Barra superior
     @FXML private TextField searchField;
@@ -69,10 +63,11 @@ public class SupplierPageController {
     }
 
     private void applyRBACRestrictions() {
-        // Only DIRECTOR and MANAGER can create new suppliers
-        if (!RBACUtil.canManageSuppliers()) {
+
+        if (!RBACUtil.isDirector()) {
             btnNewSupplier.setVisible(false);
             btnNewSupplier.setManaged(false);
+            btnProducts.setText("Visualizar Produtos >");
         }
     }
 

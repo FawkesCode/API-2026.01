@@ -179,12 +179,20 @@ public class DashboardService {
     // ════════════════════════════════════════════════════════════════════
 
     public MonthlyMovementResponse getMonthlyMovement(DashboardFilterRequest f) {
+        // Se não vier filtro de período, mostra os últimos 12 meses
+        LocalDateTime from = f.resolvedFrom() != null
+                ? f.resolvedFrom()
+                : LocalDateTime.now().minusMonths(12).withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
+        LocalDateTime to = f.resolvedTo() != null
+                ? f.resolvedTo()
+                : LocalDateTime.now();
+
         List<MonthlyCountProjection> orders   = orderRepo.fetchMonthlyOrders(
-                f.resolvedFrom(), f.resolvedTo(), f.getDepartmentId());
+                from, to, f.getDepartmentId());
         List<MonthlyCountProjection> purchase = purchaseRepo.fetchMonthlyPurchaseOrders(
-                f.resolvedFrom(), f.resolvedTo(), f.getSupplierId());
+                from, to, f.getSupplierId());
         List<MonthlyCountProjection> tickets  = ticketRepo.fetchMonthlyTickets(
-                f.resolvedFrom(), f.resolvedTo(), f.getDepartmentId());
+                from, to, f.getDepartmentId());
 
         return MonthlyMovementResponse.builder()
                 .orders(toPoints(orders))

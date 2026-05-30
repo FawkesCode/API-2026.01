@@ -46,7 +46,6 @@ public class ProductShopCard extends AnchorPane {
     public void setData(StockItem item) {
         productType.setText(item.getProductType());
         productName.setText(item.getProductName());
-        productPrice.setText(CURRENCY.format(item.getUnitValue()));
         productSupplier.setText(item.getSupplierName());
 
         this.product = item;

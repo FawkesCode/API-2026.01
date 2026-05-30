@@ -1,8 +1,9 @@
 package com.fawkes.front.controller;
 
 import com.fawkes.front.models.*;
+import com.fawkes.front.service.ApiClient;
+import com.fawkes.front.service.UserInfoManager;
 import com.fawkes.front.utils.ModalManager;
-import com.fawkes.front.utils.RBACUtil;
 import com.fawkes.front.utils.StringUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
@@ -10,7 +11,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -20,47 +20,43 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class PendingRequestForm {
+
     @FXML private JFXButton btnApprove;
     @FXML private JFXButton btnDecline;
-    @FXML private Label costCenter;
-    @FXML private Label department;
-    @FXML private Label description;
-    @FXML private Label paymentMethod;
-    @FXML private VBox productsContainer;
-    @FXML private Label requisitor;
-    @FXML private VBox suppliersContainer;
-    @FXML private Label totalPrice;
-    @FXML private Label totalQuantity;
-    @FXML private HBox btnActionContainer;
+    @FXML private Label     costCenter;
+    @FXML private Label     department;
+    @FXML private Label     description;
+    @FXML private Label     paymentMethod;
+    @FXML private VBox      productsContainer;
+    @FXML private Label     requisitor;
+    @FXML private VBox      suppliersContainer;
+    @FXML private Label     totalPrice;
+    @FXML private Label     totalQuantity;
+    @FXML private HBox      btnActionContainer;
+    @FXML private VBox      invoiceContainer;
+    @FXML private Label     invoiceNumber;
 
-    private static final NumberFormat CURRENCY = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
-    private Stage curStage;
-    private Order order;
+    private static final NumberFormat CURRENCY =
+            NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+
+    private Stage    curStage;
+    private Order    order;
     private Runnable onSaveSuccess;
-    public void setOnSaveSuccess(Runnable onSaveSuccess) {
-        this.onSaveSuccess = onSaveSuccess;
-    }
 
-    public void initialize() {
-        applyRBACRestrictions();
-    }
+    public void setOnSaveSuccess(Runnable r) { this.onSaveSuccess = r; }
 
-    private void applyRBACRestrictions() {
-        // if OPERATIONAL users can't aprove or reject orders, and I know they also cant manage products, we can use the canManageProducts
-        if (!RBACUtil.canManageProducts()) {
-            btnActionContainer.setVisible(false);
-            btnActionContainer.setManaged(false);
-        }
-    }
+    private final UserInfoManager loggedUser = UserInfoManager.getInstance();
+
+    public void initialize() {}
 
     public void setData(Order order, Stage curStage) {
         this.curStage = curStage;
-        this.order = order;
+        this.order    = order;
+
         department.setText(order.getSector());
         description.setText(order.getDescription());
         paymentMethod.setText(StringUtils.paymentTranslation(order.getPaymentMethod()));
@@ -68,38 +64,184 @@ public class PendingRequestForm {
         totalPrice.setText("Total: " + CURRENCY.format(order.getTotalValue()));
         totalQuantity.setText("Qtd. de Itens: " + order.getQuantity());
 
+        renderProducts(order.getItemsList());
+        renderSuppliers(order.getSuppliersList());
+        renderActions(order.getStatus());
 
-        List<RequestItem> productsInfo = order.getItemsList();
-        List<RequestSupplier> suppliersInfo = order.getSuppliersList();
-        List<FormProducts> products = new ArrayList<>();
-
-
-        for (RequestItem pro : productsInfo) {
-            String name = pro.getProduct().getName();
-            double price = pro.getUnitPrice();
-            int quantity = pro.getQuantity();
-
-            FormProducts product = new FormProducts(name, price, quantity, pro.getProduct().getId(), pro.getProduct().getSupplierId());
-
-            products.add(product);
+        // Exibe NF se o pedido foi recebido
+        if ("received".equals(order.getStatus()) && order.getInvoiceNumber() != null) {
+            invoiceNumber.setText("Nº " + order.getInvoiceNumber());
+            invoiceContainer.setVisible(true);
+            invoiceContainer.setManaged(true);
         }
+    }
 
-        for (FormProducts pro : products) {
-            // 1. Criar os Labels
-            Label qtd = new Label("(x " + pro.getQuantity() + ")");
+
+    private void renderActions(String status) {
+        btnActionContainer.getChildren().clear();
+
+        String  role              = loggedUser.getUserRole();
+        boolean isDirectorManager = "DIRECTOR".equals(role) || "MANAGER".equals(role);
+        boolean canReceive        = isDirectorManager || "OPERATIONAL".equals(role);
+
+        switch (status != null ? status : "") {
+            case "pending" -> {
+                if (isDirectorManager) {
+                    btnActionContainer.getChildren().addAll(
+                            makeBtn("✓  Aprovar", "btn--submit", this::handleAproved),
+                            makeBtn("✗  Recusar", "btn--danger", this::handleDeclined)
+                    );
+                } else {
+                    btnActionContainer.getChildren().add(infoLabel("⏳  Aguardando aprovação"));
+                }
+            }
+            case "confirmed" -> {
+                if (isDirectorManager) {
+                    btnActionContainer.getChildren().add(
+                            makeBtn("🚚  Marcar como Enviado", "btn--info", this::handleShip)
+                    );
+                } else {
+                    btnActionContainer.getChildren().add(infoLabel("✓  Aprovado — aguardando envio"));
+                }
+            }
+            case "shipped" -> {
+                // verifica se está em atraso
+                String effective = order.getEffectiveStatus();
+                if ("overdue".equals(effective)) {
+                    btnActionContainer.getChildren().add(infoLabel("⚠  Entrega em atraso"));
+                }
+                if (canReceive) {
+                    btnActionContainer.getChildren().add(
+                            makeBtn("📦  Confirmar Recebimento", "btn--submit", this::handleReceive)
+                    );
+                }
+            }
+            case "received" -> {
+                btnActionContainer.getChildren().add(infoLabel("✅  Pedido finalizado e recebido"));
+                if (isDirectorManager) {
+                    btnActionContainer.getChildren().add(
+                            makeBtn("⚠  Reportar Problema", "btn--danger", this::handleProblem)
+                    );
+                }
+            }
+            case "problem" -> {
+                btnActionContainer.getChildren().add(infoLabel("⚠  Problema no recebimento reportado"));
+                if (isDirectorManager) {
+                    btnActionContainer.getChildren().add(
+                            makeBtn("↩  Confirmar Devolução", "btn--danger", this::handleReturn)
+                    );
+                }
+            }
+            case "returned" ->
+                    btnActionContainer.getChildren().add(infoLabel("↩  Pedido devolvido ao fornecedor"));
+
+            case "cancelled" ->
+                    btnActionContainer.getChildren().add(infoLabel("❌  Pedido cancelado / recusado"));
+            case "draft" ->
+                    btnActionContainer.getChildren().add(infoLabel("📝  Rascunho — ainda não enviado"));
+            default ->
+                    btnActionContainer.getChildren().add(infoLabel("Status: " + status));
+        }
+    }
+
+
+    @FXML
+    public void handleAproved() {
+        abrirSubModal(new AproveRequestForm(), "Aprovando Pedido " + order.getId());
+    }
+
+    public void handleDeclined() {
+        abrirSubModal(new DeclineRequestForm(), "Recusando Pedido " + order.getId());
+    }
+
+    private void handleShip() {
+        abrirSubModal(new ShipRequestForm(), "Confirmando Envio — Pedido " + order.getId());
+    }
+
+    private void handleReceive() {
+        abrirSubModal(new ReceiveRequestForm(), "Recebendo Pedido " + order.getId());
+    }
+    private void handleProblem() {
+        abrirSubModal(new ProblemRequestForm(), "Reportando Problema — Pedido " + order.getId());
+    }
+    private void handleReturn() {
+        try {
+            ApiClient.post("/api/purchase-orders/" + order.getId() + "/return", "{}");
+            if (onSaveSuccess != null) onSaveSuccess.run();
+            ((Stage) btnActionContainer.getScene().getWindow()).close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleCloseModal() {
+        ((Stage) btnActionContainer.getScene().getWindow()).close();
+    }
+
+    private void abrirSubModal(Object controller, String titulo) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/com/fawkes/front/view/forms/director-request-form.fxml"));
+            loader.setController(controller);
+
+            Parent formulario = loader.load();
+
+            if (controller instanceof AproveRequestForm a) {
+                a.setData(order); a.setOnSaveSuccess(onSaveSuccess);
+            } else if (controller instanceof DeclineRequestForm d) {
+                d.setData(order); d.setOnSaveSuccess(onSaveSuccess);
+            } else if (controller instanceof ShipRequestForm s) {
+                s.setData(order); s.setOnSaveSuccess(onSaveSuccess);
+            } else if (controller instanceof ReceiveRequestForm r) {
+                r.setData(order); r.setOnSaveSuccess(onSaveSuccess);
+            } else if (controller instanceof ProblemRequestForm p) {
+                p.setData(order);
+                p.setOnSaveSuccess(onSaveSuccess);
+            }
+
+            Stage stageAtual = (Stage) btnActionContainer.getScene().getWindow();
+            Platform.runLater(() -> {
+                stageAtual.close();
+                ModalManager.openModal(curStage, formulario, titulo,
+                        700.0, 350.0, "ModalFrameM_heightSM.fxml", false);
+            });
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("CAUSA: " + e.getCause());
+        }
+    }
+
+    private JFXButton makeBtn(String text, String style, Runnable action) {
+        JFXButton btn = new JFXButton(text);
+        btn.getStyleClass().add(style);
+        btn.setPrefHeight(26);
+        btn.setPrefWidth(170);
+        btn.setOnAction(e -> action.run());
+        return btn;
+    }
+
+    private Label infoLabel(String text) {
+        Label lbl = new Label(text);
+        lbl.getStyleClass().add("input__label--info");
+        return lbl;
+    }
+
+    private void renderProducts(List<RequestItem> items) {
+        productsContainer.getChildren().clear();
+        for (RequestItem pro : items) {
+            FormProducts fp = new FormProducts(
+                    pro.getProduct().getName(), pro.getUnitPrice(),
+                    pro.getQuantity(), pro.getProduct().getId(),
+                    pro.getProduct().getSupplierId());
+
+            Label qtd   = new Label("(x " + fp.getQuantity() + ")");
+            Label name  = new Label(fp.getName());
+            Label price = new Label(fp.getUnityPrice());
             qtd.getStyleClass().add("input__label--info");
-
-            Label name = new Label(pro.getName());
             name.getStyleClass().add("input__label--info");
-
-            Label price = new Label(pro.getUnityPrice());
             price.getStyleClass().add("input__label--info");
-
-
-            HBox productsLineContainer = new HBox(5);
-            productsLineContainer.setAlignment(Pos.CENTER);
-
-
 
             StackPane spacer = new StackPane();
             spacer.setStyle("-fx-border-style: dotted; -fx-border-color: #818EA1; -fx-border-width: 0 0 3 0;");
@@ -107,67 +249,18 @@ public class PendingRequestForm {
             spacer.setMaxHeight(5);
             HBox.setHgrow(spacer, Priority.ALWAYS);
 
-
-            productsLineContainer.getChildren().addAll(qtd, name, spacer, price);
-
-
-            productsContainer.getChildren().add(productsLineContainer);
-        }
-
-        for (RequestSupplier sup: suppliersInfo) {
-            Label supplier = new Label(sup.getSupplierName());
-            supplier.getStyleClass().add("input__label--info");
-
-            suppliersContainer.getChildren().add(supplier);
+            HBox row = new HBox(5, qtd, name, spacer, price);
+            row.setAlignment(Pos.CENTER);
+            productsContainer.getChildren().add(row);
         }
     }
 
-    @FXML
-    private void handleCloseModal() {
-        ((Stage) btnApprove.getScene().getWindow()).close();
-    }
-
-    @FXML
-    public void handleAproved() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/fawkes/front/view/forms/director-request-form.fxml"));
-            AproveRequestForm controller = new AproveRequestForm();
-            loader.setController(controller);
-            Parent formulario = loader.load();
-            controller.setData(order);
-            controller.setOnSaveSuccess(onSaveSuccess);
-
-            Stage stageAtual = (Stage) btnApprove.getScene().getWindow();
-
-            Platform.runLater(() -> {
-                stageAtual.close();
-                ModalManager.openModal(curStage, formulario, "Aprovando Pedido " + order.getId(), 700.0, 350.0, "ModalFrameM_heightSM.fxml", false);
-            });
-
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void renderSuppliers(List<RequestSupplier> suppliers) {
+        suppliersContainer.getChildren().clear();
+        for (RequestSupplier sup : suppliers) {
+            Label l = new Label(sup.getSupplierName());
+            l.getStyleClass().add("input__label--info");
+            suppliersContainer.getChildren().add(l);
         }
     }
-
-    public void handleDeclined() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/fawkes/front/view/forms/director-request-form.fxml"));
-            DeclineRequestForm controller = new DeclineRequestForm();
-            loader.setController(controller);
-            Parent formulario = loader.load();
-            controller.setData(order);
-            controller.setOnSaveSuccess(onSaveSuccess);
-
-            Stage stageAtual = (Stage) btnApprove.getScene().getWindow();
-
-            Platform.runLater(() -> {
-                stageAtual.close();
-                ModalManager.openModal(curStage, formulario, "Recusando Pedido " + order.getId(), 700.0, 350.0, "ModalFrameM_heightSM.fxml", false);
-            });
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 }

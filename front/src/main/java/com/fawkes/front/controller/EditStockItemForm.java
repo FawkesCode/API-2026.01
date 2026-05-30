@@ -27,7 +27,6 @@ public class EditStockItemForm {
     // FORM INPUTS
     @FXML private TextField nameField;
     @FXML private TextField typeField;
-    @FXML private TextField priceField;
     @FXML private ComboBox<String> suppilerField;
     @FXML private ComboBox<String> unityField;
 
@@ -44,26 +43,12 @@ public class EditStockItemForm {
         this.product = pro;
         nameField.setText(pro.getProductName());
         typeField.setText(pro.getProductType());
-        priceField.setText(pro.getUnitValue().toString());
         unityField.getSelectionModel().select(pro.getMeasurementUnit());
         suppilerField.getSelectionModel().select(pro.getSupplierID());
     }
 
     @FXML
     public void initialize() {
-        UnaryOperator<TextFormatter.Change> priceInput = change -> {
-            String text = change.getControlNewText();
-
-            // Regex for monetary values
-            if(text.isEmpty() || text.matches("[1-9]\\d*(.\\d{0,2})?")) {
-                return change;
-            }
-
-            return null;
-        };
-
-        priceField.setTextFormatter(new TextFormatter<>(priceInput));
-
         // SUPPLIERS COMBO BOX CONTENT
         loadSuppliers();
 
@@ -118,7 +103,7 @@ public class EditStockItemForm {
 
     @FXML
     private void handleOnSubmit(ActionEvent event) {
-        if (nameField.getText().isEmpty() || priceField.getText().isEmpty() || unityField.getSelectionModel().getSelectedItem() == null || suppilerField.getSelectionModel().getSelectedItem() == null) {
+        if (nameField.getText().isEmpty() || unityField.getSelectionModel().getSelectedItem() == null || suppilerField.getSelectionModel().getSelectedItem() == null) {
             errorLabel.setText("Verfique se todos os campos obrigatórios foram preenchidos.");
             return;
         }
@@ -128,11 +113,10 @@ public class EditStockItemForm {
         String unity = unityField.getSelectionModel().getSelectedItem();
 
         String jsonBody = String.format(
-            "{\"productName\":\"%s\",\"productType\":\"%s\",\"measurementUnit\":\"%s\",\"unitValue\":%s,\"supplierId\":%d}",
+            "{\"productName\":\"%s\",\"productType\":\"%s\",\"measurementUnit\":\"%s\",\"unitValue\":\"\",\"supplierId\":%d}",
             nameField.getText(),
             typeField.getText(),
             unity,
-            priceField.getText(),
             supplierId
         );
 

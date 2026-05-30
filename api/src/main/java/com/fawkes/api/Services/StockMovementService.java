@@ -101,6 +101,10 @@ public class StockMovementService {
         companyStock.setCurrentQuantity(novoSaldo);
         companyStock.setLastOutputDate(java.time.LocalDateTime.now());
         companyStockRepository.save(companyStock);
+        productStockRepository.findByProductId(productId).ifPresent(ps -> {
+            ps.setCurrentStockQuantity(novoSaldo);
+            productStockRepository.save(ps);
+        });
 
         ProductOutputs output = new ProductOutputs();
         output.setStock(stock);

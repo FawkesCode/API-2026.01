@@ -1,5 +1,8 @@
 package com.fawkes.front.utils;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class StringUtils {
 
     public static String roleTranslation(String role) {
@@ -45,10 +48,20 @@ public class StringUtils {
 
     public static String requestStatusTranslation(String status) {
         return switch (status) {
-            case "pending" -> "••• Pendente";
+            case "draft"     -> "📝 Rascunho";
+            case "pending"   -> "••• Pendente";
             case "confirmed" -> "✔ Aprovado";
+            case "shipped"   -> "🚚 Em trânsito";
+            case "received"  -> "✅ Recebido";
             case "cancelled" -> "✖ Recusado";
+            case "overdue" -> "⚠ Em atraso";
+            case "problem"  -> "⚠ Problema no recebimento";
+            case "returned" -> "↩ Devolvido";
             default -> status;
         };
     }
+
+
+
+    public static final NumberFormat CURRENCY = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 }

@@ -45,7 +45,7 @@ public class RBACUtil {
      * Check if current user is MANAGER or higher
      */
     public static boolean isManager() {
-        return hasAnyRole(Role.MANAGER, Role.DIRECTOR);
+        return hasAnyRole(Role.MANAGER);
     }
     
     /**

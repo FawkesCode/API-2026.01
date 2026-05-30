@@ -45,9 +45,9 @@
             </AnchorPane>
          </children>
       </VBox>
-      <ImageView fitHeight="119.0" fitWidth="130.0" layoutX="210.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="137.0" fitWidth="167.0" layoutX="192.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../img/logo-login.png" />
+            <Image url="@../img/logo-login-new.png" />
          </image>
       </ImageView>
       <Label id="login__title" alignment="CENTER" layoutY="145.0" prefHeight="18.0" prefWidth="600.0" text="Olá, Bem-vindo!" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />

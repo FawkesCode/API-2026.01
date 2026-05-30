@@ -24,7 +24,7 @@
          </graphic>
       </Label>
       <Region HBox.hgrow="ALWAYS" />
-      <JFXButton onAction="#handleProductsPage" ripplerFill="#465161" styleClass="btn--link" text="Gerenciar Produtos &gt;" />
+      <JFXButton fx:id="btnProducts" onAction="#handleProductsPage" ripplerFill="#465161" styleClass="btn--link" text="Gerenciar Produtos &gt;" />
       <JFXButton fx:id="btnNewSupplier" onAction="#handleOpenAddDialog" styleClass="btn--primary" text="Novo Fornecedor">
          <graphic>
             <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">

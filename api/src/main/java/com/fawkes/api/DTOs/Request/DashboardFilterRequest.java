@@ -36,7 +36,8 @@ public class DashboardFilterRequest {
                 case THIS_YEAR     -> LocalDateTime.now().withDayOfYear(1).toLocalDate().atStartOfDay();
             };
         }
-        return from != null ? from : LocalDateTime.now().withDayOfMonth(1).toLocalDate().atStartOfDay();
+
+        return from != null ? from : LocalDateTime.now().minusMonths(12).withDayOfMonth(1).toLocalDate().atStartOfDay();
     }
 
     public LocalDateTime resolvedTo() {

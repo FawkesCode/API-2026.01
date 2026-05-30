@@ -41,24 +41,13 @@
             </HBox>
                 <HBox prefHeight="86.0" prefWidth="562.0">
                     <children>
-                        <AnchorPane prefHeight="86.0" prefWidth="190.0">
-                            <children>
-                                <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Valor*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-                        <TextField fx:id="priceField" layoutX="11.0" layoutY="39.0" promptText="R$" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
-                           <styleClass>
-                              <String fx:value="input__text" />
-                              <String fx:value="input__text--form" />
-                           </styleClass>
-                        </TextField>
-                            </children>
-                        </AnchorPane>
-                  <AnchorPane prefHeight="86.0" prefWidth="190.0">
+                  <AnchorPane prefHeight="86.0" prefWidth="282.0">
                      <children>
                         <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Fornecedor*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
                         <ComboBox fx:id="suppilerField" layoutY="39.0" prefWidth="150.0" promptText="Selecionar" styleClass="input__text" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                      </children>
                   </AnchorPane>
-                  <AnchorPane prefHeight="86.0" prefWidth="190.0">
+                  <AnchorPane prefHeight="86.0" prefWidth="282.0">
                      <children>
                         <Label layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Unidade Medida*:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
                         <ComboBox fx:id="unityField" layoutY="39.0" prefWidth="150.0" promptText="Selecionar" styleClass="input__text" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />

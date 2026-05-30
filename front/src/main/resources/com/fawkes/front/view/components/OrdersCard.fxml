@@ -16,11 +16,11 @@
             <Label fx:id="department" prefHeight="18.0" prefWidth="647.0" styleClass="orders__department" text="SETOR | Solicitação de compra" />
             <HBox prefHeight="20.0" prefWidth="648.0" spacing="15.0">
                <children>
-                  <Label fx:id="paymentMethod" prefHeight="18.0" prefWidth="206.0" styleClass="orders__info" text="Método de pagamento: PIX" />
+                  <Label fx:id="paymentMethod" prefHeight="18.0" prefWidth="181.0" styleClass="orders__info" text="Método de pagamento: PIX" />
                   <Label text="•" />
-                  <Label fx:id="quantityValue" prefHeight="18.0" prefWidth="154.0" styleClass="orders__info" text="Quantidade de itens: 5" />
+                  <Label fx:id="quantityValue" prefHeight="18.0" prefWidth="144.0" styleClass="orders__info" text="Quantidade de itens: 5" />
                   <Label text="•" />
-                  <Label fx:id="priceValue" prefHeight="18.0" prefWidth="143.0" styleClass="orders__info" text="Valor Total: R$ 99,50" />
+                  <Label fx:id="priceValue" prefHeight="18.0" prefWidth="130.0" styleClass="orders__info" text="Valor Total: R$ 99,50" />
                </children>
             </HBox>
          </children>
