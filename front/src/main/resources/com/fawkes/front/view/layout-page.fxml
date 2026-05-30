@@ -159,9 +159,9 @@
                               </Button>
                            </children>
                         </StackPane>
-                        <ImageView fx:id="logoContainer" fitHeight="43.0" fitWidth="70.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+                        <ImageView fx:id="logoContainer" fitHeight="43.0" fitWidth="136.0" layoutX="41.6" layoutY="15.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0">
                            <image>
-                              <Image url="@../img/logo-sidebar.png" />
+                              <Image url="@../img/logo-sidebar-new.png" />
                            </image>
                         </ImageView>
                      </children>

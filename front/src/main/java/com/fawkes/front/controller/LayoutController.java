@@ -239,7 +239,11 @@ public class LayoutController {
 
     public void handleOrdersButton() {
         nm.navigateToPage(contentWrapper, "view/orders-page.fxml", "Pedidos", "Onde você e os outros poderão visualizar os pedidos realizados.");
-        updateActiveButton(btnOrders);
+        System.out.println("PAGINA ATUAL:" + nm.getCurrentPage());
+
+        if (nm.getCurrentPage().equals("Pedidos")) {
+            updateActiveButton(btnOrders);
+        }
     }
 
     public void handleLogout(ActionEvent event) {

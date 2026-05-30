@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fawkes.front.models.LastOrders;
 import com.fawkes.front.service.ApiClient;
+import com.fawkes.front.utils.NavigationManager;
 import com.fawkes.front.utils.StringUtils;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -372,5 +373,12 @@ public class DashboardPageController {
             requestStatus.getChildren().add(pie);
         }));
         new Thread(task) {{ setDaemon(true); }}.start();
+    }
+
+    @FXML
+    private void handleNavigateToOrders() {
+        NavigationManager nm = NavigationManager.getInstance();
+        StackPane container = (StackPane) dashboardContainer.getScene().getRoot().lookup("#container");
+        nm.navigateToPage(container, "view/orders-page.fxml", "Pedidos", "Onde você e os outros poderão visualizar os pedidos realizados.");
     }
 }
