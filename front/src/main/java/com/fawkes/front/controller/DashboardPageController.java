@@ -137,18 +137,17 @@ public class DashboardPageController {
     private void loadMinProducts() {
         Task<JsonNode> task = new Task<>() {
             @Override protected JsonNode call() throws Exception {
-                return ApiClient.get("/dashboard/produtos-criticos");
+                return ApiClient.get("/api/product-stock/criticos");
             }
         };
         task.setOnSucceeded(e -> Platform.runLater(() -> {
             JsonNode data = task.getValue();
             minProductsContainer.getChildren().clear();
 
-            JsonNode lowStock = data.get("lowStock");
-            if (lowStock != null && lowStock.isArray() && !lowStock.isEmpty()) {
-                for (JsonNode item : lowStock) {
-                    String name = item.path("productName").asText("Produto");
-                    int qty     = item.path("availableQuantity").asInt(0);
+            if (data.isArray() && !data.isEmpty()) {
+                for (JsonNode item : data) {
+                    String name = item.path("product").path("productName").asText("Produto");
+                    int qty     = item.path("currentStockQuantity").asInt(0);
                     int min     = item.path("minStockQuantity").asInt(0);
 
                     Label lbl = new Label(name + " → " + qty + " restantes (mín: " + min + ")");

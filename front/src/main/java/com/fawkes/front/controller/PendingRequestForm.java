@@ -1,6 +1,7 @@
 package com.fawkes.front.controller;
 
 import com.fawkes.front.models.*;
+import com.fawkes.front.service.ApiClient;
 import com.fawkes.front.service.UserInfoManager;
 import com.fawkes.front.utils.ModalManager;
 import com.fawkes.front.utils.StringUtils;
@@ -75,6 +76,7 @@ public class PendingRequestForm {
         }
     }
 
+
     private void renderActions(String status) {
         btnActionContainer.getChildren().clear();
 
@@ -103,16 +105,36 @@ public class PendingRequestForm {
                 }
             }
             case "shipped" -> {
+                // verifica se está em atraso
+                String effective = order.getEffectiveStatus();
+                if ("overdue".equals(effective)) {
+                    btnActionContainer.getChildren().add(infoLabel("⚠  Entrega em atraso"));
+                }
                 if (canReceive) {
                     btnActionContainer.getChildren().add(
                             makeBtn("📦  Confirmar Recebimento", "btn--submit", this::handleReceive)
                     );
-                } else {
-                    btnActionContainer.getChildren().add(infoLabel("🚚  Em trânsito"));
                 }
             }
-            case "received"  ->
-                    btnActionContainer.getChildren().add(infoLabel("✅  Pedido finalizado e recebido"));
+            case "received" -> {
+                btnActionContainer.getChildren().add(infoLabel("✅  Pedido finalizado e recebido"));
+                if (isDirectorManager) {
+                    btnActionContainer.getChildren().add(
+                            makeBtn("⚠  Reportar Problema", "btn--danger", this::handleProblem)
+                    );
+                }
+            }
+            case "problem" -> {
+                btnActionContainer.getChildren().add(infoLabel("⚠  Problema no recebimento reportado"));
+                if (isDirectorManager) {
+                    btnActionContainer.getChildren().add(
+                            makeBtn("↩  Confirmar Devolução", "btn--danger", this::handleReturn)
+                    );
+                }
+            }
+            case "returned" ->
+                    btnActionContainer.getChildren().add(infoLabel("↩  Pedido devolvido ao fornecedor"));
+
             case "cancelled" ->
                     btnActionContainer.getChildren().add(infoLabel("❌  Pedido cancelado / recusado"));
             case "draft" ->
@@ -121,6 +143,7 @@ public class PendingRequestForm {
                     btnActionContainer.getChildren().add(infoLabel("Status: " + status));
         }
     }
+
 
     @FXML
     public void handleAproved() {
@@ -137,6 +160,18 @@ public class PendingRequestForm {
 
     private void handleReceive() {
         abrirSubModal(new ReceiveRequestForm(), "Recebendo Pedido " + order.getId());
+    }
+    private void handleProblem() {
+        abrirSubModal(new ProblemRequestForm(), "Reportando Problema — Pedido " + order.getId());
+    }
+    private void handleReturn() {
+        try {
+            ApiClient.post("/api/purchase-orders/" + order.getId() + "/return", "{}");
+            if (onSaveSuccess != null) onSaveSuccess.run();
+            ((Stage) btnActionContainer.getScene().getWindow()).close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -160,6 +195,9 @@ public class PendingRequestForm {
                 s.setData(order); s.setOnSaveSuccess(onSaveSuccess);
             } else if (controller instanceof ReceiveRequestForm r) {
                 r.setData(order); r.setOnSaveSuccess(onSaveSuccess);
+            } else if (controller instanceof ProblemRequestForm p) {
+                p.setData(order);
+                p.setOnSaveSuccess(onSaveSuccess);
             }
 
             Stage stageAtual = (Stage) btnActionContainer.getScene().getWindow();

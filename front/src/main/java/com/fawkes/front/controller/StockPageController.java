@@ -166,13 +166,17 @@ public class StockPageController {
 
     private void openViewProduct(StockItem pro) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/fawkes/front/view/forms/see-stockItem-form.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/com/fawkes/front/view/forms/see-stockItem-form.fxml"));
             ViewProductForm controller = new ViewProductForm();
             loader.setController(controller);
             Parent formulario = loader.load();
             controller.setProductData(pro);
+            controller.setOnSaveSuccess(this::loadStock); // ← recarrega após salvar
             Stage curStage = ((Stage) stockContainer.getScene().getWindow());
-            ModalManager.openModal(curStage, formulario, "Informações sobre o produto " + pro.getProductName(), 600, 400, "ModalFrameSM.fxml", false);
+            ModalManager.openModal(curStage, formulario,
+                    "Informações sobre o produto " + pro.getProductName(),
+                    600, 400, "ModalFrameSM.fxml", false);
         } catch (IOException e) {
             e.printStackTrace();
         }

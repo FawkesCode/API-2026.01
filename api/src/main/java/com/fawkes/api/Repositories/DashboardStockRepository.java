@@ -94,4 +94,14 @@ public interface DashboardStockRepository extends JpaRepository<SupplierStock, L
         ORDER BY ss.availableQuantity ASC
     """)
     List<SupplierStock> fetchLowStockEntities();
+
+    @Query("""
+    SELECT COUNT(ps) FROM ProductStock ps
+    WHERE ps.minStockQuantity IS NOT NULL
+      AND ps.minStockQuantity > 0
+      AND ps.currentStockQuantity < ps.minStockQuantity
+    """)
+    long countLowStockProductsFromProductStock();
+
+
 }

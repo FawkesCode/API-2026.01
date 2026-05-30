@@ -203,4 +203,32 @@ public class PurchaseOrderService {
 
         purchaseOrderRepository.deleteById(id);
     }
+
+
+    @Transactional
+    public PurchaseOrder markAsProblem(Long orderId, String reason) {
+        PurchaseOrder order = purchaseOrderRepository.findById(orderId)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado"));
+
+        if (order.getStatus() != PurchaseOrder.Status.received)
+            throw new RegraDeNegocioException("Só é possível reportar problema em pedidos recebidos.");
+
+        order.setStatus(PurchaseOrder.Status.problem);
+        if (reason != null && !reason.isBlank()) order.setNotes(reason);
+        return purchaseOrderRepository.save(order);
+    }
+
+    @Transactional
+    public PurchaseOrder markAsReturned(Long orderId) {
+        PurchaseOrder order = purchaseOrderRepository.findById(orderId)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado"));
+
+        if (order.getStatus() != PurchaseOrder.Status.problem)
+            throw new RegraDeNegocioException("Só é possível devolver pedidos com problema reportado.");
+
+        order.setStatus(PurchaseOrder.Status.returned);
+        return purchaseOrderRepository.save(order);
+    }
+
+
 }
