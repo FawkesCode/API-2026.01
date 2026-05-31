@@ -5,6 +5,7 @@ import com.fawkes.front.service.ApiClient;
 import com.fawkes.front.service.UserInfoManager;
 import com.fawkes.front.utils.ModalManager;
 import com.fawkes.front.utils.StringUtils;
+import com.fawkes.front.controller.QuoteRequestForm;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -88,11 +89,21 @@ public class PendingRequestForm {
             case "pending" -> {
                 if (isDirectorManager) {
                     btnActionContainer.getChildren().addAll(
-                            makeBtn("✓  Aprovar", "btn--submit", this::handleAproved),
-                            makeBtn("✗  Recusar", "btn--danger", this::handleDeclined)
+                            makeBtn("📋  Registrar Cotação", "btn--info", this::handleQuote),
+                            makeBtn("✗  Negar Pedido", "btn--danger", this::handleDeclined)
                     );
                 } else {
-                    btnActionContainer.getChildren().add(infoLabel("⏳  Aguardando aprovação"));
+                    btnActionContainer.getChildren().add(infoLabel("⏳  Sob revisão — aguardando cotação"));
+                }
+            }
+            case "quoted" -> {
+                if (isDirectorManager) {
+                    btnActionContainer.getChildren().addAll(
+                            makeBtn("✓  Aprovar para Compra", "btn--submit", this::handleAproved),
+                            makeBtn("✗  Negar Pedido", "btn--danger", this::handleDeclined)
+                    );
+                } else {
+                    btnActionContainer.getChildren().add(infoLabel("📋  Cotação registrada — aguardando aprovação"));
                 }
             }
             case "confirmed" -> {
@@ -164,6 +175,10 @@ public class PendingRequestForm {
     private void handleProblem() {
         abrirSubModal(new ProblemRequestForm(), "Reportando Problema — Pedido " + order.getId());
     }
+
+    private void handleQuote() {
+        abrirSubModal(new QuoteRequestForm(), "Registrar Cotação — Pedido " + order.getId());
+    }
     private void handleReturn() {
         try {
             ApiClient.post("/api/purchase-orders/" + order.getId() + "/return", "{}");
@@ -181,10 +196,12 @@ public class PendingRequestForm {
 
     private void abrirSubModal(Object controller, String titulo) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                    "/com/fawkes/front/view/forms/director-request-form.fxml"));
-            loader.setController(controller);
+            String fxmlPath = (controller instanceof QuoteRequestForm)
+                    ? "/com/fawkes/front/view/forms/quote-request-form.fxml"
+                    : "/com/fawkes/front/view/forms/director-request-form.fxml";
 
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            loader.setController(controller);
             Parent formulario = loader.load();
 
             if (controller instanceof AproveRequestForm a) {
@@ -196,15 +213,17 @@ public class PendingRequestForm {
             } else if (controller instanceof ReceiveRequestForm r) {
                 r.setData(order); r.setOnSaveSuccess(onSaveSuccess);
             } else if (controller instanceof ProblemRequestForm p) {
-                p.setData(order);
-                p.setOnSaveSuccess(onSaveSuccess);
+                p.setData(order); p.setOnSaveSuccess(onSaveSuccess);
+            } else if (controller instanceof QuoteRequestForm q) {
+                q.setData(order); q.setOnSaveSuccess(onSaveSuccess);
             }
 
             Stage stageAtual = (Stage) btnActionContainer.getScene().getWindow();
+            double height = (controller instanceof QuoteRequestForm) ? 420.0 : 350.0;
             Platform.runLater(() -> {
                 stageAtual.close();
                 ModalManager.openModal(curStage, formulario, titulo,
-                        700.0, 350.0, "ModalFrameM_heightSM.fxml", false);
+                        700.0, height, "ModalFrameM_heightSM.fxml", false);
             });
 
         } catch (IOException e) {
