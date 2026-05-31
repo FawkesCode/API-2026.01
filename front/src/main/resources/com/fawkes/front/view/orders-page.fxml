@@ -47,5 +47,17 @@
       </children>
    </HBox>
 
+   <HBox spacing="8.0" alignment="CENTER_LEFT">
+      <children>
+         <JFXButton onAction="#filterByStatus" text="Todos"       styleClass="btn--filter" userData="all" />
+         <JFXButton onAction="#filterByStatus" text="Sob Revisão" styleClass="btn--filter" userData="pending" />
+         <JFXButton onAction="#filterByStatus" text="Em Cotação"  styleClass="btn--filter" userData="quoted" />
+         <JFXButton onAction="#filterByStatus" text="Aprovado"    styleClass="btn--filter" userData="confirmed" />
+         <JFXButton onAction="#filterByStatus" text="Em Trânsito" styleClass="btn--filter" userData="shipped" />
+         <JFXButton onAction="#filterByStatus" text="Recebido"    styleClass="btn--filter" userData="received" />
+         <JFXButton onAction="#filterByStatus" text="Negado"      styleClass="btn--filter" userData="cancelled" />
+      </children>
+   </HBox>
+
    <VBox fx:id="requestsContainer" spacing="10.0" VBox.vgrow="ALWAYS" />
 </VBox>

@@ -10,6 +10,8 @@ import com.fawkes.front.service.ApiClient;
 import com.fawkes.front.utils.ModalManager;
 import com.fawkes.front.utils.NavigationManager;
 import com.fawkes.front.utils.RBACUtil;
+import com.fawkes.front.utils.StringUtils;
+import javafx.event.ActionEvent;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -219,6 +221,24 @@ public class OrdersPageController {
         }
 
 
+    }
+
+    @FXML
+    private void filterByStatus(ActionEvent event) {
+        String statusKey = (String) ((com.jfoenix.controls.JFXButton) event.getSource()).getUserData();
+        if ("all".equals(statusKey)) {
+            renderOrders(allRequests);
+        } else {
+            List<Order> filtered = allRequests.stream()
+                    .filter(o -> statusKey.equals(o.getStatus()))
+                    .toList();
+            if (filtered.isEmpty()) {
+                setErrorMessage("Nenhum pedido com status \""
+                    + StringUtils.requestStatusTranslation(statusKey) + "\".");
+            } else {
+                renderOrders(filtered);
+            }
+        }
     }
 
 
