@@ -1,6 +1,7 @@
 package com.fawkes.front.models;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fawkes.front.utils.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -40,17 +41,11 @@ public class Order {
     }
 
     public String getStatusLabel() {
-        return switch (status != null ? status : "") {
-            case "draft"     -> "Rascunho";
-            case "pending"   -> "Pendente";
-            case "confirmed" -> "Aprovado";
-            case "shipped"   -> "Em trânsito";
-            case "received"  -> "Recebido";
-            case "cancelled" -> "Cancelado/Recusado";
-            case "problem"  -> "Problema no recebimento";
-            case "returned" -> "Devolvido";
-            default          -> status;
-        };
+        return StringUtils.requestStatusTranslation(status);
+    }
+
+    public String getStatusColor() {
+        return StringUtils.getStatusColor(getEffectiveStatus());
     }
 
     public static Order fromJson(JsonNode node) {

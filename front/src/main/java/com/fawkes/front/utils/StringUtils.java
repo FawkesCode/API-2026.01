@@ -47,17 +47,34 @@ public class StringUtils {
     }
 
     public static String requestStatusTranslation(String status) {
-        return switch (status) {
-            case "draft"     -> "📝 Rascunho";
-            case "pending"   -> "••• Pendente";
-            case "confirmed" -> "✔ Aprovado";
-            case "shipped"   -> "🚚 Em trânsito";
-            case "received"  -> "✅ Recebido";
-            case "cancelled" -> "✖ Recusado";
-            case "overdue" -> "⚠ Em atraso";
-            case "problem"  -> "⚠ Problema no recebimento";
-            case "returned" -> "↩ Devolvido";
-            default -> status;
+        return switch (status != null ? status : "") {
+            case "draft"     -> "Rascunho";
+            case "pending"   -> "Sob Revisão";
+            case "quoted"    -> "Em Cotação";
+            case "confirmed" -> "Aprovado para Compra";
+            case "shipped"   -> "Em Trânsito";
+            case "received"  -> "Recebido";
+            case "cancelled" -> "Negado para Compra";
+            case "overdue"   -> "Em Atraso";
+            case "problem"   -> "Problemas no Recebimento";
+            case "returned"  -> "Devolvido";
+            default          -> status != null ? status : "";
+        };
+    }
+
+    public static String getStatusColor(String status) {
+        return switch (status != null ? status : "") {
+            case "draft"     -> "#6B7280";
+            case "pending"   -> "#F59E0B";
+            case "quoted"    -> "#3B82F6";
+            case "confirmed" -> "#10B981";
+            case "shipped"   -> "#8B5CF6";
+            case "received"  -> "#059669";
+            case "cancelled" -> "#EF4444";
+            case "overdue"   -> "#DC2626";
+            case "problem"   -> "#F97316";
+            case "returned"  -> "#374151";
+            default          -> "#6B7280";
         };
     }
 
