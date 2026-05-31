@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.fawkes.api.DTOs.Request.ReceiveOrderRequest;
+import com.fawkes.api.DTOs.Request.UpdateOrderRequest;
+import com.fawkes.api.DTOs.Request.UpdateItemPricesRequest;
 import com.fawkes.api.Entities.OrderNote;
 import com.fawkes.api.Exceptions.RegraDeNegocioException;
 import com.fawkes.api.Exceptions.RecursoNaoEncontradoException;
@@ -113,6 +115,11 @@ public class PurchaseOrderService {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
 
+        if (order.getStatus() != PurchaseOrder.Status.quoted) {
+            throw new RegraDeNegocioException(
+                    "Só é possível aprovar pedidos com cotação registrada (status 'Em Cotação')");
+        }
+
         order.setStatus(PurchaseOrder.Status.confirmed);
         return purchaseOrderRepository.save(order);
     }
@@ -194,6 +201,58 @@ public class PurchaseOrderService {
             }
         }
         order.setTotalValue(total);
+    }
+
+    @Transactional
+    public PurchaseOrder updateOrder(Long orderId, UpdateOrderRequest request) {
+        PurchaseOrder order = purchaseOrderRepository.findById(orderId)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado"));
+
+        if (order.getStatus() != PurchaseOrder.Status.draft
+                && order.getStatus() != PurchaseOrder.Status.pending) {
+            throw new RegraDeNegocioException(
+                    "Pedidos em cotação ou já aprovados não podem ser editados");
+        }
+
+        if (request.notes() != null) {
+            order.setNotes(request.notes());
+        }
+        if (request.expectedDeliveryDate() != null) {
+            order.setExpectedDeliveryDate(request.expectedDeliveryDate());
+        }
+
+        return purchaseOrderRepository.save(order);
+    }
+
+    @Transactional
+    public PurchaseOrder fillItemPrices(Long orderId, UpdateItemPricesRequest request) {
+        PurchaseOrder order = purchaseOrderRepository.findById(orderId)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado"));
+
+        if (order.getStatus() != PurchaseOrder.Status.pending) {
+            throw new RegraDeNegocioException(
+                    "Só é possível registrar cotação em pedidos com status 'Sob Revisão'");
+        }
+
+        for (UpdateItemPricesRequest.ItemPriceEntry entry : request.items()) {
+            PurchaseOrderItem item = order.getItems().stream()
+                    .filter(i -> i.getId().equals(entry.itemId()))
+                    .findFirst()
+                    .orElseThrow(() -> new RegraDeNegocioException(
+                            "Item " + entry.itemId() + " não pertence a este pedido"));
+
+            if (entry.unitPrice() == null || entry.unitPrice().compareTo(BigDecimal.ZERO) <= 0) {
+                throw new RegraDeNegocioException(
+                        "Preço do item " + entry.itemId() + " deve ser maior que zero");
+            }
+
+            item.setUnitPrice(entry.unitPrice());
+            item.setTotalPrice(entry.unitPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
+        }
+
+        recalculateTotal(order);
+        order.setStatus(PurchaseOrder.Status.quoted);
+        return purchaseOrderRepository.save(order);
     }
 
     public void delete(Long id) {
