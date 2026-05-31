@@ -2,22 +2,32 @@ package com.fawkes.api.Controllers;
 
 import com.fawkes.api.Entities.PurchaseOrder;
 import com.fawkes.api.Services.PurchaseOrderService;
+
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import com.fawkes.api.DTOs.Request.ReceiveOrderRequest;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.fawkes.api.Services.PurchaseOrderEmail;
+
 @RestController
 @RequestMapping("/api/purchase-orders")
 @RequiredArgsConstructor
 public class PurchaseOrderController {
 
-    private final PurchaseOrderService purchaseOrderService;
 
+    @Autowired
+    private PurchaseOrderEmail purchaseOrderEmail;
+
+    private final PurchaseOrderService purchaseOrderService;
+    
     @GetMapping
     public ResponseEntity<List<PurchaseOrder>> listAll() {
         return ResponseEntity.ok(purchaseOrderService.listAll());
@@ -65,6 +75,7 @@ public class PurchaseOrderController {
 
     @PostMapping("/{id}/submit")
     public ResponseEntity<PurchaseOrder> submit(@PathVariable Long id) {
+        purchaseOrderEmail.sendEmail(id,"vbomfimcunha@gmail.com");
         return ResponseEntity.ok(purchaseOrderService.submitOrder(id));
     }
 
