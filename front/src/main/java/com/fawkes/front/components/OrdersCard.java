@@ -42,23 +42,11 @@ public class OrdersCard extends AnchorPane {
     }
 
     public void setData(Order order) {
-        status.getStyleClass().removeAll(
-                "order__status--aproved", "order__status--declined",
-                "order__status--shipped", "order__status--overdue");
-
         String effectiveStatus = order.getEffectiveStatus();
         this.status.setText(StringUtils.requestStatusTranslation(effectiveStatus));
-
-        switch (effectiveStatus) {
-            case "confirmed" -> status.setStyle("-fx-background-color: #07b0f3;");
-            case "shipped"   -> status.setStyle("-fx-background-color: #7F77DD;");
-            case "overdue"   -> status.setStyle("-fx-background-color: #E24B4A;");
-            case "received"  -> status.setStyle("-fx-background-color: #639922;");
-            case "cancelled" -> status.setStyle("-fx-background-color: #282e38;");
-            case "problem"  -> status.setStyle("-fx-background-color: #EF9F27;");
-            case "returned" -> status.setStyle("-fx-background-color: #888780;");
-            default          -> status.setStyle("");
-        }
+        String color = StringUtils.getStatusColor(effectiveStatus);
+        status.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; "
+                + "-fx-background-radius: 4; -fx-padding: 2 8 2 8;");
 
         this.solicitorName.setText("Solicitado por " + order.getRequesterName());
         this.department.setText(order.getSector().toUpperCase()
