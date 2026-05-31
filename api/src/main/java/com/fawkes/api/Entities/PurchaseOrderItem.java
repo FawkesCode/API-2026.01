@@ -28,11 +28,11 @@ public class PurchaseOrderItem {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal unitPrice;
+    @Column(name = "unit_price", precision = 10, scale = 2)
+    private BigDecimal unitPrice = BigDecimal.ZERO;
 
-    @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal totalPrice;
+    @Column(name = "total_price", precision = 10, scale = 2)
+    private BigDecimal totalPrice = BigDecimal.ZERO;
 
     @Column(name = "received_quantity")
     private Integer receivedQuantity;

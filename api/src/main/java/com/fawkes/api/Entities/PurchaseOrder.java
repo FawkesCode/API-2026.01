@@ -14,7 +14,7 @@
     public class PurchaseOrder {
 
         public enum Status {
-            draft, pending, confirmed, shipped, received, cancelled,
+            draft, pending, quoted, confirmed, shipped, received, cancelled,
             problem, returned
         }
 
