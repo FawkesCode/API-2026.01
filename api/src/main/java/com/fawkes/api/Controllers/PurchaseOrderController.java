@@ -117,6 +117,19 @@ public class PurchaseOrderController {
         return ResponseEntity.ok(purchaseOrderService.cancelOrder(id));
     }
 
+    @PostMapping("/{id}/problem")
+    public ResponseEntity<PurchaseOrder> markAsProblem(
+            @PathVariable Long id,
+            @RequestBody(required = false) Map<String, String> body) {
+        String reason = body != null ? body.get("reason") : null;
+        return ResponseEntity.ok(purchaseOrderService.markAsProblem(id, reason));
+    }
+
+    @PostMapping("/{id}/return")
+    public ResponseEntity<PurchaseOrder> markAsReturned(@PathVariable Long id) {
+        return ResponseEntity.ok(purchaseOrderService.markAsReturned(id));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         purchaseOrderService.delete(id);

@@ -107,6 +107,7 @@ public class OrdersPageController {
 
                 switch (status.toLowerCase()) {
                     case "pending"   -> pendingOrders.add(ord);
+                    case "quoted"    -> pendingOrders.add(ord);
                     case "confirmed" -> aprovedOrders.add(ord);
                     case "shipped"   -> aprovedOrders.add(ord);  // em trânsito conta como aprovado
                     case "received"  -> aprovedOrders.add(ord);  // recebido também

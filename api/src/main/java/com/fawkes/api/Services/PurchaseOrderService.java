@@ -79,7 +79,7 @@ public class PurchaseOrderService {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
 
-        if (order.getStatus() != PurchaseOrder.Status.draft && order.getStatus() != PurchaseOrder.Status.pending) {
+        if (order.getStatus() != PurchaseOrder.Status.draft) {
             throw new IllegalArgumentException("Cannot add items to order with status: " + order.getStatus());
         }
 
@@ -248,6 +248,13 @@ public class PurchaseOrderService {
 
             item.setUnitPrice(entry.unitPrice());
             item.setTotalPrice(entry.unitPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
+        }
+
+        boolean allPriced = order.getItems().stream()
+                .allMatch(i -> i.getUnitPrice() != null && i.getUnitPrice().compareTo(BigDecimal.ZERO) > 0);
+        if (!allPriced) {
+            throw new RegraDeNegocioException(
+                    "Todos os itens precisam ter preço maior que zero antes de registrar a cotação.");
         }
 
         recalculateTotal(order);
