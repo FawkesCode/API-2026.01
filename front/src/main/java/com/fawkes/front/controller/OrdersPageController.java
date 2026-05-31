@@ -150,7 +150,7 @@ public class OrdersPageController {
         for (Order ord : orders) {
             String status = ord.getStatus().toLowerCase();
 
-            if (status.equals("pending")) {
+            if (status.equals("pending") || status.equals("quoted")) {
                 byGroup.get("PENDING").add(ord);
             } else {
                 byGroup.get("REVIEWED").add(ord);
