@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.fawkes.api.DTOs.Request.ReceiveOrderRequest;
+import com.fawkes.api.DTOs.Request.UpdateOrderRequest;
+import com.fawkes.api.DTOs.Request.UpdateItemPricesRequest;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -51,6 +53,20 @@ public class PurchaseOrderController {
     @GetMapping("/{id}")
     public ResponseEntity<PurchaseOrder> getById(@PathVariable Long id) {
         return ResponseEntity.ok(purchaseOrderService.getById(id).orElse(null));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PurchaseOrder> update(
+            @PathVariable Long id,
+            @RequestBody UpdateOrderRequest request) {
+        return ResponseEntity.ok(purchaseOrderService.updateOrder(id, request));
+    }
+
+    @PutMapping("/{id}/items/prices")
+    public ResponseEntity<PurchaseOrder> fillItemPrices(
+            @PathVariable Long id,
+            @RequestBody UpdateItemPricesRequest request) {
+        return ResponseEntity.ok(purchaseOrderService.fillItemPrices(id, request));
     }
 
     @PostMapping("/draft")
