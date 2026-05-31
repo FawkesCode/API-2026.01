@@ -15,6 +15,7 @@ public class RequestItem {
         this.unitPrice = unitPrice;
     }
 
+    public int getId() { return id; }
     public RequestProduct getProduct() { return product; }
     public double getUnitPrice() { return unitPrice; }
     public int getQuantity() { return quantity; }
