@@ -187,7 +187,10 @@ public class PurchaseOrderService {
         BigDecimal total = BigDecimal.ZERO;
         if (order.getItems() != null) {
             for (PurchaseOrderItem item : order.getItems()) {
-                total = total.add(item.getTotalPrice());
+                BigDecimal itemTotal = item.getTotalPrice();
+                if (itemTotal != null) {
+                    total = total.add(itemTotal);
+                }
             }
         }
         order.setTotalValue(total);
