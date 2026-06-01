@@ -117,12 +117,12 @@ public class UserService {
     @Transactional
     public Users registerUser(String userName, String userMail, String password, Roles role) {
         if (findExistentMail(userMail))
-            throw new RuntimeException("Este email já foi cadastrado");
+            throw new RegraDeNegocioException("Este email já foi cadastrado");
         if (findExistentName(userName))
-            throw new RuntimeException("Este nome de usuário já foi cadastrado");
+            throw new RegraDeNegocioException("Este nome de usuário já foi cadastrado");
 
         Group group = groupRepository.findByRole(role)
-                .orElseThrow(() -> new RuntimeException("Grupo não encontrado para a role: " + role));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Grupo não encontrado para a role: " + role));
 
         Department defaultDept = departmentRepository.findAll().stream().findFirst()
                 .orElseThrow(() -> new RuntimeException("Nenhum departamento encontrado"));

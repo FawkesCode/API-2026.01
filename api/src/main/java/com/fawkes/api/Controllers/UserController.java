@@ -4,6 +4,7 @@ import com.fawkes.api.DTOs.Request.SignUpRequest;
 import com.fawkes.api.DTOs.Request.UserUpdateRequest;
 import com.fawkes.api.DTOs.UserDTO;
 import com.fawkes.api.Entities.Users;
+import com.fawkes.api.Exceptions.RecursoNaoEncontradoException;
 import com.fawkes.api.Services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -63,7 +64,7 @@ public class UserController {
 
         String userEmail = authentication.getName();
         Users user = userService.findByEmail(userEmail)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
 
         return ResponseEntity.ok(UserDTO.fromEntity(user));
     }
