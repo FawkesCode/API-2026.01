@@ -1,6 +1,7 @@
 package com.fawkes.api.Services;
 
 import com.fawkes.api.Entities.Suppliers;
+import com.fawkes.api.Exceptions.RecursoNaoEncontradoException;
 import com.fawkes.api.Repositories.SupplierRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class SupplierService {
 
     public Suppliers findById(Long id) {
         return supplierRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Fornecedor não encontrado"));
     }
 
     public Suppliers create(Suppliers supplier) {
