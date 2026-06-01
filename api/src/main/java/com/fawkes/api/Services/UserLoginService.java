@@ -1,6 +1,6 @@
 package com.fawkes.api.Services;
-import com.fawkes.api.Exceptions.RecursoNaoEncontradoException;
 import com.fawkes.api.Security.JwtUtils;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.fawkes.api.Entities.Users;
@@ -18,9 +18,9 @@ public class UserLoginService {
     }
     public String loginUser(String email, String password) {
         Users user = userService.findByEmail(email)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
+                .orElseThrow(() -> new BadCredentialsException("Credenciais inválidas"));
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new RecursoNaoEncontradoException("Senha inválida");
+            throw new BadCredentialsException("Credenciais inválidas");
         }
         return jwtUtils.generateToken(user.getUserMail());
     }
