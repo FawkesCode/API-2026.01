@@ -3,6 +3,7 @@ package com.fawkes.api.Services;
 import com.fawkes.api.DTOs.ProductDTO;
 import com.fawkes.api.DTOs.Request.ProductRequest;
 import com.fawkes.api.Entities.*;
+import com.fawkes.api.Exceptions.RecursoNaoEncontradoException;
 import com.fawkes.api.Repositories.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +32,10 @@ public class ProductService {
     @Transactional
     public Products create(ProductRequest request) {
         Suppliers supplier = supplierRepository.findById(request.getSupplierId())
-                .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Fornecedor não encontrado"));
 
         Stock stock = stockRepository.findById(request.getStockId())
-                .orElseThrow(() -> new RuntimeException("Estoque não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Estoque não encontrado"));
 
         Products.MeasurementUnit unit;
         try {
@@ -58,7 +59,7 @@ public class ProductService {
     @Transactional
     public void delete(Long id) {
         Products product = productsRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto não encontrado: " + id));
 
         productStockRepository.findByProductId(id)
                 .ifPresent(productStockRepository::delete);
@@ -75,7 +76,7 @@ public class ProductService {
     @Transactional
     public ProductDTO update(Long id, ProductRequest request) {
         Products product = productsRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto não encontrado: " + id));
 
         if (request.getProductName() != null)
             product.setProductName(request.getProductName());
@@ -94,7 +95,7 @@ public class ProductService {
             product.setDescription(request.getDescription());
         if (request.getSupplierId() != null) {
             Suppliers supplier = supplierRepository.findById(request.getSupplierId())
-                    .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado"));
+                    .orElseThrow(() -> new RecursoNaoEncontradoException("Fornecedor não encontrado"));
             product.setSuppliers(supplier);
         }
 
