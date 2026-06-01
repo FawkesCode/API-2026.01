@@ -37,6 +37,10 @@
     -fx-background-color: transparent;
 }
 
+.date-picker > .arrow-button > .arrow {
+    -fx-background-color: #BCC3CD;
+}
+
 .date-picker > .arrow-button {
     -fx-background-color: transparent !important;
 }

@@ -88,3 +88,66 @@
         -fx-text-fill: $surface-800;
     }
 }
+
+.requests__status {
+    -fx-background-radius: 100px;
+    -fx-font-size: 11;
+    -fx-padding: 5px 10px;
+    -fx-border-style: solid;
+    -fx-border-radius: 100px;
+
+    &--pending {
+        -fx-text-fill: $gray;
+        -fx-background-color: $light-gray;
+        -fx-border-color: $gray;
+    }
+
+    &--problem {
+        -fx-text-fill: $black;
+        -fx-background-color: $light-black;
+        -fx-border-color: $black;
+    }
+
+    &--quoted {
+        -fx-text-fill: $primary-dark;
+        -fx-background-color: #D6DEFF;
+        -fx-border-color: $primary-dark;
+    }
+
+    &--received {
+        -fx-text-fill: $blue;
+        -fx-background-color: $light-blue;
+        -fx-border-color: $blue;
+    }
+
+    &--approved {
+         -fx-text-fill: $green;
+         -fx-background-color: $light-green;
+         -fx-border-color: $green;
+    }
+
+    &--shipped {
+        -fx-text-fill: $pink;
+        -fx-background-color: $light-pink;
+        -fx-border-color: $pink;
+    }
+
+    &--cancelled {
+        -fx-text-fill: $red;
+        -fx-background-color: $light-red;
+        -fx-border-color: $red;
+    }
+
+    &--overdue {
+        -fx-text-fill: $purple;
+        -fx-background-color: $light-purple;
+        -fx-border-color: $purple;
+    }
+
+    &--returned {
+        -fx-text-fill: $orange;
+        -fx-background-color: $light-orange;
+        -fx-border-color: $orange;
+    }
+
+}

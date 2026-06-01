@@ -66,10 +66,13 @@ public class DashboardService {
 
     private static final Map<String, String> PURCHASE_STATUS_LABEL = Map.of(
             "draft",      "Rascunho",
-            "pending",    "Pendente",
+            "pending",    "Sob Revisão",
             "confirmed",  "Aprovado",
-            "shipped",    "Em trânsito",
+            "shipped",    "Em Trânsito",
+            "quoted",    "Em Cotação",
             "received",   "Recebido",
+            "problem",    "Problemas",
+            "returned",    "Devolvido",
             "cancelled",  "Cancelado"
     );
 
