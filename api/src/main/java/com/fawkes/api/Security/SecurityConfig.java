@@ -46,7 +46,25 @@ public class SecurityConfig {
                         .requestMatchers("/manager/**").hasRole("MANAGER")
                         .requestMatchers("/operational/**").hasRole("OPERATIONAL")
                         .requestMatchers("/director/**").hasRole("DIRECTOR")
+                        // Recebimento: operacional, gerente ou diretor
                         .requestMatchers(HttpMethod.POST, "/api/purchase-orders/*/receive").hasAnyRole("MANAGER", "DIRECTOR", "OPERATIONAL")
+                        // Aprovação, negação e demais transições de estado: somente gerente/diretor
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/purchase-orders/*/confirm",
+                                "/api/purchase-orders/*/cancel",
+                                "/api/purchase-orders/*/ship",
+                                "/api/purchase-orders/*/problem",
+                                "/api/purchase-orders/*/return").hasAnyRole("MANAGER", "DIRECTOR")
+                        // Registro de cotação e edição de metadados do pedido: somente gerente/diretor
+                        .requestMatchers(HttpMethod.PUT,
+                                "/api/purchase-orders/*/items/prices",
+                                "/api/purchase-orders/*").hasAnyRole("MANAGER", "DIRECTOR")
+                        // Gestão de usuários: criar/editar/ativar = DIRECTOR
+                        .requestMatchers(HttpMethod.POST, "/api/users").hasRole("DIRECTOR")
+                        .requestMatchers(HttpMethod.PUT, "/api/users/*").hasRole("DIRECTOR")
+                        .requestMatchers(HttpMethod.PATCH, "/api/users/*/status").hasRole("DIRECTOR")
+                        // Listagem de usuários: diretor ou gerente (note: /api/users/me continua liberado)
+                        .requestMatchers(HttpMethod.GET, "/api/users").hasAnyRole("DIRECTOR", "MANAGER")
                         .anyRequest().authenticated()
                 )
                 // ✅ Adicionar handler customizado para 403
