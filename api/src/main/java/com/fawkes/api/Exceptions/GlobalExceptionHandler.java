@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
@@ -25,7 +26,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RecursoNaoEncontradoException.class)
     public ResponseEntity<Map<String, Object>> handleRecursoNaoEncontrado(RecursoNaoEncontradoException ex) {
-        return buildResponse(404, "NOT_FOUND", errorMessages.getResourceNotFound());
+        String msg = (ex.getMessage() != null && !ex.getMessage().isBlank())
+                ? ex.getMessage() : errorMessages.getResourceNotFound();
+        return buildResponse(404, "NOT_FOUND", msg);
     }
 
     @ExceptionHandler(AcessoNegadoException.class)
@@ -45,7 +48,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RegraDeNegocioException.class)
     public ResponseEntity<Map<String, Object>> handleRegraDeNegocio(RegraDeNegocioException ex) {
-        return buildResponse(422, "UNPROCESSABLE_ENTITY", errorMessages.getBusinessRuleError());
+        String msg = (ex.getMessage() != null && !ex.getMessage().isBlank())
+                ? ex.getMessage() : errorMessages.getBusinessRuleError();
+        return buildResponse(422, "UNPROCESSABLE_ENTITY", msg);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, Object>> handleDataIntegrity(DataIntegrityViolationException ex) {
+        return buildResponse(409, "CONFLICT",
+                "Não é possível concluir a operação: este registro está vinculado a pedidos ou movimentações.");
     }
 
     @ExceptionHandler(RuntimeException.class)
