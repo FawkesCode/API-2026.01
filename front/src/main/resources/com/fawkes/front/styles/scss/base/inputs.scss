@@ -16,6 +16,10 @@
   -fx-font-size: 12px;
   -fx-text-fill: $surface-800;
 
+  &--slim {
+    -fx-padding: 2px !important;
+  }
+
   &:focused {
     -fx-border-color: $primary-light;
     -fx-border-opacity: 0.5;

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -85,17 +86,20 @@
             </HBox>
          </children>
       </VBox>
-       <VBox fx:id="invoiceContainer" layoutX="14.0" layoutY="290.0" prefWidth="400.0" spacing="4.0" visible="false" managed="false">
+       <VBox fx:id="invoiceContainer" layoutX="14.0" layoutY="290.0" managed="false" prefWidth="400.0" spacing="4.0" visible="false">
            <children>
                <Label styleClass="input__label" text="Nota Fiscal:" />
                <Label fx:id="invoiceNumber" styleClass="input__label--info--dark" text="" />
            </children>
        </VBox>
-      <HBox fx:id="btnActionContainer" alignment="CENTER" layoutX="440.0" layoutY="304.0" prefHeight="54.0" prefWidth="246.0" spacing="15.0">
+      <HBox fx:id="btnActionContainer" alignment="CENTER_RIGHT" layoutX="230.0" layoutY="304.0" prefHeight="54.0" prefWidth="457.0" spacing="15.0">
          <children>
-            <JFXButton fx:id="btnApprove" onAction="#handleAproved" styleClass="btn--submit" text="Aprovar" />
-            <JFXButton fx:id="btnDecline" onAction="#handleDeclined" styleClass="btn--cancel" text="Recusar" />
+            <JFXButton fx:id="btnApprove" onAction="#handleAproved" prefHeight="26.0" prefWidth="198.0" styleClass="btn--submit" text="Aprovar" />
+            <JFXButton fx:id="btnDecline" onAction="#handleDeclined" prefHeight="26.0" prefWidth="146.0" styleClass="btn--cancel" text="Recusar" />
          </children>
+         <padding>
+            <Insets right="40.0" />
+         </padding>
       </HBox>
       <HBox alignment="CENTER" layoutX="386.0" layoutY="270.0" prefHeight="18.0" prefWidth="287.0" spacing="10.0">
          <children>

@@ -8,6 +8,7 @@ import com.fawkes.front.models.RequestItem;
 import com.fawkes.front.service.ApiClient;
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -44,7 +45,6 @@ public class QuoteRequestForm {
         for (RequestItem item : order.getItemsList()) {
             Label name = new Label(item.getProduct().getName());
             name.getStyleClass().add("input__label--info");
-            name.setPrefWidth(220);
 
             Label qty = new Label("x " + item.getQuantity());
             qty.getStyleClass().add("input__label--info");
@@ -62,8 +62,9 @@ public class QuoteRequestForm {
                             : "");
             priceField.setPromptText("Preço unitário (R$)");
             priceField.setPrefWidth(130);
+            priceField.getStyleClass().addAll("input__text", "input__text--slim");
 
-            HBox row = new HBox(8, name, qty, spacer, priceField);
+            HBox row = new HBox(8, qty, name, spacer, priceField);
             row.setAlignment(Pos.CENTER_LEFT);
             itemsContainer.getChildren().add(row);
 

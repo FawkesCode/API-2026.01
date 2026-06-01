@@ -11,6 +11,7 @@ import com.fawkes.front.utils.ModalManager;
 import com.fawkes.front.utils.NavigationManager;
 import com.fawkes.front.utils.RBACUtil;
 import com.fawkes.front.utils.StringUtils;
+import com.jfoenix.controls.JFXButton;
 import javafx.event.ActionEvent;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -21,10 +22,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -43,6 +41,16 @@ public class OrdersPageController {
     @FXML private Label pendingRequestsLabel;
     @FXML private Label aprovedRequestsLabell;
     @FXML private Label declinedRequestsLabel;
+
+    // Filters
+    @FXML private HBox filterContainer;
+    @FXML private JFXButton btnAll;
+    @FXML private JFXButton btnPending;
+    @FXML private JFXButton btnQuote;
+    @FXML private JFXButton btnApproved;
+    @FXML private JFXButton btnTransit;
+    @FXML private JFXButton btnReceived;
+    @FXML private JFXButton btnCancelled;
 
     NavigationManager nm = NavigationManager.getInstance();
     private static final NumberFormat CURRENCY_FMT = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
@@ -84,6 +92,8 @@ public class OrdersPageController {
         task.setOnSucceeded(e -> Platform.runLater(() -> {
             requestsContainer.getChildren().clear();
             JsonNode data = task.getValue();
+
+            System.out.println("PEDIDOS" + data.toPrettyString());
 
             if (!data.isArray() || data.isEmpty()) {
                 setErrorMessage("Nenhum pedido foi realizado ainda.");
@@ -227,6 +237,21 @@ public class OrdersPageController {
     @FXML
     private void filterByStatus(ActionEvent event) {
         String statusKey = (String) ((com.jfoenix.controls.JFXButton) event.getSource()).getUserData();
+        System.out.println("STATUS DO FILTER:" + statusKey);
+
+        resetFilterButtonsActiveState();
+
+        switch (statusKey) {
+            case "pending" -> { btnPending.getStyleClass().add("orders__filter--active"); }
+            case "quoted" -> { btnQuote.getStyleClass().add("orders__filter--active"); }
+            case "confirmed" -> { btnApproved.getStyleClass().add("orders__filter--active"); }
+            case "shipped" -> { btnTransit.getStyleClass().add("orders__filter--active"); }
+            case "received" -> { btnReceived.getStyleClass().add("orders__filter--active"); }
+            case "cancelled" -> { btnCancelled.getStyleClass().add("orders__filter--active"); }
+            default -> { btnAll.getStyleClass().add("orders__filter--active"); }
+        }
+
+
         if ("all".equals(statusKey)) {
             renderOrders(allRequests);
         } else {
@@ -238,6 +263,14 @@ public class OrdersPageController {
                     + StringUtils.requestStatusTranslation(statusKey) + "\".");
             } else {
                 renderOrders(filtered);
+            }
+        }
+    }
+
+    private void resetFilterButtonsActiveState() {
+        for (javafx.scene.Node node : filterContainer.getChildren()) {
+            if (node instanceof JFXButton) {
+                node.getStyleClass().remove("orders__filter--active");
             }
         }
     }

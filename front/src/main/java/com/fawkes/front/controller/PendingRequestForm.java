@@ -89,8 +89,8 @@ public class PendingRequestForm {
             case "pending" -> {
                 if (isDirectorManager) {
                     btnActionContainer.getChildren().addAll(
-                            makeBtn("📋  Registrar Cotação", "btn--info", this::handleQuote),
-                            makeBtn("✗  Negar Pedido", "btn--danger", this::handleDeclined)
+                            makeBtn("Registrar Cotação", "btn--submit", this::handleQuote),
+                            makeBtn("Recusar Solicitação", "btn--cancel", this::handleDeclined)
                     );
                 } else {
                     btnActionContainer.getChildren().add(infoLabel("⏳  Sob revisão — aguardando cotação"));
@@ -99,8 +99,8 @@ public class PendingRequestForm {
             case "quoted" -> {
                 if (isDirectorManager) {
                     btnActionContainer.getChildren().addAll(
-                            makeBtn("✓  Aprovar para Compra", "btn--submit", this::handleAproved),
-                            makeBtn("✗  Negar Pedido", "btn--danger", this::handleDeclined)
+                            makeBtn("Aprovar Solicitação", "btn--submit", this::handleAproved),
+                            makeBtn("Recusar Solicitação", "btn--cancel", this::handleDeclined)
                     );
                 } else {
                     btnActionContainer.getChildren().add(infoLabel("📋  Cotação registrada — aguardando aprovação"));
@@ -109,7 +109,7 @@ public class PendingRequestForm {
             case "confirmed" -> {
                 if (isDirectorManager) {
                     btnActionContainer.getChildren().add(
-                            makeBtn("🚚  Marcar como Enviado", "btn--info", this::handleShip)
+                            makeBtn("Marcar como comprado", "btn--submit", this::handleShip)
                     );
                 } else {
                     btnActionContainer.getChildren().add(infoLabel("✓  Aprovado — aguardando envio"));
@@ -131,15 +131,15 @@ public class PendingRequestForm {
                 btnActionContainer.getChildren().add(infoLabel("✅  Pedido finalizado e recebido"));
                 if (isDirectorManager) {
                     btnActionContainer.getChildren().add(
-                            makeBtn("⚠  Reportar Problema", "btn--danger", this::handleProblem)
+                            makeBtn("⚠  Reportar Problema", "btn--submit", this::handleProblem)
                     );
                 }
             }
             case "problem" -> {
-                btnActionContainer.getChildren().add(infoLabel("⚠  Problema no recebimento reportado"));
+                btnActionContainer.getChildren().add(infoLabel("⚠  Problema no recebimento"));
                 if (isDirectorManager) {
                     btnActionContainer.getChildren().add(
-                            makeBtn("↩  Confirmar Devolução", "btn--danger", this::handleReturn)
+                            makeBtn("↩  Confirmar Devolução", "btn--submit", this::handleReturn)
                     );
                 }
             }
@@ -149,7 +149,7 @@ public class PendingRequestForm {
             case "cancelled" ->
                     btnActionContainer.getChildren().add(infoLabel("❌  Pedido cancelado / recusado"));
             case "draft" ->
-                    btnActionContainer.getChildren().add(infoLabel("📝  Rascunho — ainda não enviado"));
+                    btnActionContainer.getChildren().add(infoLabel("Rascunho — ainda não enviado"));
             default ->
                     btnActionContainer.getChildren().add(infoLabel("Status: " + status));
         }
@@ -236,7 +236,6 @@ public class PendingRequestForm {
         JFXButton btn = new JFXButton(text);
         btn.getStyleClass().add(style);
         btn.setPrefHeight(26);
-        btn.setPrefWidth(170);
         btn.setOnAction(e -> action.run());
         return btn;
     }
@@ -267,8 +266,16 @@ public class PendingRequestForm {
             spacer.setMinHeight(5);
             spacer.setMaxHeight(5);
             HBox.setHgrow(spacer, Priority.ALWAYS);
+            HBox row = new HBox(5);
 
-            HBox row = new HBox(5, qtd, name, spacer, price);
+            if (order.getStatus().equalsIgnoreCase("pending") || order.getStatus().equalsIgnoreCase("draft") || order.getStatus().equalsIgnoreCase("cancelled")) {
+                row.getChildren().addAll( name, spacer, qtd);
+                totalPrice.setVisible(false);
+            } else {
+                row.getChildren().addAll(qtd, name, spacer, price);
+                totalPrice.setVisible(true);
+            }
+
             row.setAlignment(Pos.CENTER);
             productsContainer.getChildren().add(row);
         }

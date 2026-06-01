@@ -1,4 +1,43 @@
 .orders {
+   &__scroll {
+       -fx-background-color: transparent;
+       & > .viewport {
+           -fx-background-color: transparent;
+       }
+   }
+
+  &__filter {
+    -fx-padding: 6px;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-border-color: $surface-100;
+    -fx-text-fill: $surface-500;
+    -fx-background-color: $surface-100;
+
+    &--left {
+        -fx-border-width: 1;
+        -fx-border-radius: 100 0 0 100;
+        -fx-background-radius: 100 0 0 100;
+    }
+
+    &--middle {
+        -fx-border-width: 1 1 1 0;
+        -fx-border-radius: 0;
+    }
+
+    &--right {
+        -fx-border-width: 1 1 1 0;
+        -fx-border-radius: 0 100 100 0;
+        -fx-background-radius: 0 100 100 0;
+    }
+
+    &--active {
+        -fx-background-color: $surface-0;
+        -fx-text-fill: $surface-500;
+
+    }
+  }
+
   &__status {
     -fx-font-size: 11px;
     -fx-text-fill: $surface-0;

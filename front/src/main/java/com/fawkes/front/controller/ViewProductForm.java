@@ -3,7 +3,9 @@ package com.fawkes.front.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fawkes.front.models.StockItem;
 import com.fawkes.front.service.ApiClient;
+import com.fawkes.front.utils.RBACUtil;
 import com.fawkes.front.utils.StringUtils;
+import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -19,10 +21,10 @@ public class ViewProductForm {
     @FXML private Label    curQtdLabel;
     @FXML private TextField minQtdField;
     @FXML private TextField maxQtdField;
-    @FXML private Label    priceLabel;
     @FXML private Label    measUnitLabel;
     @FXML private Label    typeLabel;
     @FXML private Label    errorLabel;
+    @FXML private JFXButton btnSave;
 
     private StockItem product;
     private Runnable onSaveSuccess;
@@ -31,6 +33,11 @@ public class ViewProductForm {
             NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 
     public void setOnSaveSuccess(Runnable r) { this.onSaveSuccess = r; }
+
+    @FXML
+    public void initialize() {
+        applyRBACRestrictions();
+    }
 
     public void setProductData(StockItem pro) {
         this.product = pro;
@@ -43,9 +50,18 @@ public class ViewProductForm {
                 ? pro.getMinStockQuantity().toString() : "0");
         maxQtdField.setText(pro.getMaxStockQuantity() != null
                 ? pro.getMaxStockQuantity().toString() : "0");
-        priceLabel.setText(CURRENCY_FMT.format(pro.getUnitValue()));
         measUnitLabel.setText(StringUtils.measureTranslation(pro.getMeasurementUnit()));
         typeLabel.setText(pro.getProductType());
+    }
+
+    private void applyRBACRestrictions() {
+
+        if (!RBACUtil.isDirector()) {
+            btnSave.setVisible(false);
+            btnSave.setManaged(false);
+            minQtdField.setDisable(true);
+            maxQtdField.setDisable(true);
+        }
     }
 
     @FXML
