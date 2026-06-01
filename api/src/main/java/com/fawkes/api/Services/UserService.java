@@ -5,6 +5,8 @@ import com.fawkes.api.Entities.Department;
 import com.fawkes.api.Entities.Group;
 import com.fawkes.api.Entities.Roles;
 import com.fawkes.api.Entities.Users;
+import com.fawkes.api.Exceptions.RecursoNaoEncontradoException;
+import com.fawkes.api.Exceptions.RegraDeNegocioException;
 import com.fawkes.api.Repositories.DepartmentRepository;
 import com.fawkes.api.Repositories.GroupRepository;
 import com.fawkes.api.Repositories.UserRepository;
@@ -75,27 +77,30 @@ public class UserService {
     }
 
     @Transactional
-    public Users insertUserSimple(String userName, String userMail, String password, 
+    public Users insertUserSimple(String userName, String userMail, String password,
                                    String roleName, String departamentName) {
         if (findExistentMail(userMail))
-            throw new RuntimeException("Este email já foi cadastrado");
+            throw new RegraDeNegocioException("Este email já foi cadastrado");
         if (findExistentName(userName))
-            throw new RuntimeException("Este nome de usuário já foi cadastrado");
+            throw new RegraDeNegocioException("Este nome de usuário já foi cadastrado");
 
         Roles role;
         try {
             role = Roles.valueOf(roleName);
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Role inválida. Use: DIRECTOR, MANAGER ou OPERATIONAL");
+            throw new RegraDeNegocioException("Role inválida. Use: DIRECTOR, MANAGER ou OPERATIONAL");
         }
 
         Group group = groupRepository.findByRole(role)
-                .orElseThrow(() -> new RuntimeException("Grupo não encontrado para a role: " + role));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Grupo não encontrado para a role: " + role));
 
-        Department dept = new Department();
-        dept.setDepartamentName(departamentName);
-        dept.setText("Departamento " + departamentName);
-        dept = departmentRepository.save(dept);
+        Department dept = departmentRepository.findByDepartamentName(departamentName)
+                .orElseGet(() -> {
+                    Department novo = new Department();
+                    novo.setDepartamentName(departamentName);
+                    novo.setText("Departamento " + departamentName);
+                    return departmentRepository.save(novo);
+                });
 
         Users user = new Users();
         user.setUserName(userName);
@@ -145,7 +150,7 @@ public class UserService {
 
     public Users findById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
     }
 
     public Users create(Users user) {
@@ -197,11 +202,11 @@ public class UserService {
             try {
                 Roles role = Roles.valueOf(request.getRoleName());
                 Group group = groupRepository.findByRole(role)
-                        .orElseThrow(() -> new RuntimeException("Grupo não encontrado para a role: " + role));
+                        .orElseThrow(() -> new RecursoNaoEncontradoException("Grupo não encontrado para a role: " + role));
                 user.setGroup(group);
                 user.setRoles(Set.of(role));
             } catch (IllegalArgumentException e) {
-                throw new RuntimeException("Role inválida. Use: DIRECTOR, MANAGER ou OPERATIONAL");
+                throw new RegraDeNegocioException("Role inválida. Use: DIRECTOR, MANAGER ou OPERATIONAL");
             }
         }
         if (request.getDepartmentName() != null) {
