@@ -14,8 +14,10 @@ import com.fawkes.api.Entities.PurchaseOrder;
 import com.fawkes.api.Repositories.PurchaseOrderRepository;
 
 import jakarta.mail.internet.MimeMessage;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class PurchaseOrderEmail{
     private final PurchaseOrderRepository purchaseOrderRepository;
 
@@ -106,16 +108,20 @@ public class PurchaseOrderEmail{
         message.setText(formatedEmailMessage,true);
         
         mailSender.send(orderAdviser);
-        
-            
-        } catch (Exception e) {
-            throw new RuntimeException("erro ao enviar email: " + e);
-        }
-       
 
+
+        } catch (Exception e) {
+            // Notificação é best-effort: falha no envio não deve quebrar a submissão do pedido.
+            log.warn("Falha ao enviar e-mail de notificação do pedido {}: {}", orderId, e.getMessage());
+        }
+
+
+
+    } else {
+            log.warn("Pedido {} não encontrado ao tentar enviar e-mail de notificação", orderId);
+        }
 
     }
 
-    
-}
+
 }

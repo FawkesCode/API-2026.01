@@ -60,9 +60,9 @@ public class PurchaseOrderService {
     @Transactional
     public PurchaseOrder createDraft(Long supplierId, Long userId) {
         Suppliers supplier = supplierRepository.findById(supplierId)
-                .orElseThrow(() -> new IllegalArgumentException("Supplier not found"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Fornecedor não encontrado"));
         Users user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
 
         PurchaseOrder order = new PurchaseOrder();
         order.setSupplier(supplier);
@@ -77,16 +77,16 @@ public class PurchaseOrderService {
     @Transactional
     public PurchaseOrder addItem(Long orderId, Long productId, Integer quantity, BigDecimal unitPrice) {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado"));
 
         if (order.getStatus() != PurchaseOrder.Status.draft) {
-            throw new IllegalArgumentException("Cannot add items to order with status: " + order.getStatus());
+            throw new RegraDeNegocioException("Não é possível adicionar itens a um pedido com status: " + order.getStatus());
         }
 
         PurchaseOrderItem item = new PurchaseOrderItem();
         item.setPurchaseOrder(order);
         item.setProduct(productsRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Product not found")));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto não encontrado")));
         item.setQuantity(quantity);
         item.setUnitPrice(unitPrice);
         item.setTotalPrice(unitPrice.multiply(BigDecimal.valueOf(quantity)));
@@ -100,10 +100,10 @@ public class PurchaseOrderService {
     @Transactional
     public PurchaseOrder submitOrder(Long orderId) {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado"));
 
         if (order.getItems() == null || order.getItems().isEmpty()) {
-            throw new IllegalArgumentException("Cannot submit empty order");
+            throw new RegraDeNegocioException("Não é possível enviar um pedido sem itens");
         }
 
         order.setStatus(PurchaseOrder.Status.pending);
@@ -113,7 +113,7 @@ public class PurchaseOrderService {
     @Transactional
     public PurchaseOrder confirmOrder(Long orderId) {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado"));
 
         if (order.getStatus() != PurchaseOrder.Status.quoted) {
             throw new RegraDeNegocioException(
@@ -127,7 +127,7 @@ public class PurchaseOrderService {
     @Transactional
     public PurchaseOrder markAsShipped(Long orderId) {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado"));
 
         order.setStatus(PurchaseOrder.Status.shipped);
         return purchaseOrderRepository.save(order);
@@ -144,6 +144,10 @@ public class PurchaseOrderService {
 
         if (request.invoiceNumber() == null || request.invoiceNumber().isBlank()) {
             throw new RegraDeNegocioException("Número da nota fiscal é obrigatório");
+        }
+
+        if (request.items() == null || request.items().isEmpty()) {
+            throw new RegraDeNegocioException("Lista de itens recebidos não pode ser vazia");
         }
 
         for (ReceiveOrderRequest.ReceivedItemRequest receivedItem : request.items()) {
@@ -180,10 +184,10 @@ public class PurchaseOrderService {
     @Transactional
     public PurchaseOrder cancelOrder(Long orderId) {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado"));
 
         if (order.getStatus() == PurchaseOrder.Status.received || order.getStatus() == PurchaseOrder.Status.cancelled) {
-            throw new IllegalArgumentException("Cannot cancel order with status: " + order.getStatus());
+            throw new RegraDeNegocioException("Não é possível cancelar um pedido com status: " + order.getStatus());
         }
 
         order.setStatus(PurchaseOrder.Status.cancelled);
@@ -264,10 +268,10 @@ public class PurchaseOrderService {
 
     public void delete(Long id) {
         PurchaseOrder order = purchaseOrderRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado"));
 
         if (order.getStatus() != PurchaseOrder.Status.draft) {
-            throw new IllegalArgumentException("Only draft orders can be deleted");
+            throw new RegraDeNegocioException("Somente pedidos em rascunho podem ser excluídos");
         }
 
         purchaseOrderRepository.deleteById(id);

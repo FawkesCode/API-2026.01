@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fawkes.api.DTOs.ActivityDTO;
+import com.fawkes.api.Exceptions.RecursoNaoEncontradoException;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -35,10 +36,10 @@ public class StockMovementService {
         }
 
         Stock stock = stockRepository.findById(stockId)
-                .orElseThrow(() -> new RuntimeException("Estoque não encontrado: " + stockId));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Estoque não encontrado: " + stockId));
 
         Products product = productsRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + productId));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto não encontrado: " + productId));
 
         CompanyStock companyStock = companyStockRepository.findByStockIdAndProductId(stockId, productId)
                 .orElse(null);
@@ -89,13 +90,13 @@ public class StockMovementService {
         }
 
         Stock stock = stockRepository.findById(stockId)
-                .orElseThrow(() -> new RuntimeException("Estoque não encontrado: " + stockId));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Estoque não encontrado: " + stockId));
 
         Products product = productsRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + productId));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto não encontrado: " + productId));
 
         CompanyStock companyStock = companyStockRepository.findByStockIdAndProductId(stockId, productId)
-                .orElseThrow(() -> new RuntimeException("Saldo do produto não encontrado: " + productId));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Saldo do produto no estoque não encontrado. Registre uma entrada antes de realizar uma saída. Produto: " + productId));
 
         int novoSaldo = calcularSaldoSaida(companyStock, quantity);
 
@@ -111,7 +112,7 @@ public class StockMovementService {
         Ticket ticket = null;
         if (orderId != null) {
             ticket = ticketRepository.findById(orderId)
-                    .orElseThrow(() -> new RuntimeException("Ticket não encontrado: " + orderId));
+                    .orElseThrow(() -> new RecursoNaoEncontradoException("Ticket não encontrado: " + orderId));
         }
 
         ProductOutputs output = new ProductOutputs();

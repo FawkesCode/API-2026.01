@@ -4,7 +4,6 @@ import com.fawkes.api.Config.ErrorMessagesConfig;
 import com.fawkes.api.DTOs.Request.LoginRequest;
 import com.fawkes.api.DTOs.Request.SignUpRequest;
 import com.fawkes.api.DTOs.Response.LoginResponse;
-import com.fawkes.api.Entities.Roles;
 import com.fawkes.api.Entities.Users;
 import com.fawkes.api.Exceptions.AcessoNegadoException;
 import com.fawkes.api.Services.UserLoginService;
@@ -16,8 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -52,11 +49,6 @@ public class AuthController {
                 signUpRequest.getPassword(),
                 signUpRequest.getRole()
         );
-        if (signUpRequest.getRole() != null) {
-            user.setRoles(Set.of(signUpRequest.getRole()));
-        } else {
-            user.setRoles(Set.of(Roles.MANAGER));
-        }
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Usuário criado com sucesso: " + user.getUserMail());
     }

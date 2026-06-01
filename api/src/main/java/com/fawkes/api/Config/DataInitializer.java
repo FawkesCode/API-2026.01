@@ -72,7 +72,7 @@ public class DataInitializer {
                     });
 
             // ==================== ESTOQUE ====================
-            Stock estoquePrincipal = stockRepository.findById(1L)
+            Stock estoquePrincipal = stockRepository.findByStockName("Estoque Principal")
                     .orElseGet(() -> {
                         Stock s = new Stock();
                         s.setStockName("Estoque Principal");
@@ -80,7 +80,7 @@ public class DataInitializer {
                     });
 
             // ==================== PRODUTO ====================
-            Products produtoTeste = productsRepository.findById(2L)
+            Products produtoTeste = productsRepository.findByProductName("Produto Teste")
                     .orElseGet(() -> {
                         Products p = new Products();
                         p.setProductName("Produto Teste");

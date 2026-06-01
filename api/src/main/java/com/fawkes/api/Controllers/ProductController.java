@@ -4,6 +4,7 @@ import com.fawkes.api.DTOs.ProductDTO;
 import com.fawkes.api.DTOs.Request.ProductRequest;
 import com.fawkes.api.Services.ProductService;
 import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductDTO> create(@RequestBody ProductRequest request) {
+    public ResponseEntity<ProductDTO> create(@Valid @RequestBody ProductRequest request) {
         return ResponseEntity.ok(ProductDTO.fromEntity(productService.create(request)));
     }
 

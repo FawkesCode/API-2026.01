@@ -8,7 +8,8 @@ import java.math.BigDecimal;
 /*
  Espelha o StockItemDTO do back-end.
  Campos: productId, productName, productType, measurementUnit,
-         unitValue, currentStockQuantity, minStockQuantity, maxStockQuantity.
+         unitValue, currentStockQuantity, minStockQuantity, maxStockQuantity,
+         supplierName, supplierId.
  */
 public class StockItem {
 
@@ -51,7 +52,7 @@ public class StockItem {
         Integer min         = node.path("minStockQuantity").asInt(0);
         Integer max         = node.path("maxStockQuantity").asInt(0);
         String supplierName = node.path("supplierName").asText("Sem Fornecedor");
-        Integer supplierID  = 0; // não retornado pelo DTO, mantido como 0
+        Integer supplierID  = node.path("supplierId").asInt(0);
 
         return new StockItem(productId, productName, productType,
                 measureUnit, unitValue, current, min, max, null, supplierName, supplierID);

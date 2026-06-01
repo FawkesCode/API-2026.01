@@ -1,11 +1,14 @@
 package com.fawkes.api.Controllers;
 
 import com.fawkes.api.Entities.PurchaseOrder;
+import com.fawkes.api.Exceptions.RecursoNaoEncontradoException;
+import com.fawkes.api.Exceptions.RegraDeNegocioException;
 import com.fawkes.api.Services.PurchaseOrderService;
 
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +30,9 @@ public class PurchaseOrderController {
 
     @Autowired
     private PurchaseOrderEmail purchaseOrderEmail;
+
+    @Value("${app.email.order.recipient}")
+    private String orderRecipientEmail;
 
     private final PurchaseOrderService purchaseOrderService;
     
@@ -52,7 +58,9 @@ public class PurchaseOrderController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PurchaseOrder> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(purchaseOrderService.getById(id).orElse(null));
+        return purchaseOrderService.getById(id)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado: " + id));
     }
 
     @PutMapping("/{id}")
@@ -71,28 +79,37 @@ public class PurchaseOrderController {
 
     @PostMapping("/draft")
     public ResponseEntity<PurchaseOrder> createDraft(@RequestBody Map<String, Long> request) {
-        return ResponseEntity.ok(purchaseOrderService.createDraft(
-                request.get("supplierId"),
-                request.get("userId")
-        ));
+        Long supplierId = request.get("supplierId");
+        Long userId = request.get("userId");
+        if (supplierId == null || userId == null) {
+            throw new RegraDeNegocioException("supplierId e userId são obrigatórios");
+        }
+        return ResponseEntity.ok(purchaseOrderService.createDraft(supplierId, userId));
     }
 
     @PostMapping("/{orderId}/items")
     public ResponseEntity<PurchaseOrder> addItem(
             @PathVariable Long orderId,
             @RequestBody Map<String, Object> request) {
+        Object productIdObj = request.get("productId");
+        Object quantityObj = request.get("quantity");
+        Object unitPriceObj = request.get("unitPrice");
+        if (productIdObj == null || quantityObj == null || unitPriceObj == null) {
+            throw new RegraDeNegocioException("productId, quantity e unitPrice são obrigatórios");
+        }
         return ResponseEntity.ok(purchaseOrderService.addItem(
                 orderId,
-                ((Number) request.get("productId")).longValue(),
-                ((Number) request.get("quantity")).intValue(),
-                new BigDecimal(request.get("unitPrice").toString())
+                ((Number) productIdObj).longValue(),
+                ((Number) quantityObj).intValue(),
+                new BigDecimal(unitPriceObj.toString())
         ));
     }
 
     @PostMapping("/{id}/submit")
     public ResponseEntity<PurchaseOrder> submit(@PathVariable Long id) {
-        purchaseOrderEmail.sendEmail(id,"vbomfimcunha@gmail.com");
-        return ResponseEntity.ok(purchaseOrderService.submitOrder(id));
+        PurchaseOrder order = purchaseOrderService.submitOrder(id);
+        purchaseOrderEmail.sendEmail(id, orderRecipientEmail);
+        return ResponseEntity.ok(order);
     }
 
     @PostMapping("/{id}/confirm")
