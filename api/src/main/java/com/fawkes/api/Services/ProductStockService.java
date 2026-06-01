@@ -3,6 +3,7 @@ package com.fawkes.api.Services;
 import com.fawkes.api.Entities.ProductStock;
 import com.fawkes.api.Entities.Products;
 import com.fawkes.api.Exceptions.RecursoNaoEncontradoException;
+import com.fawkes.api.Exceptions.RegraDeNegocioException;
 import com.fawkes.api.Repositories.ProductStockRepository;
 import com.fawkes.api.Repositories.ProductsRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,13 +33,18 @@ public class ProductStockService {
                     return novo;
                 });
 
-        if (min < 0 || max < 0)
-            throw new IllegalArgumentException("Quantidades não podem ser negativas.");
-        if (max > 0 && min > max)
-            throw new IllegalArgumentException("Mínimo não pode ser maior que o máximo.");
+        int effectiveMin = (min != null) ? min
+                : (ps.getMinStockQuantity() != null ? ps.getMinStockQuantity() : 0);
+        int effectiveMax = (max != null) ? max
+                : (ps.getMaxStockQuantity() != null ? ps.getMaxStockQuantity() : 0);
 
-        ps.setMinStockQuantity(min);
-        ps.setMaxStockQuantity(max);
+        if (effectiveMin < 0 || effectiveMax < 0)
+            throw new RegraDeNegocioException("Quantidades não podem ser negativas.");
+        if (effectiveMax > 0 && effectiveMin > effectiveMax)
+            throw new RegraDeNegocioException("Mínimo não pode ser maior que o máximo.");
+
+        ps.setMinStockQuantity(effectiveMin);
+        ps.setMaxStockQuantity(effectiveMax);
         return productStockRepository.save(ps);
     }
 

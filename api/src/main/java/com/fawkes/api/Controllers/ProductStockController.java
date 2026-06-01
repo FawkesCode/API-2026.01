@@ -21,8 +21,8 @@ public class ProductStockController {
             @PathVariable Long productId,
             @RequestBody Map<String, Integer> body) {
 
-        Integer min = body.getOrDefault("minStockQuantity", 0);
-        Integer max = body.getOrDefault("maxStockQuantity", 0);
+        Integer min = body.get("minStockQuantity");
+        Integer max = body.get("maxStockQuantity");
 
         return ResponseEntity.ok(productStockService.updateLimits(productId, min, max));
     }
