@@ -3,6 +3,9 @@ package com.fawkes.api.Controllers;
 import com.fawkes.api.DTOs.ActivityDTO;
 import com.fawkes.api.Entities.ProductInputs;
 import com.fawkes.api.Entities.ProductOutputs;
+import com.fawkes.api.Entities.Ticket;
+import com.fawkes.api.Exceptions.RecursoNaoEncontradoException;
+import com.fawkes.api.Repositories.TicketRepository;
 import com.fawkes.api.Services.StockMovementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +20,7 @@ import java.util.List;
 public class StockMovementController {
 
     private final StockMovementService stockMovementService;
+    private final TicketRepository ticketRepository;
 
     // ----------------------------------------------------------------
     // GETs de histórico — necessários para a tela de Atividade Recente
@@ -51,7 +55,12 @@ public class StockMovementController {
             @RequestParam Long productId,
             @RequestParam Integer quantity,
             @RequestParam(required = false) Long orderId) {
-        ProductOutputs output = stockMovementService.registerOutput(stockId, productId, quantity, null);
+        Ticket ticket = null;
+        if (orderId != null) {
+            ticket = ticketRepository.findById(orderId)
+                    .orElseThrow(() -> new RecursoNaoEncontradoException("Ticket não encontrado: " + orderId));
+        }
+        ProductOutputs output = stockMovementService.registerOutput(stockId, productId, quantity, ticket);
         return ResponseEntity.ok(output);
     }
 
