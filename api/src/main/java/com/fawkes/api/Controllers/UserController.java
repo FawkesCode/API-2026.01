@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Users> create(@RequestBody SignUpRequest request) {
+    public ResponseEntity<UserDTO> create(@RequestBody SignUpRequest request) {
         Users newUser = userService.insertUserSimple(
                 request.getUserName(),
                 request.getUserMail(),
@@ -37,17 +37,17 @@ public class UserController {
                 request.getRole().name(),
                 request.getDepartamentName()
         );
-        return ResponseEntity.ok(newUser);
+        return ResponseEntity.ok(UserDTO.fromEntity(newUser));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Users> update(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
-        return ResponseEntity.ok(userService.update(id, request));
+    public ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
+        return ResponseEntity.ok(UserDTO.fromEntity(userService.update(id, request)));
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<Users> toggleStatus(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.toggleStatus(id));
+    public ResponseEntity<UserDTO> toggleStatus(@PathVariable Long id) {
+        return ResponseEntity.ok(UserDTO.fromEntity(userService.toggleStatus(id)));
     }
 
     /**
