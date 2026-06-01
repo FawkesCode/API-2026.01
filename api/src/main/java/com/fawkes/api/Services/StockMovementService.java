@@ -26,6 +26,7 @@ public class StockMovementService {
     private final ProductsRepository productsRepository;
     private final StockRepository stockRepository;
     private final ProductStockRepository productStockRepository;
+    private final TicketRepository ticketRepository;
 
     @Transactional
     public ProductInputs registerInput(Long stockId, Long productId, Integer quantity) {
@@ -82,7 +83,7 @@ public class StockMovementService {
     }
 
     @Transactional
-    public ProductOutputs registerOutput(Long stockId, Long productId, Integer quantity, Ticket order) {
+    public ProductOutputs registerOutput(Long stockId, Long productId, Integer quantity, Long orderId) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantidade de saída deve ser maior que zero.");
         }
@@ -106,11 +107,18 @@ public class StockMovementService {
             productStockRepository.save(ps);
         });
 
+        // Resolve ticket if orderId provided
+        Ticket ticket = null;
+        if (orderId != null) {
+            ticket = ticketRepository.findById(orderId)
+                    .orElseThrow(() -> new RuntimeException("Ticket não encontrado: " + orderId));
+        }
+
         ProductOutputs output = new ProductOutputs();
         output.setStock(stock);
         output.setProduct(product);
         output.setQuantity(quantity);
-        output.setOrder(order);
+        output.setOrder(ticket);
         output.setResponsible(getCurrentUserName());
 
         return productOutputsRepository.<ProductOutputs>save(output);
