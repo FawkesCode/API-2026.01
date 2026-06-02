@@ -43,6 +43,7 @@ public class DashboardPageController {
     @FXML private TableColumn<LastOrders, String>  columnSolicitor;
     @FXML private TableColumn<LastOrders, Double>  columnValue;
     @FXML private TableColumn<LastOrders, String>  columnStatus;
+    @FXML private TableColumn<LastOrders, String> columnDeliveryDate;
 
     @FXML private Label  curPage;
     @FXML private Button btnPrev;
@@ -218,6 +219,13 @@ public class DashboardPageController {
 
         columnSupplier.setCellValueFactory(new PropertyValueFactory<>("supplierName"));
         columnSolicitor.setCellValueFactory(new PropertyValueFactory<>("requesterName"));
+        columnDeliveryDate.setCellValueFactory(new PropertyValueFactory<>("expectedDeliveryDate"));
+        columnDeliveryDate.setCellFactory(col -> new TableCell<>() {
+            @Override protected void updateItem(String v, boolean empty) {
+                super.updateItem(v, empty);
+                setText(empty || v == null ? null :java.time.LocalDateTime.parse(v).format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            }
+        });
 
         columnValue.setCellValueFactory(new PropertyValueFactory<>("totalValue"));
         columnValue.setCellFactory(col -> new TableCell<>() {
@@ -242,12 +250,15 @@ public class DashboardPageController {
                 setAlignment(Pos.CENTER);
 
                 switch (status) {
-                    case "draft"     -> { badge.getStyleClass().add("dashboard__table--pending");   badge.setText("Rascunho");    }
-                    case "pending"   -> { badge.getStyleClass().add("dashboard__table--pending");   badge.setText("Sob Revisão"); }
-                    case "confirmed" -> { badge.getStyleClass().add("dashboard__table--confirmed"); badge.setText("Aprovado");    }
-                    case "shipped"   -> { badge.getStyleClass().add("dashboard__table--confirmed"); badge.setText("Enviado");     }
-                    case "received"  -> { badge.getStyleClass().add("dashboard__table--confirmed"); badge.setText("Recebido");    }
-                    case "cancelled" -> { badge.getStyleClass().add("dashboard__table--cancelled"); badge.setText("Negado");      }
+                    case "pending"   -> { badge.getStyleClass().addAll("requests__status", "requests__status--pending");   badge.setText("Sob Revisão"); }
+                    case "confirmed" -> { badge.getStyleClass().addAll("requests__status", "requests__status--approved");   badge.setText("Aprovado");    }
+                    case "quoted" -> { badge.getStyleClass().addAll("requests__status", "requests__status--quoted");   badge.setText("Em Cotação");    }
+                    case "overdue" -> { badge.getStyleClass().addAll("requests__status", "requests__status--overdue");   badge.setText("Em Atraso");    }
+                    case "shipped"   -> { badge.getStyleClass().addAll("requests__status", "requests__status--shipped");   badge.setText("Em trânsito");     }
+                    case "received"  -> { badge.getStyleClass().addAll("requests__status", "requests__status--received");   badge.setText("Recebido");    }
+                    case "cancelled" -> { badge.getStyleClass().addAll("requests__status", "requests__status--cancelled");   badge.setText("Negado");      }
+                    case "problem" -> { badge.getStyleClass().addAll("requests__status", "requests__status--problem");   badge.setText("Problemas");    }
+                    case "returned" -> { badge.getStyleClass().addAll("requests__status", "requests__status--returned");   badge.setText("Devolvido");    }
                     default          ->   badge.getStyleClass().add("dashboard__table--default");
                 }
                 setGraphic(badge);
@@ -326,11 +337,11 @@ public class DashboardPageController {
             }
         };
         task.setOnSucceeded(e -> Platform.runLater(() -> {
-            purchasesPerMonth.getChildren().removeIf(n -> n instanceof BarChart);
+            purchasesPerMonth.getChildren().removeIf(n -> n instanceof LineChart);
 
             CategoryAxis xAxis = new CategoryAxis(); xAxis.setLabel("Mês");
             NumberAxis   yAxis = new NumberAxis();   yAxis.setLabel("Compras");
-            BarChart<String, Number> chart = new BarChart<>(xAxis, yAxis);
+            LineChart<String, Number> chart = new LineChart<>(xAxis, yAxis);
             chart.setLegendVisible(false);
 
             XYChart.Series<String, Number> series = new XYChart.Series<>();
@@ -354,27 +365,60 @@ public class DashboardPageController {
                 return ApiClient.get("/dashboard/status-pedidos");
             }
         };
+
         task.setOnSucceeded(e -> Platform.runLater(() -> {
             JsonNode data = task.getValue();
             JsonNode arr  = data.get("purchaseOrders");
-            if (arr == null || !arr.isArray() || arr.isEmpty()) arr = data.get("orders");
+
+            if (arr == null || !arr.isArray() || arr.isEmpty()) {
+                arr = data.get("orders");
+            }
 
             ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
-            if (arr != null && arr.isArray())
+            if (arr != null && arr.isArray()) {
                 for (JsonNode item : arr) {
                     long count = item.get("count").asLong();
-                    if (count > 0)
+                    if (count > 0) {
                         pieData.add(new PieChart.Data(item.get("statusLabel").asText(), count));
+                    }
                 }
+            }
 
             PieChart pie = new PieChart(pieData);
             pie.setClockwise(true);
-            pie.setLabelsVisible(false);
+            pie.setLabelsVisible(true);
+            pie.setLegendVisible(false);
             pie.setStartAngle(180);
 
             requestStatus.getChildren().removeIf(n -> n instanceof PieChart);
             requestStatus.getChildren().add(pie);
+
+            for (PieChart.Data dataSlice : pie.getData()) {
+                Tooltip tooltip = new Tooltip(String.format("%s: %.0f", dataSlice.getName(), dataSlice.getPieValue()));
+                tooltip.setShowDelay(javafx.util.Duration.ZERO);
+
+                Runnable setupHover = () -> {
+                    javafx.scene.Node node = dataSlice.getNode();
+                    if (node != null) {
+                        Tooltip.install(node, tooltip);
+
+                        node.setOnMouseEntered(event -> node.setOpacity(0.80));
+                        node.setOnMouseExited(event -> node.setOpacity(1.0));
+                    }
+                };
+
+                if (dataSlice.getNode() != null) {
+                    setupHover.run();
+                } else {
+                    dataSlice.nodeProperty().addListener((obs, oldNode, newNode) -> {
+                        if (newNode != null) {
+                            setupHover.run();
+                        }
+                    });
+                }
+            }
         }));
+
         new Thread(task) {{ setDaemon(true); }}.start();
     }
 
@@ -395,10 +439,11 @@ public class DashboardPageController {
         task.setOnSucceeded(e -> Platform.runLater(() -> {
             topSuppliers.getChildren().removeIf(n -> n instanceof BarChart);
             JsonNode data = task.getValue();
-            CategoryAxis xAxis = new CategoryAxis(); xAxis.setLabel("Fornecedores");
-            NumberAxis   yAxis = new NumberAxis();   yAxis.setLabel("Quantidade");
+            CategoryAxis xAxis = new CategoryAxis(); xAxis.setLabel("Fornecedor");
+            NumberAxis   yAxis = new NumberAxis();   yAxis.setLabel("Quantidade de Pedidos");
             BarChart<String, Number> chart = new BarChart<>(xAxis, yAxis);
             chart.setLegendVisible(false);
+            chart.setId("grafico-fornecedores");
 
 
             XYChart.Series<String, Number> series = new XYChart.Series<>();
@@ -425,9 +470,10 @@ public class DashboardPageController {
             criticalProducts.getChildren().removeIf(n -> n instanceof BarChart);
             JsonNode data = task.getValue();
             CategoryAxis xAxis = new CategoryAxis(); xAxis.setLabel("Produto");
-            NumberAxis   yAxis = new NumberAxis();   yAxis.setLabel("Quantidade");
+            NumberAxis   yAxis = new NumberAxis();   yAxis.setLabel("Quantidade no Estoque");
             BarChart<String, Number> chart = new BarChart<>(xAxis, yAxis);
             chart.setLegendVisible(false);
+            chart.setId("grafico-produtos");
 
             XYChart.Series<String, Number> series = new XYChart.Series<>();
             JsonNode arr = data.get("lowStock");

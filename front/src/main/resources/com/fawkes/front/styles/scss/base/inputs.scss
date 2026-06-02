@@ -16,6 +16,10 @@
   -fx-font-size: 12px;
   -fx-text-fill: $surface-800;
 
+  &--slim {
+    -fx-padding: 2px !important;
+  }
+
   &:focused {
     -fx-border-color: $primary-light;
     -fx-border-opacity: 0.5;
@@ -35,6 +39,10 @@
 
 .text-area .viewport, .date-picker > .text-field, .date-picker > .button{
     -fx-background-color: transparent;
+}
+
+.date-picker > .arrow-button > .arrow {
+    -fx-background-color: #BCC3CD;
 }
 
 .date-picker > .arrow-button {
