@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import java.lang.String?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -15,8 +16,10 @@
             <Label fx:id="detailsLabel" prefHeight="82.0" prefWidth="640.0" styleClass="input__label--product-desc" text="Pedido de 5 itens, sendo eles: caneta, lápis, apontador, borracha e estojo; Total de R$25,00. Compra pedida pelo nome do operacional para o setor ADMINISTRATIVO. Solicitação sendo aprovada/recusada por nome do diretor logado." wrapText="true" />
             <AnchorPane prefHeight="152.0" prefWidth="674.0">
                <children>
-                  <Label fx:id="noteTitle" layoutX="31.0" layoutY="14.0" styleClass="input__label" text="Gostaria de deixar uma observaçao?" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-                  <TextArea fx:id="descriptionField" prefHeight="100.0" prefWidth="653.0" promptText="Digite alguma observação ou justificativa para a sua escolha..." AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                  <Label fx:id="deliveryLabel" layoutX="10.0" layoutY="10.0" styleClass="input__label" text="Data de entrega prevista:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="6.0" />
+                  <DatePicker fx:id="deliveryDatePicker" layoutX="10.0" layoutY="30.0" prefWidth="220.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="28.0" />
+                  <Label fx:id="noteTitle" styleClass="input__label" text="Gostaria de deixar uma observaçao?" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="62.0" />
+                  <TextArea fx:id="descriptionField" prefHeight="60.0" promptText="Digite alguma observação ou justificativa para a sua escolha..." AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="84.0">
                      <styleClass>
                         <String fx:value="input__text" />
                         <String fx:value="input__text--form" />
