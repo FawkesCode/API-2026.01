@@ -112,6 +112,7 @@ public class NewRequestForm {
 
     public void handleSubmmit() {
         Map<Integer, List<FormProducts>> productsPerSupplier = products.stream().collect(Collectors.groupingBy(FormProducts::getSuppliersId));
+        final String observacao = descriptionField.getText() != null ? descriptionField.getText().trim() : "";
 
         showError("Enviando pedidos...");
 
@@ -133,12 +134,19 @@ public class NewRequestForm {
                             mapper.writeValueAsString(draftNode));
                     Long orderId = draft.path("id").asLong();
 
+                    // Persiste a observação do solicitante enquanto o pedido ainda é draft
+                    if (!observacao.isEmpty()) {
+                        ObjectNode notesNode = mapper.createObjectNode();
+                        notesNode.put("notes", observacao);
+                        ApiClient.put("/api/purchase-orders/" + orderId,
+                                mapper.writeValueAsString(notesNode));
+                    }
+
                     for (FormProducts p : supplierItems) {
                         ObjectNode itemNode = mapper.createObjectNode();
                         itemNode.put("productId", p.getId());
                         itemNode.put("quantity", p.getQuantity());
-                        itemNode.put("unitPrice", p.getUnityPriceValue());
-
+                        itemNode.put("unitPrice", 0); // preço entra só na cotação
                         ApiClient.post("/api/purchase-orders/" + orderId + "/items",
                                 mapper.writeValueAsString(itemNode));
                     }
