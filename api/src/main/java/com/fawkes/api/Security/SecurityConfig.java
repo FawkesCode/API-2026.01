@@ -48,10 +48,12 @@ public class SecurityConfig {
                         .requestMatchers("/director/**").hasRole("DIRECTOR")
                         // Recebimento: operacional, gerente ou diretor
                         .requestMatchers(HttpMethod.POST, "/api/purchase-orders/*/receive").hasAnyRole("MANAGER", "DIRECTOR", "OPERATIONAL")
-                        // Aprovação, negação e demais transições de estado: somente gerente/diretor
+                        // Marcar como comprado (confirm) e negar (cancel): somente diretor
                         .requestMatchers(HttpMethod.POST,
                                 "/api/purchase-orders/*/confirm",
-                                "/api/purchase-orders/*/cancel",
+                                "/api/purchase-orders/*/cancel").hasRole("DIRECTOR")
+                        // Envio, problema e devolução: gerente ou diretor
+                        .requestMatchers(HttpMethod.POST,
                                 "/api/purchase-orders/*/ship",
                                 "/api/purchase-orders/*/problem",
                                 "/api/purchase-orders/*/return").hasAnyRole("MANAGER", "DIRECTOR")
