@@ -124,9 +124,6 @@ public class ShoppingRequestForm {
             Label name = new Label(p.getName());
             name.getStyleClass().add("input__label--info");
 
-            Label price = new Label(String.format("R$ %.2f", p.getTotalValue()));
-            price.getStyleClass().add("input__label--info");
-
             HBox productsLineContainer = new HBox(5);
             productsLineContainer.setAlignment(Pos.CENTER);
 
@@ -138,10 +135,8 @@ public class ShoppingRequestForm {
 
             productsLineContainer.getChildren().addAll(name, spacer, qtd);
             totalQtd = totalQtd + p.getQuantity();
-            totalPrice = totalPrice + p.getTotalValue();
 
             productsViewContainer.getChildren().add(productsLineContainer);
-
         }
         requestTotalItens.setText("Qtd. de itens: " + totalQtd);
     }
