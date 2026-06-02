@@ -6,6 +6,7 @@ import com.fawkes.api.Entities.PurchaseOrder;
 import com.fawkes.api.Exceptions.RegraDeNegocioException;
 import com.fawkes.api.Repositories.OrderNoteRepository;
 import com.fawkes.api.Repositories.ProductsRepository;
+import com.fawkes.api.Repositories.PurchaseOrderEventRepository;
 import com.fawkes.api.Repositories.PurchaseOrderRepository;
 import com.fawkes.api.Repositories.SupplierRepository;
 import com.fawkes.api.Repositories.UserRepository;
@@ -30,6 +31,7 @@ import static org.mockito.Mockito.when;
 class PurchaseOrderServiceTest {
 
     @Mock PurchaseOrderRepository purchaseOrderRepository;
+    @Mock PurchaseOrderEventRepository purchaseOrderEventRepository;
     @Mock SupplierRepository supplierRepository;
     @Mock UserRepository userRepository;
     @Mock ProductsRepository productsRepository;
