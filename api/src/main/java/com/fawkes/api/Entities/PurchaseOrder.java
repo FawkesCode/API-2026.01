@@ -46,6 +46,9 @@
         @Column(name = "notes", columnDefinition = "TEXT")
         private String notes;
 
+        @Column(name = "decision_reason", columnDefinition = "TEXT")
+        private String decisionReason;
+
         @OneToOne(cascade = CascadeType.ALL)
         @JoinColumn(name = "order_note_id_fk")
         private OrderNote orderNote;
