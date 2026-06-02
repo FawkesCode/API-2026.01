@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface ProductsRepository extends JpaRepository<Products, Long> {
+    Optional<Products> findFirstByProductName(String productName);
     Optional<Products> findByProductName(String productName);
     @Query("""
         SELECT new com.fawkes.api.DTOs.CheaperProductDTO(

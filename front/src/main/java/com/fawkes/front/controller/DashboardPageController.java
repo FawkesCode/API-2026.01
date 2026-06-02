@@ -96,6 +96,8 @@ public class DashboardPageController {
                 return dateFilter.getValue();
             }
         });
+        dateFilter.getEditor().setOnAction(event -> handleDateFilter());
+        dateFilter.valueProperty().addListener((obs, oldVal, newVal) -> handleDateFilter());
     }
 
     // ── Fornecedores ─────────────────────────────────────────────────
@@ -138,12 +140,24 @@ public class DashboardPageController {
     @FXML
     private void handleDateFilter() {
         java.time.LocalDate date = dateFilter.getValue();
+
+        if (date == null) {
+            String text = dateFilter.getEditor().getText().trim();
+            if (!text.isEmpty()) {
+                try {
+                    date = java.time.LocalDate.parse(text,
+                            java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    dateFilter.setValue(date);
+                } catch (Exception ignored) {}
+            }
+        }
+
         if (date == null) {
             selectedDateFrom = null;
-            selectedDateTo = null;
+            selectedDateTo   = null;
         } else {
-            selectedDateFrom = date.toString();
-            selectedDateTo = date.plusDays(7).toString();
+            selectedDateFrom = date.atStartOfDay().toString();
+            selectedDateTo   = date.plusDays(7).atTime(23, 59, 59).toString();
         }
         currentPage = 0;
         loadLastOrders();
@@ -515,12 +529,13 @@ public class DashboardPageController {
     private void loadBarChartProducts() {
         Task<JsonNode> task = new Task<>() {
             @Override protected JsonNode call() throws Exception {
-                return ApiClient.get("/dashboard/produtos-criticos");
+                return ApiClient.get("/api/product-stock/criticos");
             }
         };
         task.setOnSucceeded(e -> Platform.runLater(() -> {
             criticalProducts.getChildren().removeIf(n -> n instanceof BarChart);
             JsonNode data = task.getValue();
+
             CategoryAxis xAxis = new CategoryAxis(); xAxis.setLabel("Produto");
             NumberAxis   yAxis = new NumberAxis();   yAxis.setLabel("Quantidade no Estoque");
             BarChart<String, Number> chart = new BarChart<>(xAxis, yAxis);
@@ -528,14 +543,15 @@ public class DashboardPageController {
             chart.setId("grafico-produtos");
 
             XYChart.Series<String, Number> series = new XYChart.Series<>();
-            JsonNode arr = data.get("lowStock");
-            if (arr != null && arr.isArray()) {
-                for (JsonNode item : arr) {
-                    series.getData().add(new XYChart.Data<>(
-                            item.path("productName").asText("Produto"),
-                            item.path("availableQuantity").asDouble(0)));
+
+            if (data.isArray() && !data.isEmpty()) {
+                for (JsonNode item : data) {
+                    String name = item.path("product").path("productName").asText("Produto");
+                    int qty     = item.path("currentStockQuantity").asInt(0);
+                    series.getData().add(new XYChart.Data<>(name, qty));
                 }
             }
+
             chart.getData().add(series);
             criticalProducts.getChildren().add(chart);
         }));

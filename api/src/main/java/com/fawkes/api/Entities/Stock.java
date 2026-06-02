@@ -15,7 +15,12 @@ public class Stock {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "stock_name", length = 255, nullable = false)
+    @Column(
+            name = "stock_name",
+            length = 255,
+            nullable = false,
+            unique = true
+    )
     private String stockName;
 
     @Column(name = "last_update")

@@ -108,26 +108,30 @@ public interface DashboardPurchaseOrderRepository extends JpaRepository<Purchase
 
     // ── Últimas purchase orders (tabela) ───────────────────────────────
     @Query("""
-    SELECT
-        p.id                    AS id,
-        p.supplier.supplierName AS supplierName,
-        p.createdBy.userName    AS userName,
-        p.totalValue            AS totalValue,
-        CAST(p.status AS string) AS status,
-        p.createdAt             AS createdAt,
-        p.orderDate             AS orderDate,
-        p.expectedDeliveryDate  AS expectedDeliveryDate
-    FROM PurchaseOrder p
-    WHERE (:supplierId IS NULL OR p.supplier.id  = :supplierId)
-      AND (:userId     IS NULL OR p.createdBy.id = :userId)
-      AND (:status     IS NULL OR CAST(p.status AS string) = :status)
-      AND p.status NOT IN ('cancelled', 'draft')
-    ORDER BY p.createdAt DESC
-    """)
+        SELECT
+            p.id                    AS id,
+            p.supplier.supplierName AS supplierName,
+            p.createdBy.userName    AS userName,
+            p.totalValue            AS totalValue,
+            CAST(p.status AS string) AS status,
+            p.createdAt             AS createdAt,
+            p.orderDate             AS orderDate,
+            p.expectedDeliveryDate  AS expectedDeliveryDate
+        FROM PurchaseOrder p
+        WHERE (:supplierId IS NULL OR p.supplier.id  = :supplierId)
+          AND (:userId     IS NULL OR p.createdBy.id = :userId)
+          AND (:status     IS NULL OR CAST(p.status AS string) = :status)
+          AND (:from       IS NULL OR p.createdAt >= :from)
+          AND (:to         IS NULL OR p.createdAt <= :to)
+          AND p.status NOT IN ('cancelled', 'draft')
+        ORDER BY p.createdAt DESC
+        """)
     Page<RecentPurchaseOrderProjection> fetchRecentPurchaseOrders(
             @Param("supplierId") Long supplierId,
             @Param("userId")     Long userId,
             @Param("status")     String status,
+            @Param("from")       LocalDateTime from,
+            @Param("to")         LocalDateTime to,
             Pageable pageable);
 
     // ── Alertas: purchase orders com entrega vencida ───────────────────

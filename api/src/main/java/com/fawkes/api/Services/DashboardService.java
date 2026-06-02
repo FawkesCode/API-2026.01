@@ -266,7 +266,12 @@ public class DashboardService {
 
     public Page<RecentOrderResponse> getRecentPurchaseOrders(DashboardFilterRequest f, int page, int size) {
         return purchaseRepo.fetchRecentPurchaseOrders(
-                        f.getSupplierId(), f.getUserId(), f.getPurchaseOrderStatus(), PageRequest.of(page, size))
+                        f.getSupplierId(),
+                        f.getUserId(),
+                        f.getPurchaseOrderStatus(),
+                        f.getFrom(),
+                        f.getTo(),
+                        PageRequest.of(page, size))
                 .map(this::toRecentPurchaseResponse);
     }
 
