@@ -56,6 +56,8 @@
          <JFXButton onAction="#filterByStatus" text="Em Trânsito" styleClass="btn--filter" userData="shipped" />
          <JFXButton onAction="#filterByStatus" text="Recebido"    styleClass="btn--filter" userData="received" />
          <JFXButton onAction="#filterByStatus" text="Negado"      styleClass="btn--filter" userData="cancelled" />
+         <JFXButton onAction="#filterByStatus" text="Em Atraso"  styleClass="btn--filter" userData="overdue" />
+         <JFXButton onAction="#filterByStatus" text="Problema"   styleClass="btn--filter" userData="problem" />
       </children>
    </HBox>
 

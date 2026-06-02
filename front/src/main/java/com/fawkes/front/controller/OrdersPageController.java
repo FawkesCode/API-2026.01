@@ -229,16 +229,25 @@ public class OrdersPageController {
         String statusKey = (String) ((com.jfoenix.controls.JFXButton) event.getSource()).getUserData();
         if ("all".equals(statusKey)) {
             renderOrders(allRequests);
+            return;
+        }
+
+        List<Order> filtered;
+        if ("overdue".equals(statusKey)) {
+            filtered = allRequests.stream()
+                    .filter(o -> "overdue".equals(o.getEffectiveStatus()))
+                    .toList();
         } else {
-            List<Order> filtered = allRequests.stream()
+            filtered = allRequests.stream()
                     .filter(o -> statusKey.equals(o.getStatus()))
                     .toList();
-            if (filtered.isEmpty()) {
-                setErrorMessage("Nenhum pedido com status \""
+        }
+
+        if (filtered.isEmpty()) {
+            setErrorMessage("Nenhum pedido com status \""
                     + StringUtils.requestStatusTranslation(statusKey) + "\".");
-            } else {
-                renderOrders(filtered);
-            }
+        } else {
+            renderOrders(filtered);
         }
     }
 
