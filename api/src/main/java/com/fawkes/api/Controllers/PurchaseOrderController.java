@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.fawkes.api.DTOs.Request.ConfirmOrderRequest;
 import com.fawkes.api.DTOs.Request.ReceiveOrderRequest;
 import com.fawkes.api.DTOs.Request.UpdateOrderRequest;
 import com.fawkes.api.DTOs.Request.UpdateItemPricesRequest;
@@ -113,8 +114,10 @@ public class PurchaseOrderController {
     }
 
     @PostMapping("/{id}/confirm")
-    public ResponseEntity<PurchaseOrder> confirm(@PathVariable Long id) {
-        return ResponseEntity.ok(purchaseOrderService.confirmOrder(id));
+    public ResponseEntity<PurchaseOrder> confirm(
+            @PathVariable Long id,
+            @RequestBody(required = false) ConfirmOrderRequest request) {
+        return ResponseEntity.ok(purchaseOrderService.confirmOrder(id, request));
     }
 
     @PostMapping("/{id}/ship")

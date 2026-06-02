@@ -11,6 +11,7 @@ import com.fawkes.api.Repositories.ProductsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.fawkes.api.DTOs.Request.ConfirmOrderRequest;
 import com.fawkes.api.DTOs.Request.ReceiveOrderRequest;
 import com.fawkes.api.DTOs.Request.UpdateOrderRequest;
 import com.fawkes.api.DTOs.Request.UpdateItemPricesRequest;
@@ -111,13 +112,22 @@ public class PurchaseOrderService {
     }
 
     @Transactional
-    public PurchaseOrder confirmOrder(Long orderId) {
+    public PurchaseOrder confirmOrder(Long orderId, ConfirmOrderRequest request) {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado"));
 
         if (order.getStatus() != PurchaseOrder.Status.quoted) {
             throw new RegraDeNegocioException(
                     "Só é possível aprovar pedidos com cotação registrada (status 'Em Cotação')");
+        }
+
+        if (request != null) {
+            if (request.expectedDeliveryDate() != null) {
+                order.setExpectedDeliveryDate(request.expectedDeliveryDate());
+            }
+            if (request.reason() != null && !request.reason().isBlank()) {
+                order.setDecisionReason(request.reason());
+            }
         }
 
         order.setStatus(PurchaseOrder.Status.confirmed);
