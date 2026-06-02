@@ -300,7 +300,7 @@ public class PurchaseOrderService {
             throw new RegraDeNegocioException("Só é possível reportar problema em pedidos recebidos.");
 
         order.setStatus(PurchaseOrder.Status.problem);
-        if (reason != null && !reason.isBlank()) order.setNotes(reason);
+        if (reason != null && !reason.isBlank()) order.setDecisionReason(reason);
         return purchaseOrderRepository.save(order);
     }
 

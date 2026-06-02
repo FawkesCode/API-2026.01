@@ -73,4 +73,18 @@ class PurchaseOrderServiceTest {
         assertThat(result.getStatus()).isEqualTo(PurchaseOrder.Status.cancelled);
         assertThat(result.getDecisionReason()).isEqualTo("Fora do orçamento");
     }
+
+    @Test
+    void markAsProblem_gravaDecisionReason_ePreservaNotes() {
+        PurchaseOrder order = new PurchaseOrder();
+        order.setStatus(PurchaseOrder.Status.received);
+        order.setNotes("Observação do solicitante");
+        when(purchaseOrderRepository.findById(1L)).thenReturn(Optional.of(order));
+        when(purchaseOrderRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        PurchaseOrder result = service.markAsProblem(1L, "Item veio quebrado");
+
+        assertThat(result.getDecisionReason()).isEqualTo("Item veio quebrado");
+        assertThat(result.getNotes()).isEqualTo("Observação do solicitante");
+    }
 }
