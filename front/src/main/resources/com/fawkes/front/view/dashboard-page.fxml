@@ -107,10 +107,10 @@
                                     </HBox>
                                     <HBox alignment="CENTER_RIGHT" minHeight="48.0" prefHeight="70.0" prefWidth="600.0">
                                        <children>
-                                          <AnchorPane prefHeight="80.0" prefWidth="155.0">
+                                          <AnchorPane prefHeight="58.0" prefWidth="180.0">
                                              <children>
                                                 <Label layoutY="14.0" styleClass="dashboard__filter--label" text="Período" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                                <DatePicker layoutX="14.0" layoutY="40.0" promptText="Data" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                                <DatePicker fx:id="dateFilter" layoutX="14.0" layoutY="40.0" onAction="#handleDateFilter" promptText="Data" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                                                    <styleClass>
                                                       <String fx:value="input__text" />
                                                       <String fx:value="dashboard__filter--1" />

@@ -17,7 +17,9 @@ import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
+import javafx.util.StringConverter;
 
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ public class DashboardPageController {
     @FXML private Label lblCount;
     @FXML private Label lblTotalPrice;
     @FXML private ComboBox<String> supplierFilter;
+    @FXML private DatePicker dateFilter;
 
     @FXML private Label kpiPending;
     @FXML private Label kpiConfirmed;
@@ -58,6 +61,8 @@ public class DashboardPageController {
     private final int pageSize = 7;
     private boolean isLastPage = true;
     private Long selectedSupplierId = null;
+    private String selectedDateFrom = null;
+    private String selectedDateTo = null;
 
     private final Map<String, Long> supplierMap = new LinkedHashMap<>();
 
@@ -66,6 +71,31 @@ public class DashboardPageController {
         tableMapping();
         loadSuppliers();
         loadDashboard();
+
+        dateFilter.setConverter(new StringConverter<LocalDate>() {
+            private final java.time.format.DateTimeFormatter dayMonthFormatter =
+                    java.time.format.DateTimeFormatter.ofPattern("dd 'de' MMM", new java.util.Locale("pt", "BR"));
+
+            @Override
+            public String toString(java.time.LocalDate dateFrom) {
+                if (dateFrom == null) {
+                    return "";
+                }
+                java.time.LocalDate dateTo = dateFrom.plusDays(7);
+                String toText = dateTo.format(dayMonthFormatter);
+                String fromText = dateFrom.format(dayMonthFormatter);
+
+                return String.format("%s - %s", fromText, toText);
+            }
+
+            @Override
+            public java.time.LocalDate fromString(String string) {
+                if (string == null || string.trim().isEmpty()) {
+                    return null;
+                }
+                return dateFilter.getValue();
+            }
+        });
     }
 
     // ── Fornecedores ─────────────────────────────────────────────────
@@ -103,6 +133,21 @@ public class DashboardPageController {
         }
         currentPage = 0;
         loadLastOrders();
+    }
+
+    @FXML
+    private void handleDateFilter() {
+        java.time.LocalDate date = dateFilter.getValue();
+        if (date == null) {
+            selectedDateFrom = null;
+            selectedDateTo = null;
+        } else {
+            selectedDateFrom = date.toString();
+            selectedDateTo = date.plusDays(7).toString();
+        }
+        currentPage = 0;
+        loadLastOrders();
+        System.out.println("Vamo ta filtrando?");
     }
 
     private void loadKpis() {
@@ -273,6 +318,14 @@ public class DashboardPageController {
                         String.format("/dashboard/ultimas-ordens-compra?page=%d&size=%d", currentPage, pageSize));
                 if (selectedSupplierId != null)
                     url.append("&supplierId=").append(selectedSupplierId);
+                if (selectedDateFrom != null) {
+                    String fromWithTime = selectedDateFrom + "T00:00:00";
+                    String toWithTime = selectedDateTo + "T23:59:59";
+
+                    url.append("&from=").append(fromWithTime);
+                    url.append("&to=").append(toWithTime);
+                }
+
                 return ApiClient.get(url.toString());
             }
         };
