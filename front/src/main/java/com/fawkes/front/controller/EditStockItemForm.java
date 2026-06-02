@@ -44,7 +44,7 @@ public class EditStockItemForm {
         nameField.setText(pro.getProductName());
         typeField.setText(pro.getProductType());
         unityField.getSelectionModel().select(pro.getMeasurementUnit());
-        suppilerField.getSelectionModel().select(pro.getSupplierID());
+        suppilerField.getSelectionModel().select(pro.getSupplierName());
     }
 
     @FXML
