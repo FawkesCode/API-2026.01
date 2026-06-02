@@ -62,6 +62,7 @@ public class QuoteRequestForm {
                             : "");
             priceField.setPromptText("Preço unitário (R$)");
             priceField.setPrefWidth(130);
+            priceField.setMaxWidth(130);
 
             HBox row = new HBox(8, name, qty, spacer, priceField);
             row.setAlignment(Pos.CENTER_LEFT);
