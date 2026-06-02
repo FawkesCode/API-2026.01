@@ -192,7 +192,7 @@ public class PurchaseOrderService {
     }
 
     @Transactional
-    public PurchaseOrder cancelOrder(Long orderId) {
+    public PurchaseOrder cancelOrder(Long orderId, String reason) {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado"));
 
@@ -200,6 +200,9 @@ public class PurchaseOrderService {
             throw new RegraDeNegocioException("Não é possível cancelar um pedido com status: " + order.getStatus());
         }
 
+        if (reason != null && !reason.isBlank()) {
+            order.setDecisionReason(reason);
+        }
         order.setStatus(PurchaseOrder.Status.cancelled);
         return purchaseOrderRepository.save(order);
     }

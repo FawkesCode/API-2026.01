@@ -133,8 +133,11 @@ public class PurchaseOrderController {
     }
 
     @PostMapping("/{id}/cancel")
-    public ResponseEntity<PurchaseOrder> cancel(@PathVariable Long id) {
-        return ResponseEntity.ok(purchaseOrderService.cancelOrder(id));
+    public ResponseEntity<PurchaseOrder> cancel(
+            @PathVariable Long id,
+            @RequestBody(required = false) Map<String, String> body) {
+        String reason = body != null ? body.get("reason") : null;
+        return ResponseEntity.ok(purchaseOrderService.cancelOrder(id, reason));
     }
 
     @PostMapping("/{id}/problem")

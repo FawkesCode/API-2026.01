@@ -60,4 +60,17 @@ class PurchaseOrderServiceTest {
         assertThatThrownBy(() -> service.confirmOrder(1L, new ConfirmOrderRequest(null, null)))
                 .isInstanceOf(RegraDeNegocioException.class);
     }
+
+    @Test
+    void cancelOrder_persisteReasonEmDecisionReason() {
+        PurchaseOrder order = new PurchaseOrder();
+        order.setStatus(PurchaseOrder.Status.quoted);
+        when(purchaseOrderRepository.findById(1L)).thenReturn(Optional.of(order));
+        when(purchaseOrderRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        PurchaseOrder result = service.cancelOrder(1L, "Fora do orçamento");
+
+        assertThat(result.getStatus()).isEqualTo(PurchaseOrder.Status.cancelled);
+        assertThat(result.getDecisionReason()).isEqualTo("Fora do orçamento");
+    }
 }
