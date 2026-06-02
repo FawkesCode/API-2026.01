@@ -1,6 +1,7 @@
 package com.fawkes.api.Services;
 
 import com.fawkes.api.DTOs.Request.ConfirmOrderRequest;
+import com.fawkes.api.Entities.Products;
 import com.fawkes.api.Entities.PurchaseOrder;
 import com.fawkes.api.Exceptions.RegraDeNegocioException;
 import com.fawkes.api.Repositories.OrderNoteRepository;
@@ -14,12 +15,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -86,5 +90,21 @@ class PurchaseOrderServiceTest {
 
         assertThat(result.getDecisionReason()).isEqualTo("Item veio quebrado");
         assertThat(result.getNotes()).isEqualTo("Observação do solicitante");
+    }
+
+    @Test
+    void addItem_aceitaPrecoZero() {
+        PurchaseOrder order = new PurchaseOrder();
+        order.setStatus(PurchaseOrder.Status.draft);
+        order.setItems(new ArrayList<>());
+        Products product = mock(Products.class);
+        when(purchaseOrderRepository.findById(1L)).thenReturn(Optional.of(order));
+        when(productsRepository.findById(10L)).thenReturn(Optional.of(product));
+        when(purchaseOrderRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        PurchaseOrder result = service.addItem(1L, 10L, 5, BigDecimal.ZERO);
+
+        assertThat(result.getItems()).hasSize(1);
+        assertThat(result.getItems().get(0).getUnitPrice()).isEqualByComparingTo(BigDecimal.ZERO);
     }
 }
