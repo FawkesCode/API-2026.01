@@ -22,6 +22,7 @@ public class Order {
     private String invoiceNumber;
     private String expectedDeliveryDate; // ISO string, ex: "2026-05-01T00:00:00"
     private LocalDateTime createdAt;
+    private String decisionReason;
 
     public Order(String requesterName, String product, String sector, String paymentMethod,
                  int quantity, double totalValue, String status, String description,
@@ -140,6 +141,8 @@ public class Order {
         }
 
         String desc = node.path("notes").asText("Sem descição proporcionada pelo solicitante.");
+        String decisionReason = node.path("decisionReason").asText(null);
+        if ("null".equals(decisionReason)) decisionReason = null;
 
         // Extrai número da nota fiscal
         String invoiceNumber = null;
@@ -153,6 +156,7 @@ public class Order {
         if ("null".equals(expectedDeliveryDate)) expectedDeliveryDate = null;
         ord.setInvoiceNumber(invoiceNumber);
         ord.setExpectedDeliveryDate(expectedDeliveryDate);
+        ord.setDecisionReason(decisionReason);
         return ord;
     }
 
@@ -185,4 +189,6 @@ public class Order {
     public String getExpectedDeliveryDate() { return expectedDeliveryDate; }
     public void setExpectedDeliveryDate(String v) { this.expectedDeliveryDate = v; }
     public LocalDateTime getCreatedAt() { return createdAt; }
+    public String getDecisionReason() { return decisionReason; }
+    public void setDecisionReason(String v) { this.decisionReason = v; }
 }

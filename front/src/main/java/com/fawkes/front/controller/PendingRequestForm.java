@@ -60,6 +60,9 @@ public class PendingRequestForm {
 
         department.setText(order.getSector());
         description.setText(order.getDescription());
+        if (order.getDecisionReason() != null && !order.getDecisionReason().isBlank()) {
+            description.setText(order.getDescription() + "\n\nJustificativa: " + order.getDecisionReason());
+        }
         paymentMethod.setText(StringUtils.paymentTranslation(order.getPaymentMethod()));
         requisitor.setText(order.getRequesterName());
         totalPrice.setText("Total: " + CURRENCY.format(order.getTotalValue()));
@@ -88,22 +91,21 @@ public class PendingRequestForm {
         switch (status != null ? status : "") {
             case "pending" -> {
                 if (isDirectorManager) {
-                    btnActionContainer.getChildren().addAll(
-                            makeBtn("📋  Registrar Cotação", "btn--info", this::handleQuote),
-                            makeBtn("✗  Negar Pedido", "btn--danger", this::handleDeclined)
+                    btnActionContainer.getChildren().add(
+                            makeBtn("📋  Registrar Cotação", "btn--info", this::handleQuote)
                     );
                 } else {
                     btnActionContainer.getChildren().add(infoLabel("⏳  Sob revisão — aguardando cotação"));
                 }
             }
             case "quoted" -> {
-                if (isDirectorManager) {
+                if ("DIRECTOR".equals(role)) {
                     btnActionContainer.getChildren().addAll(
-                            makeBtn("✓  Aprovar para Compra", "btn--submit", this::handleAproved),
+                            makeBtn("✓  Marcar como Comprado", "btn--submit", this::handleAproved),
                             makeBtn("✗  Negar Pedido", "btn--danger", this::handleDeclined)
                     );
                 } else {
-                    btnActionContainer.getChildren().add(infoLabel("📋  Cotação registrada — aguardando aprovação"));
+                    btnActionContainer.getChildren().add(infoLabel("📋  Cotação registrada — aguardando decisão do diretor"));
                 }
             }
             case "confirmed" -> {
