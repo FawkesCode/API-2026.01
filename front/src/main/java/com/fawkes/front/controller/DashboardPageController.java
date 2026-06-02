@@ -147,7 +147,6 @@ public class DashboardPageController {
         }
         currentPage = 0;
         loadLastOrders();
-        System.out.println("Vamo ta filtrando?");
     }
 
     private void loadKpis() {
