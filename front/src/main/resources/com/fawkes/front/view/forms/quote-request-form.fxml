@@ -18,14 +18,14 @@
             AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="16.0"
             AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="12.0" spacing="8.0">
          <children>
-            <Label styleClass="input__label" text="Preencha o preço unitário para cada item:">
+            <Label styleClass="input__label" text="Preencha o preço unitário de cada item:" maxWidth="Infinity">
                <VBox.margin>
-                  <Insets bottom="4.0" top="2.0" />
+                  <Insets bottom="8.0" left="4.0" top="2.0" />
                </VBox.margin>
             </Label>
             <ScrollPane fitToWidth="true" prefHeight="280.0" VBox.vgrow="ALWAYS">
                <content>
-                  <VBox fx:id="itemsContainer" spacing="10.0" style="-fx-padding: 8;" />
+                  <VBox fx:id="itemsContainer" spacing="10.0" style="-fx-padding: 12;" />
                </content>
             </ScrollPane>
             <Label fx:id="errorLabel" prefWidth="640.0" style="-fx-text-fill: #EF4444;" />

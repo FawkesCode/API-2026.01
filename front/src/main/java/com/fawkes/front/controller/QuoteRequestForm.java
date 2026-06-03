@@ -44,10 +44,13 @@ public class QuoteRequestForm {
         for (RequestItem item : order.getItemsList()) {
             Label name = new Label(item.getProduct().getName());
             name.getStyleClass().add("input__label--info");
-            name.setPrefWidth(220);
+            name.setPrefWidth(280);
+            name.setMinWidth(280);
 
             Label qty = new Label("x " + item.getQuantity());
             qty.getStyleClass().add("input__label--info");
+            qty.setPrefWidth(60);
+            qty.setMinWidth(60);
 
             StackPane spacer = new StackPane();
             spacer.setStyle("-fx-border-style: dotted; -fx-border-color: #818EA1; -fx-border-width: 0 0 3 0;");
@@ -61,10 +64,10 @@ public class QuoteRequestForm {
                             ? String.format("%.2f", existingPrice).replace(",", ".")
                             : "");
             priceField.setPromptText("Preço unitário (R$)");
-            priceField.setPrefWidth(130);
-            priceField.setMaxWidth(130);
+            priceField.setPrefWidth(140);
+            priceField.setMaxWidth(140);
 
-            HBox row = new HBox(8, name, qty, spacer, priceField);
+            HBox row = new HBox(10, name, qty, spacer, priceField);
             row.setAlignment(Pos.CENTER_LEFT);
             itemsContainer.getChildren().add(row);
 
