@@ -26,8 +26,6 @@ import java.util.Locale;
 
 public class PendingRequestForm {
 
-    @FXML private JFXButton btnApprove;
-    @FXML private JFXButton btnDecline;
     @FXML private Label     costCenter;
     @FXML private Label     department;
     @FXML private Label     description;
@@ -40,6 +38,7 @@ public class PendingRequestForm {
     @FXML private HBox      btnActionContainer;
     @FXML private VBox      invoiceContainer;
     @FXML private Label     invoiceNumber;
+    @FXML private Label     deliveryInfo;
 
     private static final NumberFormat CURRENCY =
             NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
@@ -59,7 +58,14 @@ public class PendingRequestForm {
         this.order    = order;
 
         department.setText(order.getSector());
-        description.setText(order.getDescription());
+        StringBuilder desc = new StringBuilder(order.getDescription() != null ? order.getDescription() : "");
+        if (order.getPurchaseJustification() != null && !order.getPurchaseJustification().isBlank()) {
+            desc.append("\n\nJustificativa da compra: ").append(order.getPurchaseJustification());
+        }
+        if (order.getProblemJustification() != null && !order.getProblemJustification().isBlank()) {
+            desc.append("\n\nJustificativa do problema: ").append(order.getProblemJustification());
+        }
+        description.setText(desc.toString());
         paymentMethod.setText(StringUtils.paymentTranslation(order.getPaymentMethod()));
         requisitor.setText(order.getRequesterName());
         totalPrice.setText("Total: " + CURRENCY.format(order.getTotalValue()));
@@ -74,6 +80,13 @@ public class PendingRequestForm {
             invoiceNumber.setText("Nº " + order.getInvoiceNumber());
             invoiceContainer.setVisible(true);
             invoiceContainer.setManaged(true);
+        }
+
+        // Data de entrega prevista (existe a partir de 'confirmed')
+        if (deliveryInfo != null && order.getExpectedDeliveryDateFormatted() != null) {
+            deliveryInfo.setText("Entrega prevista: " + order.getExpectedDeliveryDateFormatted());
+            deliveryInfo.setVisible(true);
+            deliveryInfo.setManaged(true);
         }
     }
 
@@ -97,13 +110,19 @@ public class PendingRequestForm {
                 }
             }
             case "quoted" -> {
-                if (isDirectorManager) {
+                boolean canEditQuote = "DIRECTOR".equals(role) || "MANAGER".equals(role);
+                if (canEditQuote) {
+                    btnActionContainer.getChildren().add(
+                            makeBtn("✏  Editar Cotação", "btn--info", this::handleQuote));
+                }
+                if ("DIRECTOR".equals(role)) {
                     btnActionContainer.getChildren().addAll(
                             makeBtn("Aprovar Solicitação", "btn--submit", this::handleAproved),
                             makeBtn("Recusar Solicitação", "btn--cancel", this::handleDeclined)
                     );
                 } else {
-                    btnActionContainer.getChildren().add(infoLabel("📋  Cotação registrada — aguardando aprovação"));
+                    btnActionContainer.getChildren().add(
+                            infoLabel("📋  Cotação registrada — aguardando decisão do diretor"));
                 }
             }
             case "confirmed" -> {
@@ -156,7 +175,6 @@ public class PendingRequestForm {
     }
 
 
-    @FXML
     public void handleAproved() {
         abrirSubModal(new AproveRequestForm(), "Aprovando Pedido " + order.getId());
     }
@@ -196,9 +214,17 @@ public class PendingRequestForm {
 
     private void abrirSubModal(Object controller, String titulo) {
         try {
-            String fxmlPath = (controller instanceof QuoteRequestForm)
-                    ? "/com/fawkes/front/view/forms/quote-request-form.fxml"
-                    : "/com/fawkes/front/view/forms/director-request-form.fxml";
+            String fxmlPath;
+            if (controller instanceof QuoteRequestForm) {
+                fxmlPath = "/com/fawkes/front/view/forms/quote-request-form.fxml";
+            } else if (controller instanceof AproveRequestForm) {
+                fxmlPath = "/com/fawkes/front/view/forms/director-request-form.fxml";
+            } else if (controller instanceof ReceiveRequestForm) {
+                fxmlPath = "/com/fawkes/front/view/forms/receive-request-form.fxml";
+            } else {
+                // Recusar, Enviar, Problema
+                fxmlPath = "/com/fawkes/front/view/forms/simple-request-form.fxml";
+            }
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             loader.setController(controller);

@@ -1,6 +1,8 @@
 package com.fawkes.front.components;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fawkes.front.models.HistoryLog;
+import com.fawkes.front.utils.StringUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -24,6 +26,50 @@ public class HistoryLogCard extends AnchorPane {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /** Renderiza um evento de pedido vindo de /api/purchase-orders/events. */
+    public void setOrderEvent(JsonNode node) {
+        String toStatus = node.path("toStatus").asText("");
+        String label    = node.path("orderLabel").asText("Pedido");
+        String by       = node.path("performedBy").asText("-");
+        String reason   = node.path("reason").asText("");
+        String when     = HistoryLog.formatDate(node.path("occurredAt"));
+
+        if (status != null) status.setText(when);
+
+        if (typeLabel != null) {
+            typeLabel.setText("Pedido — "
+                    + StringUtils.requestStatusTranslation(toStatus));
+            String style = orderStatusStyle(toStatus);
+            if (!style.isEmpty()) typeLabel.getStyleClass().add(style);
+        }
+
+        Label ownerLabel = (Label) this.lookup(".log__owner");
+        if (ownerLabel != null) ownerLabel.setText(label);
+
+        Label descLabel = (Label) this.lookup(".log__description");
+        if (descLabel != null) {
+            String txt = "Por: " + by;
+            if (!reason.isBlank() && !"null".equals(reason)) {
+                txt += "  —  " + reason;
+            }
+            descLabel.setText(txt);
+        }
+    }
+
+    private String orderStatusStyle(String toStatus) {
+        return switch (toStatus) {
+            case "pending"   -> "log__status--3";
+            case "quoted"    -> "log__status--3";
+            case "confirmed" -> "log__status--6";
+            case "shipped"   -> "log__status--7";
+            case "received"  -> "log__status--9";
+            case "cancelled" -> "log__status--5";
+            case "problem"   -> "log__status--10";
+            case "returned"  -> "log__status--12";
+            default          -> "";
+        };
     }
 
     public void setData(HistoryLog log) {

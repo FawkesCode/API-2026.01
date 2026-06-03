@@ -12,9 +12,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.fawkes.api.DTOs.Request.ConfirmOrderRequest;
 import com.fawkes.api.DTOs.Request.ReceiveOrderRequest;
 import com.fawkes.api.DTOs.Request.UpdateOrderRequest;
 import com.fawkes.api.DTOs.Request.UpdateItemPricesRequest;
+import com.fawkes.api.DTOs.Response.OrderEventActivityDTO;
+import com.fawkes.api.DTOs.Response.PurchaseOrderEventDTO;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -113,8 +116,10 @@ public class PurchaseOrderController {
     }
 
     @PostMapping("/{id}/confirm")
-    public ResponseEntity<PurchaseOrder> confirm(@PathVariable Long id) {
-        return ResponseEntity.ok(purchaseOrderService.confirmOrder(id));
+    public ResponseEntity<PurchaseOrder> confirm(
+            @PathVariable Long id,
+            @RequestBody(required = false) ConfirmOrderRequest request) {
+        return ResponseEntity.ok(purchaseOrderService.confirmOrder(id, request));
     }
 
     @PostMapping("/{id}/ship")
@@ -130,8 +135,11 @@ public class PurchaseOrderController {
     }
 
     @PostMapping("/{id}/cancel")
-    public ResponseEntity<PurchaseOrder> cancel(@PathVariable Long id) {
-        return ResponseEntity.ok(purchaseOrderService.cancelOrder(id));
+    public ResponseEntity<PurchaseOrder> cancel(
+            @PathVariable Long id,
+            @RequestBody(required = false) Map<String, String> body) {
+        String reason = body != null ? body.get("reason") : null;
+        return ResponseEntity.ok(purchaseOrderService.cancelOrder(id, reason));
     }
 
     @PostMapping("/{id}/problem")
@@ -145,6 +153,16 @@ public class PurchaseOrderController {
     @PostMapping("/{id}/return")
     public ResponseEntity<PurchaseOrder> markAsReturned(@PathVariable Long id) {
         return ResponseEntity.ok(purchaseOrderService.markAsReturned(id));
+    }
+
+    @GetMapping("/events")
+    public ResponseEntity<List<OrderEventActivityDTO>> listAllEvents() {
+        return ResponseEntity.ok(purchaseOrderService.listAllEvents());
+    }
+
+    @GetMapping("/{id}/events")
+    public ResponseEntity<List<PurchaseOrderEventDTO>> listEvents(@PathVariable Long id) {
+        return ResponseEntity.ok(purchaseOrderService.listEvents(id));
     }
 
     @DeleteMapping("/{id}")

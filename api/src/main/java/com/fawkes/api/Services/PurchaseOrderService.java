@@ -1,16 +1,23 @@
 package com.fawkes.api.Services;
 
 import com.fawkes.api.Entities.PurchaseOrder;
+import com.fawkes.api.Entities.PurchaseOrderEvent;
 import com.fawkes.api.Entities.PurchaseOrderItem;
 import com.fawkes.api.Entities.Suppliers;
 import com.fawkes.api.Entities.Users;
+import com.fawkes.api.Repositories.PurchaseOrderEventRepository;
 import com.fawkes.api.Repositories.PurchaseOrderRepository;
 import com.fawkes.api.Repositories.SupplierRepository;
 import com.fawkes.api.Repositories.UserRepository;
 import com.fawkes.api.Repositories.ProductsRepository;
+import com.fawkes.api.DTOs.Response.OrderEventActivityDTO;
+import com.fawkes.api.DTOs.Response.PurchaseOrderEventDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.fawkes.api.DTOs.Request.ConfirmOrderRequest;
 import com.fawkes.api.DTOs.Request.ReceiveOrderRequest;
 import com.fawkes.api.DTOs.Request.UpdateOrderRequest;
 import com.fawkes.api.DTOs.Request.UpdateItemPricesRequest;
@@ -31,6 +38,7 @@ import java.util.Optional;
 public class PurchaseOrderService {
 
     private final PurchaseOrderRepository purchaseOrderRepository;
+    private final PurchaseOrderEventRepository purchaseOrderEventRepository;
     private final SupplierRepository supplierRepository;
     private final UserRepository userRepository;
     private final ProductsRepository productsRepository;
@@ -106,12 +114,15 @@ public class PurchaseOrderService {
             throw new RegraDeNegocioException("Não é possível enviar um pedido sem itens");
         }
 
+        PurchaseOrder.Status prev = order.getStatus();
         order.setStatus(PurchaseOrder.Status.pending);
-        return purchaseOrderRepository.save(order);
+        PurchaseOrder saved = purchaseOrderRepository.save(order);
+        recordEvent(saved, prev, PurchaseOrder.Status.pending, null);
+        return saved;
     }
 
     @Transactional
-    public PurchaseOrder confirmOrder(Long orderId) {
+    public PurchaseOrder confirmOrder(Long orderId, ConfirmOrderRequest request) {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado"));
 
@@ -120,8 +131,20 @@ public class PurchaseOrderService {
                     "Só é possível aprovar pedidos com cotação registrada (status 'Em Cotação')");
         }
 
+        if (request != null) {
+            if (request.expectedDeliveryDate() != null) {
+                order.setExpectedDeliveryDate(request.expectedDeliveryDate());
+            }
+            if (request.reason() != null && !request.reason().isBlank()) {
+                order.setPurchaseJustification(request.reason());
+            }
+        }
+
+        String reason = (request != null) ? request.reason() : null;
         order.setStatus(PurchaseOrder.Status.confirmed);
-        return purchaseOrderRepository.save(order);
+        PurchaseOrder saved = purchaseOrderRepository.save(order);
+        recordEvent(saved, PurchaseOrder.Status.quoted, PurchaseOrder.Status.confirmed, reason);
+        return saved;
     }
 
     @Transactional
@@ -129,8 +152,11 @@ public class PurchaseOrderService {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado"));
 
+        PurchaseOrder.Status prev = order.getStatus();
         order.setStatus(PurchaseOrder.Status.shipped);
-        return purchaseOrderRepository.save(order);
+        PurchaseOrder saved = purchaseOrderRepository.save(order);
+        recordEvent(saved, prev, PurchaseOrder.Status.shipped, null);
+        return saved;
     }
 
     @Transactional
@@ -178,11 +204,13 @@ public class PurchaseOrderService {
         order.setOrderNote(note);
 
         order.setStatus(PurchaseOrder.Status.received);
-        return purchaseOrderRepository.save(order);
+        PurchaseOrder saved = purchaseOrderRepository.save(order);
+        recordEvent(saved, PurchaseOrder.Status.shipped, PurchaseOrder.Status.received, null);
+        return saved;
     }
 
     @Transactional
-    public PurchaseOrder cancelOrder(Long orderId) {
+    public PurchaseOrder cancelOrder(Long orderId, String reason) {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado"));
 
@@ -190,8 +218,46 @@ public class PurchaseOrderService {
             throw new RegraDeNegocioException("Não é possível cancelar um pedido com status: " + order.getStatus());
         }
 
+        if (reason != null && !reason.isBlank()) {
+            order.setPurchaseJustification(reason);
+        }
+        PurchaseOrder.Status prev = order.getStatus();
         order.setStatus(PurchaseOrder.Status.cancelled);
-        return purchaseOrderRepository.save(order);
+        PurchaseOrder saved = purchaseOrderRepository.save(order);
+        recordEvent(saved, prev, PurchaseOrder.Status.cancelled, reason);
+        return saved;
+    }
+
+    private void recordEvent(PurchaseOrder order, PurchaseOrder.Status from, PurchaseOrder.Status to, String reason) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String performer = (auth != null && auth.isAuthenticated()) ? auth.getName() : "sistema";
+
+        PurchaseOrderEvent event = new PurchaseOrderEvent();
+        event.setPurchaseOrder(order);
+        event.setFromStatus(from);
+        event.setToStatus(to);
+        event.setPerformedBy(performer);
+        event.setReason(reason);
+        purchaseOrderEventRepository.save(event);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderEventActivityDTO> listAllEvents() {
+        return purchaseOrderEventRepository.findAllByOrderByOccurredAtDesc()
+                .stream()
+                .map(OrderEventActivityDTO::from)
+                .toList();
+    }
+
+    public List<PurchaseOrderEventDTO> listEvents(Long orderId) {
+        if (!purchaseOrderRepository.existsById(orderId)) {
+            throw new RecursoNaoEncontradoException("Pedido não encontrado: " + orderId);
+        }
+        return purchaseOrderEventRepository
+                .findByPurchaseOrderIdOrderByOccurredAtAsc(orderId)
+                .stream()
+                .map(PurchaseOrderEventDTO::from)
+                .toList();
     }
 
     private void recalculateTotal(PurchaseOrder order) {
@@ -233,9 +299,15 @@ public class PurchaseOrderService {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado"));
 
-        if (order.getStatus() != PurchaseOrder.Status.pending) {
+        if (order.getStatus() != PurchaseOrder.Status.pending
+                && order.getStatus() != PurchaseOrder.Status.quoted) {
             throw new RegraDeNegocioException(
-                    "Só é possível registrar cotação em pedidos com status 'Sob Revisão'");
+                    "Só é possível registrar/editar cotação em pedidos 'Sob Revisão' ou 'Em Cotação'");
+        }
+        boolean wasPending = order.getStatus() == PurchaseOrder.Status.pending;
+
+        if (request.items() == null || request.items().isEmpty()) {
+            throw new RegraDeNegocioException("Lista de itens da cotação não pode ser vazia");
         }
 
         for (UpdateItemPricesRequest.ItemPriceEntry entry : request.items()) {
@@ -262,7 +334,13 @@ public class PurchaseOrderService {
         }
 
         recalculateTotal(order);
-        order.setStatus(PurchaseOrder.Status.quoted);
+        if (wasPending) {
+            order.setStatus(PurchaseOrder.Status.quoted);
+            PurchaseOrder saved = purchaseOrderRepository.save(order);
+            recordEvent(saved, PurchaseOrder.Status.pending, PurchaseOrder.Status.quoted, null);
+            return saved;
+        }
+        // edição silenciosa de cotação já registrada: mantém 'quoted', sem evento
         return purchaseOrderRepository.save(order);
     }
 
@@ -287,8 +365,12 @@ public class PurchaseOrderService {
             throw new RegraDeNegocioException("Só é possível reportar problema em pedidos recebidos.");
 
         order.setStatus(PurchaseOrder.Status.problem);
-        if (reason != null && !reason.isBlank()) order.setNotes(reason);
-        return purchaseOrderRepository.save(order);
+        if (reason != null && !reason.isBlank()) {
+            order.setProblemJustification(reason);
+        }
+        PurchaseOrder saved = purchaseOrderRepository.save(order);
+        recordEvent(saved, PurchaseOrder.Status.received, PurchaseOrder.Status.problem, reason);
+        return saved;
     }
 
     @Transactional
@@ -300,7 +382,9 @@ public class PurchaseOrderService {
             throw new RegraDeNegocioException("Só é possível devolver pedidos com problema reportado.");
 
         order.setStatus(PurchaseOrder.Status.returned);
-        return purchaseOrderRepository.save(order);
+        PurchaseOrder saved = purchaseOrderRepository.save(order);
+        recordEvent(saved, PurchaseOrder.Status.problem, PurchaseOrder.Status.returned, null);
+        return saved;
     }
 
 

@@ -1,0 +1,129 @@
+================================================================================
+RELATÓRIO — Correção dos processos de Produtos (Criação, Edição e Deleção)
+Projeto: API-2026.01 | Branch: fix/pedidos-historico-estoque | Data: 2026-06-01
+================================================================================
+
+CONTEXTO
+--------------------------------------------------------------------------------
+Relato: não se consegue criar, editar nem deletar produtos corretamente.
+A investigação (somente leitura) revelou que CADA operação falha por uma
+causa-raiz diferente, espalhada entre o front (JavaFX) e a API (Spring).
+A API de produtos é mais madura que a de fornecedores (já tem ProductReAquest
+validado, ProductDTO e endpoints completos) — os defeitos são pontuais, mas
+cada um quebra um fluxo inteiro para o usuário.
+
+
+MAPA DO FLUXO ATUAL
+--------------------------------------------------------------------------------
+Operação | Front                                  | API                              | Persistência
+---------+----------------------------------------+----------------------------------+----------------------
+Listar   | ProductsPageController.loadStock       | GET  /api/products               | findAll -> ProductDTO
+Criar    | AddStockItemForm.handleOnSubmit        | POST /api/products (@Valid)      | ProductService.create
+Editar   | EditStockItemForm.handleOnSubmit       | PUT  /api/products/{id} (s/@Valid)| ProductService.update
+Deletar  | ProductsPageController.confirmDelete   | DELETE /api/products/{id}        | ProductService.delete
+
+
+FLUXOS CRÍTICOS E CAUSAS-RAIZ
+--------------------------------------------------------------------------------
+[CRÍTICO] 1. CRIAÇÃO — sempre falha
+    AddStockItemForm.java:103-110 envia "unitValue":"" fixo (a tela não tem
+    campo de preço). ProductRequest.unitValue é @NotNull BigDecimal — a string
+    vazia ou vira null (viola @NotNull) ou quebra a desserialização. E NÃO há
+    handler para MethodArgumentNotValidException no GlobalExceptionHandler,
+    então o erro cai no genérico -> HTTP 500.
+    Agravantes: stockId:1 hard-coded; JSON montado por concatenação de string.
+
+[CRÍTICO] 2. EDIÇÃO — fornecedor nunca pré-selecionado
+    EditStockItemForm.java:47 faz
+        suppilerField.getSelectionModel().select(pro.getSupplierID())
+    getSupplierID() é Integer (id), mas o ComboBox<String> contém NOMES.
+    select(Integer) não casa com item nenhum -> fornecedor atual não aparece,
+    e o submit pode mandar null.
+
+[CRÍTICO] 3. DELEÇÃO — falha com qualquer produto que tem histórico
+    ProductService.delete (linhas 60-74) limpa só ProductStock, CompanyStock e
+    SupplierStock. Mas Products tem FK nullable=false em SEIS entidades —
+    faltam ProductInputs, ProductOutputs e PurchaseOrderItem. Produto com
+    movimentação/pedido -> viola FK -> 409 genérico. Só dá para deletar produto
+    nunca usado.
+
+[ATENÇÃO] 4. Transversais
+    - Sem handler de validação (todo payload inválido -> 500).
+    - Front monta JSON por concatenação de string (frágil com aspas/acentos).
+    - ApiClient.assertOk (linhas 203-206) propaga o body cru, sem extrair a
+      mensagem amigável retornada pela API.
+
+
+DECISÕES CONFIRMADAS COM O USUÁRIO
+--------------------------------------------------------------------------------
+- Deleção = HARD DELETE COM GUARDA: mantém exclusão física, mas BLOQUEIA com
+  422 e mensagem clara quando há movimentação/pedido. Sem soft delete /
+  campo isActive em Products.
+- Escopo = FRONT + API (completo).
+
+
+PLANO DE CORREÇÃO
+--------------------------------------------------------------------------------
+A. CRIAÇÃO
+   1. Front (AddStockItemForm): adicionar campo de PREÇO (e opcionalmente
+      descrição) no new-stockItem-form.fxml; validar número > 0 antes de enviar.
+   2. Front: trocar concatenação por ObjectMapper para montar o body.
+   3. Front: parar de hard-codear stockId:1 (derivar/selecionar, ou confirmar
+      que só há um estoque e documentar).
+   4. API (GlobalExceptionHandler): adicionar handlers para
+      MethodArgumentNotValidException (-> 400 com campos) e
+      HttpMessageNotReadableException (-> 400 "corpo inválido"), seguindo o
+      padrão buildResponse já existente.
+
+B. EDIÇÃO
+   1. Front (EditStockItemForm.setProductData): selecionar o fornecedor PELO
+      NOME (getSupplierName()), garantindo que loadSuppliers() já populou o combo.
+   2. Front: incluir campo de preço também na edição (enviar valor real, não "").
+   3. API: manter o update parcial null-guarded; validar formato só quando o
+      campo vier preenchido.
+
+C. DELEÇÃO (hard delete com guarda)
+   1. API (ProductService.delete): antes de apagar, checar vínculos —
+      ProductInputsRepository.findByProductId (já existe), adicionar
+      findByProductId em ProductOutputsRepository, e checar PurchaseOrderItem
+      (existsByProductId). Havendo vínculo, lançar RegraDeNegocioException
+      (já mapeada -> 422) com mensagem clara.
+   2. API: sem vínculo, manter a limpeza dos satélites e excluir — eliminando o
+      409 genérico.
+   3. Front (confirmDeleteProduct): exibir a mensagem retornada (ver D),
+      deixando claro o motivo do bloqueio.
+
+D. TRANSVERSAL
+   1. Front (ApiClient): extrair o campo "mensagem" do JSON de erro e propagá-lo
+      aos modais.
+
+
+ARQUIVOS CRÍTICOS
+--------------------------------------------------------------------------------
+API:
+  - Services/ProductService.java
+  - Controllers/ProductController.java
+  - DTOs/Request/ProductRequest.java
+  - Exceptions/GlobalExceptionHandler.java
+  - Repositories/ProductOutputsRepository.java (+ consulta para PurchaseOrderItem)
+Front:
+  - controller/AddStockItemForm.java
+  - controller/EditStockItemForm.java
+  - controller/ProductsPageController.java
+  - service/ApiClient.java
+  - view/forms/new-stockItem-form.fxml
+
+
+VERIFICAÇÃO (END-TO-END, QUANDO FOR IMPLEMENTAR)
+--------------------------------------------------------------------------------
+1. Criar com nome + preço -> persiste e aparece na lista (sem 500).
+2. Criar com preço vazio -> 400 com mensagem de campo, não 500.
+3. Editar produto existente -> fornecedor vem pré-selecionado; alterar preço
+   -> persiste.
+4. Deletar sem vínculo -> 204; deletar com movimentação/pedido -> 422 com
+   mensagem clara exibida no front.
+5. Conferir que nenhum 500 genérico aparece nos quatro casos.
+
+================================================================================
+Observação: este é um relatório de análise e plano. Nenhum código foi alterado.
+================================================================================

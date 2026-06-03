@@ -48,10 +48,12 @@ public class SecurityConfig {
                         .requestMatchers("/director/**").hasRole("DIRECTOR")
                         // Recebimento: operacional, gerente ou diretor
                         .requestMatchers(HttpMethod.POST, "/api/purchase-orders/*/receive").hasAnyRole("MANAGER", "DIRECTOR", "OPERATIONAL")
-                        // Aprovação, negação e demais transições de estado: somente gerente/diretor
+                        // Marcar como comprado (confirm) e negar (cancel): somente diretor
                         .requestMatchers(HttpMethod.POST,
                                 "/api/purchase-orders/*/confirm",
-                                "/api/purchase-orders/*/cancel",
+                                "/api/purchase-orders/*/cancel").hasRole("DIRECTOR")
+                        // Envio, problema e devolução: gerente ou diretor
+                        .requestMatchers(HttpMethod.POST,
                                 "/api/purchase-orders/*/ship",
                                 "/api/purchase-orders/*/problem",
                                 "/api/purchase-orders/*/return").hasAnyRole("MANAGER", "DIRECTOR")
@@ -65,6 +67,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/api/users/*/status").hasRole("DIRECTOR")
                         // Listagem de usuários: diretor ou gerente (note: /api/users/me continua liberado)
                         .requestMatchers(HttpMethod.GET, "/api/users").hasAnyRole("DIRECTOR", "MANAGER")
+                        // Histórico de eventos de pedidos: gerente ou diretor
+                        .requestMatchers(HttpMethod.GET, "/api/purchase-orders/events").hasAnyRole("MANAGER", "DIRECTOR")
                         .anyRequest().authenticated()
                 )
                 // ✅ Adicionar handler customizado para 403

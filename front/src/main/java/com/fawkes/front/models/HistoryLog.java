@@ -59,6 +59,11 @@ public class HistoryLog {
         return new HistoryLog(id, type, productName, quantity, date, responsible);
     }
 
+    /** Formata um nó de data (array Jackson ou string ISO) para exibição. */
+    public static String formatDate(JsonNode dateNode) {
+        return parseDate(dateNode);
+    }
+
     /**
      * Jackson serializa LocalDateTime de duas formas dependendo da config:
      * - Array: [2026, 4, 3, 21, 30, 0, 0]

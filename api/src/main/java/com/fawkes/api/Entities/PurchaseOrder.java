@@ -46,6 +46,13 @@
         @Column(name = "notes", columnDefinition = "TEXT")
         private String notes;
 
+        // Mapeado para a coluna legada 'decision_reason' para preservar dados historicos.
+        @Column(name = "decision_reason", columnDefinition = "TEXT")
+        private String purchaseJustification;
+
+        @Column(name = "problem_justification", columnDefinition = "TEXT")
+        private String problemJustification;
+
         @OneToOne(cascade = CascadeType.ALL)
         @JoinColumn(name = "order_note_id_fk")
         private OrderNote orderNote;

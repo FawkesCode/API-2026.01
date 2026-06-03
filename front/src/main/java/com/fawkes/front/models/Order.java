@@ -22,6 +22,8 @@ public class Order {
     private String invoiceNumber;
     private String expectedDeliveryDate; // ISO string, ex: "2026-05-01T00:00:00"
     private LocalDateTime createdAt;
+    private String purchaseJustification;
+    private String problemJustification;
 
     public Order(String requesterName, String product, String sector, String paymentMethod,
                  int quantity, double totalValue, String status, String description,
@@ -140,6 +142,10 @@ public class Order {
         }
 
         String desc = node.path("notes").asText("Sem descição proporcionada pelo solicitante.");
+        String purchaseJustification = node.path("purchaseJustification").asText(null);
+        if ("null".equals(purchaseJustification)) purchaseJustification = null;
+        String problemJustification = node.path("problemJustification").asText(null);
+        if ("null".equals(problemJustification)) problemJustification = null;
 
         // Extrai número da nota fiscal
         String invoiceNumber = null;
@@ -153,6 +159,8 @@ public class Order {
         if ("null".equals(expectedDeliveryDate)) expectedDeliveryDate = null;
         ord.setInvoiceNumber(invoiceNumber);
         ord.setExpectedDeliveryDate(expectedDeliveryDate);
+        ord.setPurchaseJustification(purchaseJustification);
+        ord.setProblemJustification(problemJustification);
         return ord;
     }
 
@@ -185,4 +193,19 @@ public class Order {
     public String getExpectedDeliveryDate() { return expectedDeliveryDate; }
     public void setExpectedDeliveryDate(String v) { this.expectedDeliveryDate = v; }
     public LocalDateTime getCreatedAt() { return createdAt; }
+    public String getPurchaseJustification() { return purchaseJustification; }
+    public void setPurchaseJustification(String v) { this.purchaseJustification = v; }
+    public String getProblemJustification() { return problemJustification; }
+    public void setProblemJustification(String v) { this.problemJustification = v; }
+
+    /** Retorna a data prevista como "dd/MM/aaaa", ou null se não houver. */
+    public String getExpectedDeliveryDateFormatted() {
+        if (expectedDeliveryDate == null) return null;
+        try {
+            java.time.LocalDateTime dt = java.time.LocalDateTime.parse(expectedDeliveryDate);
+            return dt.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

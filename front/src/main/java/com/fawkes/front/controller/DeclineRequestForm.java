@@ -6,12 +6,9 @@ import com.fawkes.front.models.RequestItem;
 import com.fawkes.front.service.ApiClient;
 import com.fawkes.front.service.UserInfoManager;
 import com.jfoenix.controls.JFXButton;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 
@@ -60,14 +57,16 @@ public class DeclineRequestForm {
     @FXML
     private void handleSubmit() {
         try {
-            JsonNode response = ApiClient.post("/api/purchase-orders/" + order.getId() + "/cancel", "{}" );
+            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            com.fasterxml.jackson.databind.node.ObjectNode body = mapper.createObjectNode();
+            String reason = descriptionField.getText();
+            if (reason != null && !reason.isBlank()) body.put("reason", reason.trim());
+
+            JsonNode response = ApiClient.post("/api/purchase-orders/" + order.getId() + "/cancel",
+                    mapper.writeValueAsString(body));
             System.out.println("RETORNO DO BACKEND: " + response.toPrettyString());
 
-
-            if (onSaveSuccess != null) {
-                onSaveSuccess.run();
-            }
-
+            if (onSaveSuccess != null) onSaveSuccess.run();
             handleCloseModal();
         } catch (Exception e) {
             errorLabel.setText("Erro: " + e.getMessage());

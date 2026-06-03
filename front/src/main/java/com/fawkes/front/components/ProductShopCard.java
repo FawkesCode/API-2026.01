@@ -8,15 +8,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
-import java.text.NumberFormat;
-import java.util.Locale;
 import java.util.function.Consumer;
 
 public class ProductShopCard extends AnchorPane {
     @FXML private JFXButton btnDelete;
     @FXML private JFXButton btnEdit;
     @FXML private Label productName;
-    @FXML private Label productPrice;
     @FXML private Label productType;
     @FXML private Label productSupplier;
 
@@ -27,9 +24,6 @@ public class ProductShopCard extends AnchorPane {
     public void setOnAddToCart(Consumer<StockItem> action) {
         this.onAddToCart = action;
     }
-
-    private static final NumberFormat CURRENCY =
-            NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 
     public ProductShopCard() {
         FXMLLoader fxmlLoader = new FXMLLoader(

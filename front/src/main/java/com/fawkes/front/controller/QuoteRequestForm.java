@@ -48,6 +48,8 @@ public class QuoteRequestForm {
 
             Label qty = new Label("x " + item.getQuantity());
             qty.getStyleClass().add("input__label--info");
+            qty.setPrefWidth(60);
+            qty.setMinWidth(60);
 
             StackPane spacer = new StackPane();
             spacer.setStyle("-fx-border-style: dotted; -fx-border-color: #818EA1; -fx-border-width: 0 0 3 0;");

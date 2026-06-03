@@ -1,0 +1,159 @@
+================================================================================
+RELATÓRIO — Correção do fluxo de Pedidos de Compra (US9 — ajustes)
+Projeto: API-2026.01 | Branch: fix/pedidos-historico-estoque | Data: 2026-06-01
+================================================================================
+
+CONTEXTO
+--------------------------------------------------------------------------------
+O fluxo de pedidos (abertura -> cotação -> aprovação -> envio -> recebimento) já
+existe e implementa a maior parte da US9, mas há 7 defeitos/ajustes que o tornam
+incorreto na prática. O mais grave: a "observação"/justificativa digitada pelo
+usuário NUNCA é persistida — some em vários pontos do front. Há também um erro
+fundamental de papéis (gerente aprovando compra) e uma mudança de semântica
+pedida pelo negócio ("marcar como comprado" com data de entrega).
+
+Este relatório cobre SOMENTE os pedidos. O histórico/timeline de status por
+pedido (US9 CA2) fica para um plano seguinte e separado.
+
+
+DECISÕES DE NEGÓCIO CONFIRMADAS
+--------------------------------------------------------------------------------
+1. PAPÉIS: Gerente (MANAGER) registra a cotação; apenas o Diretor (DIRECTOR)
+   aprova / "marca como comprado" e nega o pedido.
+2. PREÇO: removido do produto e da tela de abertura — o preço passa a existir
+   SOMENTE na cotação (registrada pelo gerente).
+3. "MARCAR COMO COMPRADO" substitui o passo "Aprovar para Compra" (mantém o
+   estado 'confirmed' por trás), capturando data de entrega e previsão
+   (default = data + 3 dias).
+4. HISTÓRICO = plano seguinte.
+
+
+OS 7 AJUSTES
+--------------------------------------------------------------------------------
+[CRÍTICO] 1. Observação/justificativa não registra (causa-raiz confirmada)
+   - Abertura (NewRequestForm.handleSubmmit): o descriptionField (TextArea)
+     NUNCA é lido. O draft envia só supplierId+userId; o submit envia {}. O
+     campo 'notes' do PurchaseOrder fica vazio.
+   - Aprovar/Negar (AproveRequestForm/DeclineRequestForm.handleSubmit): postam
+     {} para /confirm e /cancel — o descriptionField (justificativa) é descartado.
+   - Correção:
+       * Front abertura: enviar o texto da observação ao criar o pedido. Como
+         createDraft só aceita supplierId/userId, usar PUT /api/purchase-orders/{id}
+         (já existe, aceita notes) logo após criar o draft e antes do submit.
+       * Front aprovar/negar: enviar a justificativa. API: cancelOrder/confirmOrder
+         passam a aceitar um reason/notes opcional e persistir em 'notes'
+         (espelhando o que markAsProblem já faz).
+
+[CRÍTICO] 2. Tirar preço dos produtos (abertura sem preço)
+   - Hoje NewRequestForm envia unitPrice = p.getUnityPriceValue() (derivado do
+     unitValue do produto) na criação dos itens; o carrinho exibe preço
+     (ShoppingRequestForm, ProductShopCard).
+   - Correção (alcance: remover do produto E da abertura):
+       * Front: remover exibição/uso de preço em RequestProductsPageController /
+         ShoppingRequestForm / NewRequestForm / cards de compra; enviar
+         unitPrice: 0 no addItem.
+       * API: addItem já aceita preço; alinhar para aceitar 0 sem recusar. O preço
+         real entra só na cotação (fillItemPrices).
+       * Produto: remover o preço do cadastro de produto — integra com o plano de
+         Produtos (campo unitValue); aqui apenas garantir que a abertura não dependa
+         dele.
+
+[ATENÇÃO] 3. Estilo da cotação (modal)
+   - QuoteRequestForm monta linhas programaticamente; quote-request-form.fxml
+     precisa de ajuste visual (alinhamento, espaçamento, largura dos campos de
+     preço, header).
+   - Correção: refinar o FXML/estilos do modal de cotação (UI), mantendo a lógica.
+
+[ATENÇÃO] 4. Justificativa com campo abaixo da descrição
+   - No fluxo de solicitação/aprovação, o campo de justificativa deve ficar abaixo
+     da descrição.
+   - Correção: ajustar o layout (director-request-form.fxml e/ou o form de
+     solicitação) para posicionar o campo de justificativa logo abaixo da descrição
+     — e garantir que ele seja PERSISTIDO (ver item 1).
+
+[CRÍTICO] 5. Gerente aprova pedido (papéis errados)
+   - PendingRequestForm.renderActions usa isDirectorManager (MANAGER OU DIRECTOR)
+     para aprovar e negar.
+   - Correção:
+       * pending -> botão "Registrar Cotação": MANAGER ou DIRECTOR (gerente cota).
+       * quoted  -> botões "Marcar como Comprado" / "Negar Pedido": SOMENTE DIRECTOR.
+       * Reforçar no BACKEND (não só no front): confirmOrder/cancelOrder exigirem
+         perfil DIRECTOR (validação de role/segurança), evitando burlar pela API.
+
+[CRÍTICO] 6. "Marcar como Comprado" + data de entrega + previsão (+3 dias)
+   - Hoje quoted -> "Aprovar para Compra" -> POST /{id}/confirm com {} (sem data).
+   - Correção:
+       * Front: renomear o botão/sub-modal para "Marcar como Comprado"; adicionar
+         DatePicker de data de entrega, com previsão default = data atual + 3 dias
+         (pré-preenchida, editável).
+       * API: confirmOrder passa a aceitar e persistir expectedDeliveryDate (campo
+         já existe em PurchaseOrder). Como updateOrder só permite draft/pending,
+         gravar a data dentro do próprio confirm (estender confirmOrder para receber
+         a data), em vez de via PUT /{id}.
+       * Mantém o estado interno 'confirmed'; muda apenas rótulo + captura de data.
+
+[ATENÇÃO] 7. Filtros "Em Atraso" e "Problemas"
+   - orders-page.fxml tem filtros: Todos, Sob Revisão, Em Cotação, Aprovado, Em
+     Trânsito, Recebido, Negado. Faltam "Em Atraso" e "Problema".
+   - OrdersPageController.filterByStatus filtra por o.getStatus() (cru) — "overdue"
+     é calculado (getEffectiveStatus), então não casaria.
+   - Correção:
+       * Adicionar botões "Em Atraso" (userData="overdue") e "Problema"
+         (userData="problem").
+       * Em filterByStatus, para overdue filtrar por o.getEffectiveStatus(); para
+         problem, por o.getStatus(). Incluir esses status nos contadores se fizer
+         sentido.
+
+
+FORA DE ESCOPO (PLANO SEGUINTE)
+--------------------------------------------------------------------------------
+- US9 CA2 — histórico/timeline de status por pedido: requer tabela de auditoria de
+  transições (quem, quando, de/para qual status, comentário), endpoint
+  GET /{id}/history e tela de timeline. Será especificado e planejado
+  separadamente, junto com a avaliação da HistoryPage atual (verificar se é
+  auditoria global US5 ou timeline por pedido).
+
+
+ARQUIVOS CRÍTICOS
+--------------------------------------------------------------------------------
+API:
+  - Services/PurchaseOrderService.java — confirmOrder (data de entrega + role
+    DIRECTOR), cancelOrder/confirmOrder (persistir notes/reason).
+  - Controllers/PurchaseOrderController.java — payloads de /confirm e /cancel.
+  - DTOs/Request/ — novo/estendido request para confirm (expectedDeliveryDate, notes).
+  - (segurança de role: ponto de verificação DIRECTOR em confirm/cancel.)
+Front:
+  - controller/NewRequestForm.java — enviar observação; remover preço da abertura.
+  - controller/ShoppingRequestForm.java + components/ProductShopCard /
+    RequestedProductCard — remover preço.
+  - controller/AproveRequestForm.java / DeclineRequestForm.java — enviar
+    justificativa; renomear para "Marcar como Comprado" + DatePicker (default +3 dias).
+  - controller/PendingRequestForm.java — renderActions (papéis: cotação=gerente,
+    compra/negar=diretor).
+  - view/forms/quote-request-form.fxml — estilo do modal de cotação.
+  - view/forms/director-request-form.fxml — justificativa abaixo da descrição +
+    DatePicker.
+  - view/orders-page.fxml + controller/OrdersPageController.java — filtros
+    "Em Atraso"/"Problema".
+
+
+VERIFICAÇÃO (END-TO-END, QUANDO FOR IMPLEMENTAR)
+--------------------------------------------------------------------------------
+1. Observação: abrir pedido com observação -> conferir que 'notes' é persistido e
+   aparece no detalhe do pedido.
+2. Justificativa: aprovar/negar com texto -> conferir que a justificativa é gravada.
+3. Preço: abrir pedido -> não há campo/exibição de preço; itens criados com preço 0;
+   preço só aparece após a cotação.
+4. Papéis: logado como MANAGER -> só vê "Registrar Cotação" (sem aprovar/negar);
+   como DIRECTOR -> vê "Marcar como Comprado"/"Negar". Tentativa de confirm/cancel
+   como MANAGER via API -> bloqueada.
+5. Marcar como comprado: registrar cotação -> como diretor, "Marcar como Comprado"
+   com data default = hoje+3 dias (editável) -> expectedDeliveryDate persistido;
+   estado vira 'confirmed'.
+6. Filtros: "Em Atraso" lista pedidos shipped com entrega vencida; "Problema" lista
+   pedidos em problem.
+7. Cotação (UI): modal de cotação alinhado/estilizado corretamente.
+
+================================================================================
+Observação: este é um relatório de análise e plano. Nenhum código foi alterado.
+================================================================================

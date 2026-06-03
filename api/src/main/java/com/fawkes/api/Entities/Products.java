@@ -1,8 +1,23 @@
 package com.fawkes.api.Entities;
 
-import jakarta.persistence.*;
 import java.math.BigDecimal;
-import lombok.*;
+
+import org.hibernate.annotations.ColumnDefault;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -28,8 +43,9 @@ public class Products {
     @Column(name = "measurement_unit", nullable = false)
     private MeasurementUnit measurementUnit = MeasurementUnit.NAO_DEFINIDO;
 
-    @Column(name = "unit_value", nullable = false, precision = 10, scale = 2)
-    private BigDecimal unitValue;
+    @Column(name = "unit_value",  columnDefinition="Decimal(10,2) default '0.00'")
+    @ColumnDefault("0.00")
+    private BigDecimal unitValue = BigDecimal.ZERO;
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
