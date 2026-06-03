@@ -25,6 +25,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -94,6 +96,63 @@ class PurchaseOrderServiceTest {
         assertThat(result.getProblemJustification()).isEqualTo("Item veio quebrado");
         assertThat(result.getPurchaseJustification()).isEqualTo("Comprado no fornecedor X");
         assertThat(result.getNotes()).isEqualTo("Observação do solicitante");
+    }
+
+    @Test
+    void fillItemPrices_dePendingVaiParaQuoted_eGravaEvento() {
+        PurchaseOrder order = new PurchaseOrder();
+        order.setStatus(PurchaseOrder.Status.pending);
+        var item = new com.fawkes.api.Entities.PurchaseOrderItem();
+        item.setId(7L);
+        item.setQuantity(2);
+        order.setItems(new java.util.ArrayList<>(java.util.List.of(item)));
+        when(purchaseOrderRepository.findById(1L)).thenReturn(Optional.of(order));
+        when(purchaseOrderRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        var req = new com.fawkes.api.DTOs.Request.UpdateItemPricesRequest(
+                java.util.List.of(new com.fawkes.api.DTOs.Request.UpdateItemPricesRequest
+                        .ItemPriceEntry(7L, new BigDecimal("10.00"))));
+
+        PurchaseOrder result = service.fillItemPrices(1L, req);
+
+        assertThat(result.getStatus()).isEqualTo(PurchaseOrder.Status.quoted);
+        assertThat(result.getItems().get(0).getUnitPrice()).isEqualByComparingTo("10.00");
+        assertThat(result.getTotalValue()).isEqualByComparingTo("20.00");
+        verify(purchaseOrderEventRepository).save(any());
+    }
+
+    @Test
+    void fillItemPrices_emQuoted_mantemQuoted_eNaoGravaEvento() {
+        PurchaseOrder order = new PurchaseOrder();
+        order.setStatus(PurchaseOrder.Status.quoted);
+        var item = new com.fawkes.api.Entities.PurchaseOrderItem();
+        item.setId(7L);
+        item.setQuantity(2);
+        order.setItems(new java.util.ArrayList<>(java.util.List.of(item)));
+        when(purchaseOrderRepository.findById(1L)).thenReturn(Optional.of(order));
+        when(purchaseOrderRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        var req = new com.fawkes.api.DTOs.Request.UpdateItemPricesRequest(
+                java.util.List.of(new com.fawkes.api.DTOs.Request.UpdateItemPricesRequest
+                        .ItemPriceEntry(7L, new BigDecimal("12.50"))));
+
+        PurchaseOrder result = service.fillItemPrices(1L, req);
+
+        assertThat(result.getStatus()).isEqualTo(PurchaseOrder.Status.quoted);
+        assertThat(result.getItems().get(0).getUnitPrice()).isEqualByComparingTo("12.50");
+        verifyNoInteractions(purchaseOrderEventRepository);
+    }
+
+    @Test
+    void fillItemPrices_rejeitaQuandoNaoEhPendingNemQuoted() {
+        PurchaseOrder order = new PurchaseOrder();
+        order.setStatus(PurchaseOrder.Status.confirmed);
+        when(purchaseOrderRepository.findById(1L)).thenReturn(Optional.of(order));
+
+        var req = new com.fawkes.api.DTOs.Request.UpdateItemPricesRequest(java.util.List.of());
+
+        assertThatThrownBy(() -> service.fillItemPrices(1L, req))
+                .isInstanceOf(RegraDeNegocioException.class);
     }
 
     @Test

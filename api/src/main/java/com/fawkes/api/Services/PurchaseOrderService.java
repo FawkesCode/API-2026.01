@@ -290,9 +290,15 @@ public class PurchaseOrderService {
         PurchaseOrder order = purchaseOrderRepository.findById(orderId)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado"));
 
-        if (order.getStatus() != PurchaseOrder.Status.pending) {
+        if (order.getStatus() != PurchaseOrder.Status.pending
+                && order.getStatus() != PurchaseOrder.Status.quoted) {
             throw new RegraDeNegocioException(
-                    "Só é possível registrar cotação em pedidos com status 'Sob Revisão'");
+                    "Só é possível registrar/editar cotação em pedidos 'Sob Revisão' ou 'Em Cotação'");
+        }
+        boolean wasPending = order.getStatus() == PurchaseOrder.Status.pending;
+
+        if (request.items() == null || request.items().isEmpty()) {
+            throw new RegraDeNegocioException("Lista de itens da cotação não pode ser vazia");
         }
 
         for (UpdateItemPricesRequest.ItemPriceEntry entry : request.items()) {
@@ -319,10 +325,14 @@ public class PurchaseOrderService {
         }
 
         recalculateTotal(order);
-        order.setStatus(PurchaseOrder.Status.quoted);
-        PurchaseOrder saved = purchaseOrderRepository.save(order);
-        recordEvent(saved, PurchaseOrder.Status.pending, PurchaseOrder.Status.quoted, null);
-        return saved;
+        if (wasPending) {
+            order.setStatus(PurchaseOrder.Status.quoted);
+            PurchaseOrder saved = purchaseOrderRepository.save(order);
+            recordEvent(saved, PurchaseOrder.Status.pending, PurchaseOrder.Status.quoted, null);
+            return saved;
+        }
+        // edição silenciosa de cotação já registrada: mantém 'quoted', sem evento
+        return purchaseOrderRepository.save(order);
     }
 
     public void delete(Long id) {
