@@ -1,8 +1,8 @@
 package com.fawkes.api.DTOs;
 
-import com.fawkes.api.Entities.Products;
-
 import java.math.BigDecimal;
+
+import com.fawkes.api.Entities.Products;
 
 public record ProductDTO(
         Long productId,
@@ -16,6 +16,12 @@ public record ProductDTO(
         Long stockId,
         String stockName
 ) {
+    public ProductDTO {
+        // Se unitValue vier nulo, ele assume 0.0 automaticamente
+        if (unitValue == null) {
+            unitValue = new BigDecimal("0.0");
+        }
+    }
     public static ProductDTO fromEntity(Products p) {
         return new ProductDTO(
                 p.getId(),
