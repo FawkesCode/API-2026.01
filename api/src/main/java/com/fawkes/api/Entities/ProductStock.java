@@ -21,7 +21,7 @@ public class ProductStock {
     @Column(name = "min_stock_quantity", nullable = false)
     private Integer minStockQuantity;
 
-    @Column(name = "max_stock_quantity", nullable = false)
+    @Column(name = "max_stock_quantity")
     private Integer maxStockQuantity;
 
     @Column(name = "current_stock_quantity", nullable = false)
