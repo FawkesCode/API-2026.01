@@ -21,6 +21,7 @@
                   <Label fx:id="quantityValue" prefHeight="18.0" prefWidth="144.0" styleClass="orders__info" text="Quantidade de itens: 5" />
                   <Label text="•" />
                   <Label fx:id="priceValue" prefHeight="18.0" prefWidth="130.0" styleClass="orders__info" text="Valor Total: R$ 99,50" />
+                  <Label fx:id="deliveryValue" managed="false" styleClass="orders__info" text="" visible="false" />
                </children>
             </HBox>
          </children>

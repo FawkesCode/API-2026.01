@@ -20,6 +20,7 @@ public class OrdersCard extends AnchorPane {
     @FXML private Label paymentMethod;
     @FXML private Label quantityValue;
     @FXML private Label priceValue;
+    @FXML private Label deliveryValue;
     @FXML private Button purchaseDetails;
 
     private Order order;
@@ -56,6 +57,12 @@ public class OrdersCard extends AnchorPane {
         this.quantityValue.setText("Quantidade de Itens: " + order.getQuantity());
         this.priceValue.setText("Valor Total: " + order.getTotalValue());
         this.order = order;
+        String prevista = order.getExpectedDeliveryDateFormatted();
+        if (prevista != null) {
+            deliveryValue.setText("Entrega prevista: " + prevista);
+            deliveryValue.setVisible(true);
+            deliveryValue.setManaged(true);
+        }
     }
 
     @FXML
