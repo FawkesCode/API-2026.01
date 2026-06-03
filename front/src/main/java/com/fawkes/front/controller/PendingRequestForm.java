@@ -26,8 +26,6 @@ import java.util.Locale;
 
 public class PendingRequestForm {
 
-    @FXML private JFXButton btnApprove;
-    @FXML private JFXButton btnDecline;
     @FXML private Label     costCenter;
     @FXML private Label     department;
     @FXML private Label     description;
@@ -176,7 +174,6 @@ public class PendingRequestForm {
     }
 
 
-    @FXML
     public void handleAproved() {
         abrirSubModal(new AproveRequestForm(), "Aprovando Pedido " + order.getId());
     }
