@@ -10,6 +10,7 @@ import com.fawkes.api.Repositories.PurchaseOrderRepository;
 import com.fawkes.api.Repositories.SupplierRepository;
 import com.fawkes.api.Repositories.UserRepository;
 import com.fawkes.api.Repositories.ProductsRepository;
+import com.fawkes.api.DTOs.Response.OrderEventActivityDTO;
 import com.fawkes.api.DTOs.Response.PurchaseOrderEventDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -238,6 +239,14 @@ public class PurchaseOrderService {
         event.setPerformedBy(performer);
         event.setReason(reason);
         purchaseOrderEventRepository.save(event);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderEventActivityDTO> listAllEvents() {
+        return purchaseOrderEventRepository.findAllByOrderByOccurredAtDesc()
+                .stream()
+                .map(OrderEventActivityDTO::from)
+                .toList();
     }
 
     public List<PurchaseOrderEventDTO> listEvents(Long orderId) {

@@ -67,6 +67,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/api/users/*/status").hasRole("DIRECTOR")
                         // Listagem de usuários: diretor ou gerente (note: /api/users/me continua liberado)
                         .requestMatchers(HttpMethod.GET, "/api/users").hasAnyRole("DIRECTOR", "MANAGER")
+                        // Histórico de eventos de pedidos: gerente ou diretor
+                        .requestMatchers(HttpMethod.GET, "/api/purchase-orders/events").hasAnyRole("MANAGER", "DIRECTOR")
                         .anyRequest().authenticated()
                 )
                 // ✅ Adicionar handler customizado para 403

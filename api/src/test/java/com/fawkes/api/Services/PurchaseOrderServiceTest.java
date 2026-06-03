@@ -156,6 +156,49 @@ class PurchaseOrderServiceTest {
     }
 
     @Test
+    void listAllEvents_mapeiaEventosParaDTO_maisRecentesPrimeiro() {
+        PurchaseOrder order = new PurchaseOrder();
+        order.setId(5L);
+        order.setItems(new java.util.ArrayList<>());
+        var event = new com.fawkes.api.Entities.PurchaseOrderEvent();
+        event.setId(99L);
+        event.setPurchaseOrder(order);
+        event.setFromStatus(PurchaseOrder.Status.pending);
+        event.setToStatus(PurchaseOrder.Status.quoted);
+        event.setPerformedBy("gerente@x");
+        event.setOccurredAt(LocalDateTime.of(2026, 6, 2, 10, 0));
+        when(purchaseOrderEventRepository.findAllByOrderByOccurredAtDesc())
+                .thenReturn(java.util.List.of(event));
+
+        var result = service.listAllEvents();
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).orderId()).isEqualTo(5L);
+        assertThat(result.get(0).toStatus()).isEqualTo(PurchaseOrder.Status.quoted);
+        assertThat(result.get(0).performedBy()).isEqualTo("gerente@x");
+    }
+
+    @Test
+    void listAllEvents_montaLabelComProdutoEContagem() {
+        PurchaseOrder order = new PurchaseOrder();
+        order.setId(5L);
+        var p1 = new com.fawkes.api.Entities.Products(); p1.setProductName("Caneta");
+        var i1 = new com.fawkes.api.Entities.PurchaseOrderItem(); i1.setProduct(p1);
+        var i2 = new com.fawkes.api.Entities.PurchaseOrderItem();
+        order.setItems(new java.util.ArrayList<>(java.util.List.of(i1, i2)));
+        var event = new com.fawkes.api.Entities.PurchaseOrderEvent();
+        event.setId(1L); event.setPurchaseOrder(order);
+        event.setToStatus(PurchaseOrder.Status.confirmed);
+        event.setOccurredAt(java.time.LocalDateTime.now());
+        when(purchaseOrderEventRepository.findAllByOrderByOccurredAtDesc())
+                .thenReturn(java.util.List.of(event));
+
+        var result = service.listAllEvents();
+
+        assertThat(result.get(0).orderLabel()).isEqualTo("Pedido #5 — Caneta (+1)");
+    }
+
+    @Test
     void addItem_aceitaPrecoZero() {
         PurchaseOrder order = new PurchaseOrder();
         order.setStatus(PurchaseOrder.Status.draft);

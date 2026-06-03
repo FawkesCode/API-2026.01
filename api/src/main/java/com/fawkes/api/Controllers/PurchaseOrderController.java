@@ -16,6 +16,7 @@ import com.fawkes.api.DTOs.Request.ConfirmOrderRequest;
 import com.fawkes.api.DTOs.Request.ReceiveOrderRequest;
 import com.fawkes.api.DTOs.Request.UpdateOrderRequest;
 import com.fawkes.api.DTOs.Request.UpdateItemPricesRequest;
+import com.fawkes.api.DTOs.Response.OrderEventActivityDTO;
 import com.fawkes.api.DTOs.Response.PurchaseOrderEventDTO;
 
 import java.math.BigDecimal;
@@ -152,6 +153,11 @@ public class PurchaseOrderController {
     @PostMapping("/{id}/return")
     public ResponseEntity<PurchaseOrder> markAsReturned(@PathVariable Long id) {
         return ResponseEntity.ok(purchaseOrderService.markAsReturned(id));
+    }
+
+    @GetMapping("/events")
+    public ResponseEntity<List<OrderEventActivityDTO>> listAllEvents() {
+        return ResponseEntity.ok(purchaseOrderService.listAllEvents());
     }
 
     @GetMapping("/{id}/events")
