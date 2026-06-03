@@ -10,7 +10,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 
 public class ReceiveRequestForm {
@@ -18,7 +19,7 @@ public class ReceiveRequestForm {
     @FXML private Label     detailsLabel;
     @FXML private JFXButton btnCancel;
     @FXML private JFXButton btnCommand;
-    @FXML private TextArea  descriptionField;   // usado como campo de nota fiscal
+    @FXML private TextField invoiceField;
     @FXML private Label     errorLabel;
 
     private Order    order;
@@ -30,8 +31,11 @@ public class ReceiveRequestForm {
 
     public void initialize() {
         btnCommand.setText("Confirmar Recebimento");
-        if (descriptionField != null)
-            descriptionField.setPromptText("Número da nota fiscal (obrigatório)");
+        if (invoiceField != null) {
+            // aceita apenas dígitos
+            invoiceField.setTextFormatter(new TextFormatter<>(change ->
+                    change.getControlNewText().matches("\\d*") ? change : null));
+        }
     }
 
     public void setData(Order order) {
@@ -48,14 +52,17 @@ public class ReceiveRequestForm {
 
     @FXML
     private void handleSubmit() {
-        String nf = descriptionField != null ? descriptionField.getText().trim() : "";
+        String nf = invoiceField != null ? invoiceField.getText().trim() : "";
         if (nf.isEmpty()) {
             if (errorLabel != null) errorLabel.setText("Informe o número da nota fiscal.");
             return;
         }
-
+        // Defesa extra: o TextFormatter ja restringe a digitos, mas revalida caso o campo seja preenchido programaticamente.
+        if (!nf.matches("\\d+")) {
+            if (errorLabel != null) errorLabel.setText("A nota fiscal deve conter apenas números.");
+            return;
+        }
         try {
-            // Monta o body com todos os itens do pedido
             ObjectNode body = mapper.createObjectNode();
             body.put("invoiceNumber", nf);
             body.put("invoiceSerie", "1");
@@ -63,8 +70,8 @@ public class ReceiveRequestForm {
             ArrayNode itemsArray = mapper.createArrayNode();
             for (RequestItem item : order.getItemsList()) {
                 ObjectNode itemNode = mapper.createObjectNode();
-                itemNode.put("productId",         item.getProduct().getId());
-                itemNode.put("receivedQuantity",   item.getQuantity());
+                itemNode.put("productId",        item.getProduct().getId());
+                itemNode.put("receivedQuantity", item.getQuantity());
                 itemsArray.add(itemNode);
             }
             body.set("items", itemsArray);
@@ -74,7 +81,6 @@ public class ReceiveRequestForm {
 
             if (onSaveSuccess != null) onSaveSuccess.run();
             handleCloseModal();
-
         } catch (Exception e) {
             if (errorLabel != null) errorLabel.setText("Erro: " + e.getMessage());
             e.printStackTrace();

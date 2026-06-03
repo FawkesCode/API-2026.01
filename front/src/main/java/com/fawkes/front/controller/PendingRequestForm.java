@@ -40,6 +40,7 @@ public class PendingRequestForm {
     @FXML private HBox      btnActionContainer;
     @FXML private VBox      invoiceContainer;
     @FXML private Label     invoiceNumber;
+    @FXML private Label     deliveryInfo;
 
     private static final NumberFormat CURRENCY =
             NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
@@ -59,10 +60,14 @@ public class PendingRequestForm {
         this.order    = order;
 
         department.setText(order.getSector());
-        description.setText(order.getDescription());
-        if (order.getDecisionReason() != null && !order.getDecisionReason().isBlank()) {
-            description.setText(order.getDescription() + "\n\nJustificativa: " + order.getDecisionReason());
+        StringBuilder desc = new StringBuilder(order.getDescription() != null ? order.getDescription() : "");
+        if (order.getPurchaseJustification() != null && !order.getPurchaseJustification().isBlank()) {
+            desc.append("\n\nJustificativa da compra: ").append(order.getPurchaseJustification());
         }
+        if (order.getProblemJustification() != null && !order.getProblemJustification().isBlank()) {
+            desc.append("\n\nJustificativa do problema: ").append(order.getProblemJustification());
+        }
+        description.setText(desc.toString());
         paymentMethod.setText(StringUtils.paymentTranslation(order.getPaymentMethod()));
         requisitor.setText(order.getRequesterName());
         totalPrice.setText("Total: " + CURRENCY.format(order.getTotalValue()));
@@ -77,6 +82,13 @@ public class PendingRequestForm {
             invoiceNumber.setText("Nº " + order.getInvoiceNumber());
             invoiceContainer.setVisible(true);
             invoiceContainer.setManaged(true);
+        }
+
+        // Data de entrega prevista (existe a partir de 'confirmed')
+        if (deliveryInfo != null && order.getExpectedDeliveryDateFormatted() != null) {
+            deliveryInfo.setText("Entrega prevista: " + order.getExpectedDeliveryDateFormatted());
+            deliveryInfo.setVisible(true);
+            deliveryInfo.setManaged(true);
         }
     }
 
@@ -99,13 +111,19 @@ public class PendingRequestForm {
                 }
             }
             case "quoted" -> {
+                boolean canEditQuote = "DIRECTOR".equals(role) || "MANAGER".equals(role);
+                if (canEditQuote) {
+                    btnActionContainer.getChildren().add(
+                            makeBtn("✏  Editar Cotação", "btn--info", this::handleQuote));
+                }
                 if ("DIRECTOR".equals(role)) {
                     btnActionContainer.getChildren().addAll(
                             makeBtn("✓  Marcar como Comprado", "btn--submit", this::handleAproved),
                             makeBtn("✗  Negar Pedido", "btn--danger", this::handleDeclined)
                     );
                 } else {
-                    btnActionContainer.getChildren().add(infoLabel("📋  Cotação registrada — aguardando decisão do diretor"));
+                    btnActionContainer.getChildren().add(
+                            infoLabel("📋  Cotação registrada — aguardando decisão do diretor"));
                 }
             }
             case "confirmed" -> {
@@ -198,9 +216,17 @@ public class PendingRequestForm {
 
     private void abrirSubModal(Object controller, String titulo) {
         try {
-            String fxmlPath = (controller instanceof QuoteRequestForm)
-                    ? "/com/fawkes/front/view/forms/quote-request-form.fxml"
-                    : "/com/fawkes/front/view/forms/director-request-form.fxml";
+            String fxmlPath;
+            if (controller instanceof QuoteRequestForm) {
+                fxmlPath = "/com/fawkes/front/view/forms/quote-request-form.fxml";
+            } else if (controller instanceof AproveRequestForm) {
+                fxmlPath = "/com/fawkes/front/view/forms/director-request-form.fxml";
+            } else if (controller instanceof ReceiveRequestForm) {
+                fxmlPath = "/com/fawkes/front/view/forms/receive-request-form.fxml";
+            } else {
+                // Recusar, Enviar, Problema
+                fxmlPath = "/com/fawkes/front/view/forms/simple-request-form.fxml";
+            }
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             loader.setController(controller);
@@ -238,7 +264,8 @@ public class PendingRequestForm {
         JFXButton btn = new JFXButton(text);
         btn.getStyleClass().add(style);
         btn.setPrefHeight(26);
-        btn.setPrefWidth(170);
+        btn.setMinWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
+        btn.setPadding(new javafx.geometry.Insets(2, 14, 2, 14));
         btn.setOnAction(e -> action.run());
         return btn;
     }

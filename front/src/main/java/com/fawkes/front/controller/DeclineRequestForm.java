@@ -6,13 +6,9 @@ import com.fawkes.front.models.RequestItem;
 import com.fawkes.front.service.ApiClient;
 import com.fawkes.front.service.UserInfoManager;
 import com.jfoenix.controls.JFXButton;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 
@@ -21,8 +17,6 @@ public class DeclineRequestForm {
     @FXML private JFXButton btnCancel;
     @FXML private JFXButton btnCommand;
     @FXML private TextArea descriptionField;
-    @FXML private DatePicker deliveryDatePicker;
-    @FXML private Label deliveryLabel;
     @FXML private Label errorLabel;
     UserInfoManager loggedUser = UserInfoManager.getInstance();
 
@@ -53,9 +47,6 @@ public class DeclineRequestForm {
         this.order = order;
 
         detailsLabel.setText(text);
-        // Negar não usa data de entrega
-        if (deliveryDatePicker != null) { deliveryDatePicker.setVisible(false); deliveryDatePicker.setManaged(false); }
-        if (deliveryLabel != null) { deliveryLabel.setVisible(false); deliveryLabel.setManaged(false); }
     }
 
     @FXML
