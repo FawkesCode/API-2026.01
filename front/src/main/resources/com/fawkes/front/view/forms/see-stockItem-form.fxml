@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import java.lang.String?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="320.0" prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="320.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <VBox alignment="CENTER" layoutX="64.0" layoutY="20.0" prefHeight="214.0" prefWidth="252.0" spacing="14.0">
             <children>
@@ -20,10 +19,6 @@
                 <HBox prefHeight="26.0" prefWidth="193.0" spacing="5.0">
                     <Label prefHeight="18.0" prefWidth="114.0" styleClass="input__label" text="Uni. de Medida:" />
                     <Label fx:id="measUnitLabel" styleClass="input__label--desc" text="—" />
-                </HBox>
-                <HBox prefHeight="26.0" prefWidth="193.0" spacing="5.0">
-                    <Label styleClass="input__label" text="Preço:" />
-                    <Label fx:id="priceLabel" styleClass="input__label--desc" text="—" />
                 </HBox>
                 <HBox prefHeight="26.0" prefWidth="270.0" spacing="5.0">
                     <Label prefHeight="18.0" prefWidth="105.0" styleClass="input__label" text="Fornecedor:" />
@@ -43,17 +38,25 @@
                 </HBox>
                 <HBox prefHeight="26.0" prefWidth="270.0" spacing="5.0">
                     <Label styleClass="input__label" text="Qtd. Mínima:" />
-                    <TextField fx:id="minQtdField" prefWidth="80.0" promptText="0" />
+                    <TextField fx:id="minQtdField" prefWidth="80.0" promptText="0" style="-fx-padding: 2;">
+                  <styleClass>
+                     <String fx:value="input__text" />
+                     <String fx:value="input__text--form" />
+                  </styleClass></TextField>
                 </HBox>
                 <HBox prefHeight="26.0" prefWidth="270.0" spacing="5.0">
                     <Label styleClass="input__label" text="Qtd. Máxima:" />
-                    <TextField fx:id="maxQtdField" prefWidth="80.0" promptText="0" />
+                    <TextField fx:id="maxQtdField" prefWidth="80.0" promptText="0" style="-fx-padding: 2;">
+                  <styleClass>
+                     <String fx:value="input__text" />
+                     <String fx:value="input__text--form" />
+                  </styleClass></TextField>
                 </HBox>
             </children>
         </VBox>
         <Label fx:id="errorLabel" layoutX="64.0" layoutY="245.0" prefWidth="400.0" styleClass="input__label--error" />
         <HBox alignment="CENTER_RIGHT" layoutX="330.0" layoutY="265.0" prefWidth="243.0" spacing="10.0">
-            <Button onAction="#handleSaveLimits" styleClass="btn--submit" text="Salvar Limites" />
+         <JFXButton fx:id="btnSave" onAction="#handleSaveLimits" styleClass="btn--submit" text="Salvar Limites" />
         </HBox>
     </children>
 </AnchorPane>

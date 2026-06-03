@@ -17,7 +17,9 @@ import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
+import javafx.util.StringConverter;
 
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ public class DashboardPageController {
     @FXML private Label lblCount;
     @FXML private Label lblTotalPrice;
     @FXML private ComboBox<String> supplierFilter;
+    @FXML private DatePicker dateFilter;
 
     @FXML private Label kpiPending;
     @FXML private Label kpiConfirmed;
@@ -43,6 +46,7 @@ public class DashboardPageController {
     @FXML private TableColumn<LastOrders, String>  columnSolicitor;
     @FXML private TableColumn<LastOrders, Double>  columnValue;
     @FXML private TableColumn<LastOrders, String>  columnStatus;
+    @FXML private TableColumn<LastOrders, String> columnDeliveryDate;
 
     @FXML private Label  curPage;
     @FXML private Button btnPrev;
@@ -57,6 +61,8 @@ public class DashboardPageController {
     private final int pageSize = 7;
     private boolean isLastPage = true;
     private Long selectedSupplierId = null;
+    private String selectedDateFrom = null;
+    private String selectedDateTo = null;
 
     private final Map<String, Long> supplierMap = new LinkedHashMap<>();
 
@@ -65,6 +71,33 @@ public class DashboardPageController {
         tableMapping();
         loadSuppliers();
         loadDashboard();
+
+        dateFilter.setConverter(new StringConverter<LocalDate>() {
+            private final java.time.format.DateTimeFormatter dayMonthFormatter =
+                    java.time.format.DateTimeFormatter.ofPattern("dd 'de' MMM", new java.util.Locale("pt", "BR"));
+
+            @Override
+            public String toString(java.time.LocalDate dateFrom) {
+                if (dateFrom == null) {
+                    return "";
+                }
+                java.time.LocalDate dateTo = dateFrom.plusDays(7);
+                String toText = dateTo.format(dayMonthFormatter);
+                String fromText = dateFrom.format(dayMonthFormatter);
+
+                return String.format("%s - %s", fromText, toText);
+            }
+
+            @Override
+            public java.time.LocalDate fromString(String string) {
+                if (string == null || string.trim().isEmpty()) {
+                    return null;
+                }
+                return dateFilter.getValue();
+            }
+        });
+        dateFilter.getEditor().setOnAction(event -> handleDateFilter());
+        dateFilter.valueProperty().addListener((obs, oldVal, newVal) -> handleDateFilter());
     }
 
     // ── Fornecedores ─────────────────────────────────────────────────
@@ -99,6 +132,32 @@ public class DashboardPageController {
             selectedSupplierId = null;
         } else {
             selectedSupplierId = supplierMap.get(selected);
+        }
+        currentPage = 0;
+        loadLastOrders();
+    }
+
+    @FXML
+    private void handleDateFilter() {
+        java.time.LocalDate date = dateFilter.getValue();
+
+        if (date == null) {
+            String text = dateFilter.getEditor().getText().trim();
+            if (!text.isEmpty()) {
+                try {
+                    date = java.time.LocalDate.parse(text,
+                            java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    dateFilter.setValue(date);
+                } catch (Exception ignored) {}
+            }
+        }
+
+        if (date == null) {
+            selectedDateFrom = null;
+            selectedDateTo   = null;
+        } else {
+            selectedDateFrom = date.atStartOfDay().toString();
+            selectedDateTo   = date.plusDays(7).atTime(23, 59, 59).toString();
         }
         currentPage = 0;
         loadLastOrders();
@@ -218,6 +277,13 @@ public class DashboardPageController {
 
         columnSupplier.setCellValueFactory(new PropertyValueFactory<>("supplierName"));
         columnSolicitor.setCellValueFactory(new PropertyValueFactory<>("requesterName"));
+        columnDeliveryDate.setCellValueFactory(new PropertyValueFactory<>("expectedDeliveryDate"));
+        columnDeliveryDate.setCellFactory(col -> new TableCell<>() {
+            @Override protected void updateItem(String v, boolean empty) {
+                super.updateItem(v, empty);
+                setText(empty || v == null ? null :java.time.LocalDateTime.parse(v).format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            }
+        });
 
         columnValue.setCellValueFactory(new PropertyValueFactory<>("totalValue"));
         columnValue.setCellFactory(col -> new TableCell<>() {
@@ -242,12 +308,15 @@ public class DashboardPageController {
                 setAlignment(Pos.CENTER);
 
                 switch (status) {
-                    case "draft"     -> { badge.getStyleClass().add("dashboard__table--pending");   badge.setText("Rascunho");    }
-                    case "pending"   -> { badge.getStyleClass().add("dashboard__table--pending");   badge.setText("Sob Revisão"); }
-                    case "confirmed" -> { badge.getStyleClass().add("dashboard__table--confirmed"); badge.setText("Aprovado");    }
-                    case "shipped"   -> { badge.getStyleClass().add("dashboard__table--confirmed"); badge.setText("Enviado");     }
-                    case "received"  -> { badge.getStyleClass().add("dashboard__table--confirmed"); badge.setText("Recebido");    }
-                    case "cancelled" -> { badge.getStyleClass().add("dashboard__table--cancelled"); badge.setText("Negado");      }
+                    case "pending"   -> { badge.getStyleClass().addAll("requests__status", "requests__status--pending");   badge.setText("Sob Revisão"); }
+                    case "confirmed" -> { badge.getStyleClass().addAll("requests__status", "requests__status--approved");   badge.setText("Aprovado");    }
+                    case "quoted" -> { badge.getStyleClass().addAll("requests__status", "requests__status--quoted");   badge.setText("Em Cotação");    }
+                    case "overdue" -> { badge.getStyleClass().addAll("requests__status", "requests__status--overdue");   badge.setText("Em Atraso");    }
+                    case "shipped"   -> { badge.getStyleClass().addAll("requests__status", "requests__status--shipped");   badge.setText("Em trânsito");     }
+                    case "received"  -> { badge.getStyleClass().addAll("requests__status", "requests__status--received");   badge.setText("Recebido");    }
+                    case "cancelled" -> { badge.getStyleClass().addAll("requests__status", "requests__status--cancelled");   badge.setText("Negado");      }
+                    case "problem" -> { badge.getStyleClass().addAll("requests__status", "requests__status--problem");   badge.setText("Problemas");    }
+                    case "returned" -> { badge.getStyleClass().addAll("requests__status", "requests__status--returned");   badge.setText("Devolvido");    }
                     default          ->   badge.getStyleClass().add("dashboard__table--default");
                 }
                 setGraphic(badge);
@@ -262,6 +331,14 @@ public class DashboardPageController {
                         String.format("/dashboard/ultimas-ordens-compra?page=%d&size=%d", currentPage, pageSize));
                 if (selectedSupplierId != null)
                     url.append("&supplierId=").append(selectedSupplierId);
+                if (selectedDateFrom != null) {
+                    String fromWithTime = selectedDateFrom + "T00:00:00";
+                    String toWithTime = selectedDateTo + "T23:59:59";
+
+                    url.append("&from=").append(fromWithTime);
+                    url.append("&to=").append(toWithTime);
+                }
+
                 return ApiClient.get(url.toString());
             }
         };
@@ -326,11 +403,11 @@ public class DashboardPageController {
             }
         };
         task.setOnSucceeded(e -> Platform.runLater(() -> {
-            purchasesPerMonth.getChildren().removeIf(n -> n instanceof BarChart);
+            purchasesPerMonth.getChildren().removeIf(n -> n instanceof LineChart);
 
             CategoryAxis xAxis = new CategoryAxis(); xAxis.setLabel("Mês");
             NumberAxis   yAxis = new NumberAxis();   yAxis.setLabel("Compras");
-            BarChart<String, Number> chart = new BarChart<>(xAxis, yAxis);
+            LineChart<String, Number> chart = new LineChart<>(xAxis, yAxis);
             chart.setLegendVisible(false);
 
             XYChart.Series<String, Number> series = new XYChart.Series<>();
@@ -354,27 +431,60 @@ public class DashboardPageController {
                 return ApiClient.get("/dashboard/status-pedidos");
             }
         };
+
         task.setOnSucceeded(e -> Platform.runLater(() -> {
             JsonNode data = task.getValue();
             JsonNode arr  = data.get("purchaseOrders");
-            if (arr == null || !arr.isArray() || arr.isEmpty()) arr = data.get("orders");
+
+            if (arr == null || !arr.isArray() || arr.isEmpty()) {
+                arr = data.get("orders");
+            }
 
             ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
-            if (arr != null && arr.isArray())
+            if (arr != null && arr.isArray()) {
                 for (JsonNode item : arr) {
                     long count = item.get("count").asLong();
-                    if (count > 0)
+                    if (count > 0) {
                         pieData.add(new PieChart.Data(item.get("statusLabel").asText(), count));
+                    }
                 }
+            }
 
             PieChart pie = new PieChart(pieData);
             pie.setClockwise(true);
-            pie.setLabelsVisible(false);
+            pie.setLabelsVisible(true);
+            pie.setLegendVisible(false);
             pie.setStartAngle(180);
 
             requestStatus.getChildren().removeIf(n -> n instanceof PieChart);
             requestStatus.getChildren().add(pie);
+
+            for (PieChart.Data dataSlice : pie.getData()) {
+                Tooltip tooltip = new Tooltip(String.format("%s: %.0f", dataSlice.getName(), dataSlice.getPieValue()));
+                tooltip.setShowDelay(javafx.util.Duration.ZERO);
+
+                Runnable setupHover = () -> {
+                    javafx.scene.Node node = dataSlice.getNode();
+                    if (node != null) {
+                        Tooltip.install(node, tooltip);
+
+                        node.setOnMouseEntered(event -> node.setOpacity(0.80));
+                        node.setOnMouseExited(event -> node.setOpacity(1.0));
+                    }
+                };
+
+                if (dataSlice.getNode() != null) {
+                    setupHover.run();
+                } else {
+                    dataSlice.nodeProperty().addListener((obs, oldNode, newNode) -> {
+                        if (newNode != null) {
+                            setupHover.run();
+                        }
+                    });
+                }
+            }
         }));
+
         new Thread(task) {{ setDaemon(true); }}.start();
     }
 
@@ -395,10 +505,11 @@ public class DashboardPageController {
         task.setOnSucceeded(e -> Platform.runLater(() -> {
             topSuppliers.getChildren().removeIf(n -> n instanceof BarChart);
             JsonNode data = task.getValue();
-            CategoryAxis xAxis = new CategoryAxis(); xAxis.setLabel("Fornecedores");
-            NumberAxis   yAxis = new NumberAxis();   yAxis.setLabel("Quantidade");
+            CategoryAxis xAxis = new CategoryAxis(); xAxis.setLabel("Fornecedor");
+            NumberAxis   yAxis = new NumberAxis();   yAxis.setLabel("Quantidade de Pedidos");
             BarChart<String, Number> chart = new BarChart<>(xAxis, yAxis);
             chart.setLegendVisible(false);
+            chart.setId("grafico-fornecedores");
 
 
             XYChart.Series<String, Number> series = new XYChart.Series<>();
@@ -418,26 +529,29 @@ public class DashboardPageController {
     private void loadBarChartProducts() {
         Task<JsonNode> task = new Task<>() {
             @Override protected JsonNode call() throws Exception {
-                return ApiClient.get("/dashboard/produtos-criticos");
+                return ApiClient.get("/api/product-stock/criticos");
             }
         };
         task.setOnSucceeded(e -> Platform.runLater(() -> {
             criticalProducts.getChildren().removeIf(n -> n instanceof BarChart);
             JsonNode data = task.getValue();
+
             CategoryAxis xAxis = new CategoryAxis(); xAxis.setLabel("Produto");
-            NumberAxis   yAxis = new NumberAxis();   yAxis.setLabel("Quantidade");
+            NumberAxis   yAxis = new NumberAxis();   yAxis.setLabel("Quantidade no Estoque");
             BarChart<String, Number> chart = new BarChart<>(xAxis, yAxis);
             chart.setLegendVisible(false);
+            chart.setId("grafico-produtos");
 
             XYChart.Series<String, Number> series = new XYChart.Series<>();
-            JsonNode arr = data.get("lowStock");
-            if (arr != null && arr.isArray()) {
-                for (JsonNode item : arr) {
-                    series.getData().add(new XYChart.Data<>(
-                            item.path("productName").asText("Produto"),
-                            item.path("availableQuantity").asDouble(0)));
+
+            if (data.isArray() && !data.isEmpty()) {
+                for (JsonNode item : data) {
+                    String name = item.path("product").path("productName").asText("Produto");
+                    int qty     = item.path("currentStockQuantity").asInt(0);
+                    series.getData().add(new XYChart.Data<>(name, qty));
                 }
             }
+
             chart.getData().add(series);
             criticalProducts.getChildren().add(chart);
         }));

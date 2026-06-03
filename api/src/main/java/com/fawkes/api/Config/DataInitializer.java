@@ -38,19 +38,19 @@ public class DataInitializer {
                 return groupRepository.save(g);
             });
 
-            Group managerGroup = groupRepository.findById(2L).orElseGet(() -> {
+            groupRepository.findById(2L).orElseGet(() -> {
                 Group g = new Group();
                 g.setRole(Roles.MANAGER);
                 g.setGroupDescription("Grupo de gerentes do sistema");
                 return groupRepository.save(g);
             });
-            Group operationalGroup = groupRepository.findById(3L).orElseGet(() -> {
+
+            groupRepository.findById(3L).orElseGet(() -> {
                 Group g = new Group();
                 g.setRole(Roles.OPERATIONAL);
                 g.setGroupDescription("Grupo de operários do sistema");
                 return groupRepository.save(g);
             });
-
 
             // ==================== DEPARTAMENTO ====================
             Department logisticaDept = departmentRepository.findById(1L).orElseGet(() -> {
@@ -72,7 +72,8 @@ public class DataInitializer {
                     });
 
             // ==================== ESTOQUE ====================
-            Stock estoquePrincipal = stockRepository.findByStockName("Estoque Principal")
+            Stock estoquePrincipal = stockRepository
+                    .findFirstByStockName("Estoque Principal")
                     .orElseGet(() -> {
                         Stock s = new Stock();
                         s.setStockName("Estoque Principal");
@@ -80,7 +81,8 @@ public class DataInitializer {
                     });
 
             // ==================== PRODUTO ====================
-            Products produtoTeste = productsRepository.findByProductName("Produto Teste")
+            Products produtoTeste = productsRepository
+                    .findFirstByProductName("Produto Teste")
                     .orElseGet(() -> {
                         Products p = new Products();
                         p.setProductName("Produto Teste");
@@ -94,7 +96,8 @@ public class DataInitializer {
                     });
 
             // ==================== PRODUCT STOCK ====================
-            productStockRepository.findById(1L)
+            // Busca pelo produto, não pelo ID fixo
+            productStockRepository.findByProductId(produtoTeste.getId())
                     .orElseGet(() -> {
                         ProductStock ps = new ProductStock();
                         ps.setProduct(produtoTeste);
@@ -120,7 +123,6 @@ public class DataInitializer {
             }
             userRepository.save(user);
             System.out.println("✅ Usuário de teste → teste@gmail.com / teste123");
-
             System.out.println("✅ Seed de dados concluído com sucesso!");
         };
     }

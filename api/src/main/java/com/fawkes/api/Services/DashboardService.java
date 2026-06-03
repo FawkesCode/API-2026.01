@@ -66,10 +66,13 @@ public class DashboardService {
 
     private static final Map<String, String> PURCHASE_STATUS_LABEL = Map.of(
             "draft",      "Rascunho",
-            "pending",    "Pendente",
+            "pending",    "Sob Revisão",
             "confirmed",  "Aprovado",
-            "shipped",    "Em trânsito",
+            "shipped",    "Em Trânsito",
+            "quoted",    "Em Cotação",
             "received",   "Recebido",
+            "problem",    "Problemas",
+            "returned",    "Devolvido",
             "cancelled",  "Cancelado"
     );
 
@@ -263,7 +266,12 @@ public class DashboardService {
 
     public Page<RecentOrderResponse> getRecentPurchaseOrders(DashboardFilterRequest f, int page, int size) {
         return purchaseRepo.fetchRecentPurchaseOrders(
-                        f.getSupplierId(), f.getUserId(), f.getPurchaseOrderStatus(), PageRequest.of(page, size))
+                        f.getSupplierId(),
+                        f.getUserId(),
+                        f.getPurchaseOrderStatus(),
+                        f.getFrom(),
+                        f.getTo(),
+                        PageRequest.of(page, size))
                 .map(this::toRecentPurchaseResponse);
     }
 

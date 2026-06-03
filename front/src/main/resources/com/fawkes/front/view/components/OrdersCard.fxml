@@ -11,7 +11,7 @@
    <children>
       <VBox layoutY="-50.0" prefHeight="107.0" prefWidth="648.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label fx:id="status" styleClass="orders__status" text="Pendente" />
+            <Label fx:id="status" text="Pendente" />
             <Label fx:id="solicitorName" prefHeight="18.0" prefWidth="668.0" styleClass="orders__solicitor" text="Solicitado por Nome do solicitante (x_DiasAtrás) Ou direto a data também" />
             <Label fx:id="department" prefHeight="18.0" prefWidth="647.0" styleClass="orders__department" text="SETOR | Solicitação de compra" />
             <HBox prefHeight="20.0" prefWidth="648.0" spacing="15.0">
@@ -21,7 +21,6 @@
                   <Label fx:id="quantityValue" prefHeight="18.0" prefWidth="144.0" styleClass="orders__info" text="Quantidade de itens: 5" />
                   <Label text="•" />
                   <Label fx:id="priceValue" prefHeight="18.0" prefWidth="130.0" styleClass="orders__info" text="Valor Total: R$ 99,50" />
-                  <Label fx:id="deliveryValue" managed="false" styleClass="orders__info" text="" visible="false" />
                </children>
             </HBox>
          </children>

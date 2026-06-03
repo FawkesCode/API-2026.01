@@ -145,10 +145,12 @@ public class DashboardController {
             @RequestParam(required = false) Long supplierId,
             @RequestParam(required = false) Long userId,
             @RequestParam(required = false) String status,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME) LocalDateTime to,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        DashboardFilterRequest f = buildFilter(null, null, null, supplierId, userId, null, null, status);
+        DashboardFilterRequest f = buildFilter(from, to, null, supplierId, userId, null, null, status);
         return ResponseEntity.ok(dashboardService.getRecentPurchaseOrders(f, page, size));
     }
 

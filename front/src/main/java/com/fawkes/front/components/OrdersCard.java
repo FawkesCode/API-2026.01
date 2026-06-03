@@ -46,8 +46,19 @@ public class OrdersCard extends AnchorPane {
         String effectiveStatus = order.getEffectiveStatus();
         this.status.setText(StringUtils.requestStatusTranslation(effectiveStatus));
         String color = StringUtils.getStatusColor(effectiveStatus);
-        status.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; "
-                + "-fx-background-radius: 4; -fx-padding: 2 8 2 8;");
+
+        switch (effectiveStatus) {
+            case "pending" -> status.getStyleClass().addAll("requests__status", "requests__status--pending");
+            case "quoted"   -> status.getStyleClass().addAll("requests__status", "requests__status--quoted");
+            case "confirmed"   -> status.getStyleClass().addAll("requests__status", "requests__status--approved");
+            case "shipped"  -> status.getStyleClass().addAll("requests__status", "requests__status--shipped");
+            case "received" -> status.getStyleClass().addAll("requests__status", "requests__status--received");
+            case "cancelled"  -> status.getStyleClass().addAll("requests__status", "requests__status--cancelled");
+            case "overdue" -> status.getStyleClass().addAll("requests__status", "requests__status--overdue");
+            case "problem" -> status.getStyleClass().addAll("requests__status", "requests__status--problem");
+            case "returned" -> status.getStyleClass().addAll("requests__status", "requests__status--returned");
+            default          -> status.getStyleClass().add("requests__status");
+        }
 
         this.solicitorName.setText("Solicitado por " + order.getRequesterName());
         this.department.setText(order.getSector().toUpperCase()
