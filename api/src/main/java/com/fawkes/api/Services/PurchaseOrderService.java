@@ -135,7 +135,7 @@ public class PurchaseOrderService {
                 order.setExpectedDeliveryDate(request.expectedDeliveryDate());
             }
             if (request.reason() != null && !request.reason().isBlank()) {
-                order.setDecisionReason(request.reason());
+                order.setPurchaseJustification(request.reason());
             }
         }
 
@@ -218,7 +218,7 @@ public class PurchaseOrderService {
         }
 
         if (reason != null && !reason.isBlank()) {
-            order.setDecisionReason(reason);
+            order.setPurchaseJustification(reason);
         }
         PurchaseOrder.Status prev = order.getStatus();
         order.setStatus(PurchaseOrder.Status.cancelled);
@@ -346,7 +346,9 @@ public class PurchaseOrderService {
             throw new RegraDeNegocioException("Só é possível reportar problema em pedidos recebidos.");
 
         order.setStatus(PurchaseOrder.Status.problem);
-        if (reason != null && !reason.isBlank()) order.setDecisionReason(reason);
+        if (reason != null && !reason.isBlank()) {
+            order.setProblemJustification(reason);
+        }
         PurchaseOrder saved = purchaseOrderRepository.save(order);
         recordEvent(saved, PurchaseOrder.Status.received, PurchaseOrder.Status.problem, reason);
         return saved;

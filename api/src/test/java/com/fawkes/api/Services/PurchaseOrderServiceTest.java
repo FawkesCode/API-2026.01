@@ -54,7 +54,7 @@ class PurchaseOrderServiceTest {
 
         assertThat(result.getStatus()).isEqualTo(PurchaseOrder.Status.confirmed);
         assertThat(result.getExpectedDeliveryDate()).isEqualTo(date);
-        assertThat(result.getDecisionReason()).isEqualTo("Comprado no fornecedor X");
+        assertThat(result.getPurchaseJustification()).isEqualTo("Comprado no fornecedor X");
     }
 
     @Test
@@ -68,7 +68,7 @@ class PurchaseOrderServiceTest {
     }
 
     @Test
-    void cancelOrder_persisteReasonEmDecisionReason() {
+    void cancelOrder_persisteReasonEmPurchaseJustification() {
         PurchaseOrder order = new PurchaseOrder();
         order.setStatus(PurchaseOrder.Status.quoted);
         when(purchaseOrderRepository.findById(1L)).thenReturn(Optional.of(order));
@@ -77,20 +77,22 @@ class PurchaseOrderServiceTest {
         PurchaseOrder result = service.cancelOrder(1L, "Fora do orçamento");
 
         assertThat(result.getStatus()).isEqualTo(PurchaseOrder.Status.cancelled);
-        assertThat(result.getDecisionReason()).isEqualTo("Fora do orçamento");
+        assertThat(result.getPurchaseJustification()).isEqualTo("Fora do orçamento");
     }
 
     @Test
-    void markAsProblem_gravaDecisionReason_ePreservaNotes() {
+    void markAsProblem_gravaProblemJustification_ePreservaCompraENotes() {
         PurchaseOrder order = new PurchaseOrder();
         order.setStatus(PurchaseOrder.Status.received);
         order.setNotes("Observação do solicitante");
+        order.setPurchaseJustification("Comprado no fornecedor X");
         when(purchaseOrderRepository.findById(1L)).thenReturn(Optional.of(order));
         when(purchaseOrderRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
         PurchaseOrder result = service.markAsProblem(1L, "Item veio quebrado");
 
-        assertThat(result.getDecisionReason()).isEqualTo("Item veio quebrado");
+        assertThat(result.getProblemJustification()).isEqualTo("Item veio quebrado");
+        assertThat(result.getPurchaseJustification()).isEqualTo("Comprado no fornecedor X");
         assertThat(result.getNotes()).isEqualTo("Observação do solicitante");
     }
 
