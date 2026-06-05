@@ -56,7 +56,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,
                                 "/api/purchase-orders/*/ship",
                                 "/api/purchase-orders/*/problem",
-                                "/api/purchase-orders/*/return").hasAnyRole("MANAGER", "DIRECTOR")
+                                "/api/purchase-orders/*/return").hasAnyRole("MANAGER", "DIRECTOR","OPERATIONAL")
                         // Registro de cotação e edição de metadados do pedido: somente gerente/diretor
                         .requestMatchers(HttpMethod.PUT,
                                 "/api/purchase-orders/*/items/prices",
@@ -68,7 +68,7 @@ public class SecurityConfig {
                         // Listagem de usuários: diretor ou gerente (note: /api/users/me continua liberado)
                         .requestMatchers(HttpMethod.GET, "/api/users").hasAnyRole("DIRECTOR", "MANAGER")
                         // Histórico de eventos de pedidos: gerente ou diretor
-                        .requestMatchers(HttpMethod.GET, "/api/purchase-orders/events").hasAnyRole("MANAGER", "DIRECTOR")
+                        .requestMatchers(HttpMethod.GET, "/api/purchase-orders/events").hasAnyRole("MANAGER", "DIRECTOR", "OPERATIONAL")
                         .anyRequest().authenticated()
                 )
                 // ✅ Adicionar handler customizado para 403

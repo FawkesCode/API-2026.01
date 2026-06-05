@@ -178,9 +178,9 @@
         }
 
         &--delayed {
-            -fx-border-color: #8649FF;
-            -fx-text-fill: #8649FF;
-            -fx-background-color: #E5D8FF;
+            -fx-border-color: $purple;
+            -fx-text-fill: $purple;
+            -fx-background-color: $light-purple;
         }
 
         &--returned {
@@ -290,4 +290,9 @@
     -fx-background-color: $primary-light, $surface-0;
     -fx-background-insets: 0, 2;
     -fx-radius: 5px;
+}
+
+.default-color0.chart-series-line {
+    -fx-stroke: $surface-200;
+    -fx-stroke-width: 2px;
 }

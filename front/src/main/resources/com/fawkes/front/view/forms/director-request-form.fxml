@@ -17,7 +17,12 @@
             <AnchorPane prefHeight="152.0" prefWidth="674.0">
                <children>
                   <Label fx:id="deliveryLabel" layoutX="10.0" layoutY="10.0" styleClass="input__label" text="Data de entrega prevista:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="6.0" />
-                  <DatePicker fx:id="deliveryDatePicker" layoutX="10.0" layoutY="30.0" prefWidth="220.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="28.0" />
+                  <DatePicker fx:id="deliveryDatePicker" layoutX="10.0" layoutY="30.0" prefWidth="220.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="28.0">
+                     <styleClass>
+                        <String fx:value="input__text" />
+                        <String fx:value="input__text--search" />
+                        <String fx:value="dashboard__filter" />
+                     </styleClass></DatePicker>
                   <Label fx:id="noteTitle" styleClass="input__label" text="Gostaria de deixar uma observaçao?" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="62.0" />
                   <TextArea fx:id="descriptionField" prefHeight="60.0" promptText="Digite alguma observação ou justificativa para a sua escolha..." AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="84.0">
                      <styleClass>

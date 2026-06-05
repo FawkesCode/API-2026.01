@@ -42,7 +42,7 @@ public class HistoryLogCard extends AnchorPane {
             typeLabel.setText("Pedido — "
                     + StringUtils.requestStatusTranslation(toStatus));
             String style = orderStatusStyle(toStatus);
-            if (!style.isEmpty()) typeLabel.getStyleClass().add(style);
+            if (!style.isEmpty()) typeLabel.getStyleClass().addAll("requests__status", style);
         }
 
         Label ownerLabel = (Label) this.lookup(".log__owner");
@@ -60,14 +60,15 @@ public class HistoryLogCard extends AnchorPane {
 
     private String orderStatusStyle(String toStatus) {
         return switch (toStatus) {
-            case "pending"   -> "log__status--3";
-            case "quoted"    -> "log__status--3";
-            case "confirmed" -> "log__status--6";
-            case "shipped"   -> "log__status--7";
-            case "received"  -> "log__status--9";
-            case "cancelled" -> "log__status--5";
-            case "problem"   -> "log__status--10";
-            case "returned"  -> "log__status--12";
+            case "pending"   -> "requests__status--pending";
+            case "quoted"    -> "requests__status--quoted";
+            case "confirmed" -> "requests__status--approved";
+            case "shipped"   -> "requests__status--shipped";
+            case "received"  -> "requests__status--received";
+            case "cancelled" -> "requests__status--cancelled";
+            case "problem"   -> "requests__status--problem";
+            case "overdue"   -> "requests__status--overdue";
+            case "returned"  -> "requests__status--returned";
             default          -> "";
         };
     }
@@ -81,20 +82,10 @@ public class HistoryLogCard extends AnchorPane {
 
         if (typeLabel != null) {
             typeLabel.setText(isInput ? "Entrada - Estoque" : "Saída - Estoque");
-            typeLabel.getStyleClass().add(switch (log.getType()) {
-                case HistoryLog.MovementType.ENTRADA -> "log__status--1";
-                case HistoryLog.MovementType.SAIDA -> "log__status--2";
-                case HistoryLog.MovementType.REVISAO -> "log__status--3";
-                case HistoryLog.MovementType.APROVACAO -> "log__status--4";
-                case HistoryLog.MovementType.NEGACAO -> "log__status--5";
-                case HistoryLog.MovementType.COMPRA -> "log__status--6";
-                case HistoryLog.MovementType.EM_TRANSITO -> "log__status--7";
-                case HistoryLog.MovementType.EM_ATRASO -> "log__status--8";
-                case HistoryLog.MovementType.RECEBIDO -> "log__status--9";
-                case HistoryLog.MovementType.PROBLEMA -> "log__status--10";
-                case HistoryLog.MovementType.NAO_RECEBIDO -> "log__status--11";
-                case HistoryLog.MovementType.DEVOLVIDO -> "log__status--12";
-                default -> "log__status";
+            typeLabel.getStyleClass().addAll("requests__status", switch (log.getType()) {
+                case HistoryLog.MovementType.ENTRADA -> "requests__status--approved";
+                case HistoryLog.MovementType.SAIDA -> "requests__status--cancelled";
+                default -> "";
 
             });
 

@@ -136,10 +136,13 @@ public class LayoutController {
         Platform.runLater(this::handleDashboardButton);
         // OPERATIONAL users can only access Stock
         if (RBACUtil.isOperational()) {
+            btnDashboard.setManaged(false);
+            btnDashboard.setVisible(false);
             btnEmployees.setVisible(false);
             btnEmployees.setManaged(false);
             btnSuppliers.setVisible(false);
             btnSuppliers.setManaged(false);
+            Platform.runLater(this::handleHistoryButton);
         } else if (RBACUtil.isManager()) {
             btnEmployees.setVisible(false);
             btnEmployees.setManaged(false);

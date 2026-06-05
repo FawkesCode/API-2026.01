@@ -70,10 +70,7 @@ public class PurchaseOrderEmail{
                                 <td class="value">{{userName}}</td>
                             </tr>
                             
-                            <tr>
-                                <td class="label">Valor:</td>
-                                <td class="value">R$ {{itemPrice}}</td>
-                            </tr>
+           
                             <tr>
                                 <td class="label">Data/Hora:</td>
                                 <td class="value">{{requestDate}}</td>
@@ -96,7 +93,6 @@ public class PurchaseOrderEmail{
                 
                 String formatedEmailMessage = emailBody
                         .replace("{{userName}}",order.getCreatedBy().getUserName())
-                        .replace("{{itemPrice}}",order.getTotalValue().toString())
                         .replace("{{requestDate}}",formattedDate);
         try {
         MimeMessage orderAdviser = mailSender.createMimeMessage();

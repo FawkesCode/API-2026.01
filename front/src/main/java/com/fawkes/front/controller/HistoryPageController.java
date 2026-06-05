@@ -4,18 +4,22 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fawkes.front.components.HistoryLogCard;
 import com.fawkes.front.models.HistoryLog;
 import com.fawkes.front.service.ApiClient;
+import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 public class HistoryPageController {
-
+    @FXML private HBox filtersContainer;
     @FXML private VBox historyContainer;
+    @FXML private JFXButton tabStock;
+    @FXML private JFXButton tabOrders;
     private int loadGeneration = 0;
 
     @FXML
@@ -28,11 +32,15 @@ public class HistoryPageController {
 
     @FXML
     private void showStock() {
+        resetFilterButtonsActiveState();
+        tabStock.getStyleClass().add("orders__filter--active");
         load("/api/stock/movements/activity", false);
     }
 
     @FXML
     private void showOrders() {
+        resetFilterButtonsActiveState();
+        tabOrders.getStyleClass().add("orders__filter--active");
         load("/api/purchase-orders/events", true);
     }
 
@@ -49,6 +57,9 @@ public class HistoryPageController {
             if (gen != loadGeneration) return;
             historyContainer.getChildren().clear();
             JsonNode data = task.getValue();
+
+            System.out.println("DADOS ATIVIDADE RECENTE:" + data.toPrettyString());
+
             if (data == null || !data.isArray() || data.isEmpty()) {
                 setMessage(isOrders ? "Nenhum evento de pedido registrado ainda."
                                     : "Nenhuma atividade de estoque registrada ainda.");
@@ -91,5 +102,13 @@ public class HistoryPageController {
         Label l = new Label(message);
         l.setWrapText(true);
         historyContainer.getChildren().add(l);
+    }
+
+    private void resetFilterButtonsActiveState() {
+        for (javafx.scene.Node node : filtersContainer.getChildren()) {
+            if (node instanceof JFXButton) {
+                node.getStyleClass().remove("orders__filter--active");
+            }
+        }
     }
 }
